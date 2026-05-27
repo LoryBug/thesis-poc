@@ -1,7 +1,8 @@
 import { useUiStore } from '../../stores/ui.store'
 
 export function Header() {
-  const { page, navigate } = useUiStore()
+  const page = useUiStore((s) => s.page)
+  const navigate = useUiStore((s) => s.navigate)
 
   return (
     <header className="bg-blue-900 text-white shadow-lg">

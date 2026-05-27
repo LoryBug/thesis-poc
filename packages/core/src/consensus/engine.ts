@@ -4,7 +4,7 @@ import { calculateCmrScore, CMR_CUTOFF } from '../scores/cmr-score'
 import { calculateCtSigns, evaluatePet, ctPetLevel } from '../scores/ct-pet'
 import type { ConsensusResult } from './types'
 
-export { type ConsensusResult } from './types'
+export type { ConsensusResult }
 
 export function evaluateConsensus(data: ImagingData): ConsensusResult {
   const echoPositive = data.echoAvailable && data.echo !== null && calculateDemScore(data.echo) >= DEM_CUTOFF
@@ -13,10 +13,10 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
   const demScore = data.echoAvailable && data.echo !== null ? calculateDemScore(data.echo) : null
   const cmrScore = data.cmrAvailable && data.cmr !== null ? calculateCmrScore(data.cmr) : null
 
-  const petAvailable = data.pet !== null
+  const petDataEntered = data.pet !== null && (data.pet.suvMax !== null || data.pet.mtv !== null || data.pet.tlg !== null)
   const ctSigns = data.ctpetAvailable && data.ct !== null ? calculateCtSigns(data.ct) : 0
-  const petPositive = petAvailable ? evaluatePet(data.pet!) : false
-  const ctLevel = data.ctpetAvailable ? ctPetLevel(ctSigns, petPositive, petAvailable) : 'unavailable'
+  const petPositive = petDataEntered ? evaluatePet(data.pet!) : false
+  const ctLevel = data.ctpetAvailable ? ctPetLevel(ctSigns, petPositive, petDataEntered) : 'unavailable'
   const ctHigh = ctLevel === 'high'
   const ctGray = ctLevel === 'gray'
   const ctDiscordant = ctLevel === 'discordant'
@@ -34,16 +34,19 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
   if (ctDiscordant) evidence.push(`Discordanza TC/PET: TC <= 2 segni ma PET patologica.`)
   if (evidence.length === 0) evidence.push('Nessun criterio di malignita identificato.')
 
-  // Modality statuses
+  // Modality statuses (defensive: guard against malformed data.echo === null with echoAvailable === true)
+  const safeDemScore = demScore !== null ? `${demScore}/9` : 'N/A'
+  const safeCmrScore = cmrScore !== null ? `${cmrScore}/8` : 'N/A'
+
   const echoStatus = data.echoAvailable
-    ? (echoPositive ? `DEM positivo (${demScore}/9)` : `DEM sotto cutoff (${demScore}/9)`)
+    ? (echoPositive ? `DEM positivo (${safeDemScore})` : `DEM sotto cutoff (${safeDemScore})`)
     : 'Non disponibile'
   const echoNote = data.echoAvailable
     ? (echoPositive ? 'Primo livello positivo: indica approfondimento con imaging avanzato.' : 'Primo livello senza cutoff di malignita.')
     : 'Primo livello non inserito.'
 
   const cmrStatus = data.cmrAvailable
-    ? (cmrPositive ? `CMR Mass Score positivo (${cmrScore}/8)` : `CMR Mass Score sotto cutoff (${cmrScore}/8)`)
+    ? (cmrPositive ? `CMR Mass Score positivo (${safeCmrScore})` : `CMR Mass Score sotto cutoff (${safeCmrScore})`)
     : 'Non disponibile'
   const cmrNote = data.cmrAvailable
     ? (cmrPositive ? 'Esame dominante positivo: integra morfologia e caratterizzazione tissutale.' : 'Esame dominante sotto cutoff.')
@@ -59,8 +62,8 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
       ctPetStatus = `TC zona grigia + PET positiva (${ctSigns}/8)`
       ctPetNote = 'PET risolve la zona grigia verso malignita.'
     } else if (ctLevel === 'gray') {
-      ctPetStatus = petAvailable ? `Zona grigia TC + PET negativa (${ctSigns}/8)` : `Zona grigia TC (${ctSigns}/8)`
-      ctPetNote = petAvailable
+      ctPetStatus = petDataEntered ? `Zona grigia TC + PET negativa (${ctSigns}/8)` : `Zona grigia TC (${ctSigns}/8)`
+      ctPetNote = petDataEntered
         ? 'PET sotto cutoff: aiuta a riclassificare i casi grigi verso benignita.'
         : 'TC 3-4 segni: serve PET/TC o CMR per chiarire.'
     } else if (ctLevel === 'discordant') {
@@ -133,7 +136,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     nextStep = 'Eseguire CMR cardiaca se disponibile. Se CMR non fattibile, considerare TC cardiaca; PET/TC se TC in zona grigia o contesto oncologico.'
     integratedStatus = title
     integratedNote = subtitle
-  } else if ((ctLevel === 'gray' && !petAvailable) || (ctUnavailable && ctSigns >= 3)) {
+  } else if (ctUnavailable && ctSigns >= 3) {
     risk = 'mid'
     title = 'Zona grigia TC'
     subtitle = 'TC con 3-4 segni e PET non disponibile.'

@@ -1,5 +1,5 @@
 import { useCaseStore } from '../stores/case.store'
-import { calculateDemScore, DEM_CUTOFF } from '@cm-dss/core'
+import { calculateDemScore, demProbability, DEM_CUTOFF } from '@cm-dss/core'
 import type { EchoFeatures } from '@cm-dss/core'
 
 const labels: [keyof EchoFeatures, string][] = [
@@ -12,9 +12,14 @@ const labels: [keyof EchoFeatures, string][] = [
 ]
 
 export function EchoCard() {
-  const { echo, echoAvailable, setEchoAvailable, setEchoFeature } = useCaseStore()
+  const echo = useCaseStore((s) => s.echo)
+  const echoAvailable = useCaseStore((s) => s.echoAvailable)
+  const setEchoAvailable = useCaseStore((s) => s.setEchoAvailable)
+  const setEchoFeature = useCaseStore((s) => s.setEchoFeature)
+
   const hasFeatures = Object.values(echo).some(Boolean)
   const score = hasFeatures ? calculateDemScore(echo) : null
+  const prob = score !== null ? demProbability(score) : null
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
@@ -70,6 +75,12 @@ export function EchoCard() {
               </span>
             )}
           </div>
+
+          {prob !== null && (
+            <p className="text-xs text-gray-500 mt-1">
+              Probabilità stimata: <span className="font-medium">{prob}%</span>
+            </p>
+          )}
         </>
       )}
     </div>

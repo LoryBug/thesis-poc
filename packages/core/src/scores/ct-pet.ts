@@ -25,13 +25,10 @@ export function ctPetLevel(
   petAvailable: boolean,
 ): CtPetLevel {
   if (ctSigns >= 5) return 'high'
-  if (ctSigns >= 3 && ctSigns <= 4) {
+  if (ctSigns >= 3) {
     if (!petAvailable) return 'unavailable'
     return petPositive ? 'high' : 'gray'
   }
-  if (ctSigns <= 2) {
-    if (!petAvailable || !petPositive) return 'low'
-    return 'discordant'
-  }
-  return 'low'
+  if (!petAvailable || !petPositive) return 'low'
+  return 'discordant'
 }

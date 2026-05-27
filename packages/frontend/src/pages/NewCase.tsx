@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { evaluateConsensus } from '@cm-dss/core'
 import type { ImagingData, ConsensusResult } from '@cm-dss/core'
 import { useCaseStore } from '../stores/case.store'
@@ -14,6 +14,11 @@ export function NewCase() {
   const store = useCaseStore()
   const addCase = useHistoryStore((s) => s.addCase)
   const navigate = useUiStore((s) => s.navigate)
+
+  useEffect(() => {
+    store.reset()
+    setResult(null)
+  }, [])
 
   function handleRun() {
     const data: ImagingData = store.toImagingData()

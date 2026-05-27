@@ -1,10 +1,12 @@
+import type { RiskLevel } from '../types'
+
 export interface ModalityStatus {
   status: string
   note: string
 }
 
 export interface ConsensusResult {
-  risk: 'low' | 'mid' | 'high' | 'not'
+  risk: RiskLevel
   title: string
   subtitle: string
   explanation: string

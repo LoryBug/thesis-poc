@@ -14,11 +14,17 @@ const ctLabels: [keyof CtFeatures, string][] = [
 ]
 
 export function CtPetCard() {
-  const { ct, pet, ctpetAvailable, setCtpetAvailable, setCtFeature, setPetParam } =
-    useCaseStore()
+  const ct = useCaseStore((s) => s.ct)
+  const pet = useCaseStore((s) => s.pet)
+  const ctpetAvailable = useCaseStore((s) => s.ctpetAvailable)
+  const setCtpetAvailable = useCaseStore((s) => s.setCtpetAvailable)
+  const setCtFeature = useCaseStore((s) => s.setCtFeature)
+  const setPetParam = useCaseStore((s) => s.setPetParam)
+
+  const petDataEntered = ctpetAvailable && (pet.suvMax !== null || pet.mtv !== null || pet.tlg !== null)
   const ctSigns = ctpetAvailable ? calculateCtSigns(ct) : 0
-  const petPositive = ctpetAvailable ? evaluatePet(pet) : false
-  const level = ctpetAvailable ? ctPetLevel(ctSigns, petPositive, true) : 'unavailable'
+  const petPositive = petDataEntered ? evaluatePet(pet) : false
+  const level = ctpetAvailable ? ctPetLevel(ctSigns, petPositive, petDataEntered) : 'unavailable'
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
@@ -71,7 +77,7 @@ export function CtPetCard() {
                   type="number"
                   step="0.1"
                   value={pet.suvMax ?? ''}
-                  onChange={(e) => setPetParam('suvMax', e.target.value ? Number(e.target.value) : null)}
+                  onChange={(e) => setPetParam('suvMax', e.target.value === '' ? null : Number(e.target.value))}
                   className="w-full px-2 py-1 border rounded text-sm"
                   placeholder="≥ 4.9"
                 />
@@ -82,7 +88,7 @@ export function CtPetCard() {
                   type="number"
                   step="0.1"
                   value={pet.mtv ?? ''}
-                  onChange={(e) => setPetParam('mtv', e.target.value ? Number(e.target.value) : null)}
+                  onChange={(e) => setPetParam('mtv', e.target.value === '' ? null : Number(e.target.value))}
                   className="w-full px-2 py-1 border rounded text-sm"
                   placeholder="≥ 8.2"
                 />
@@ -93,13 +99,13 @@ export function CtPetCard() {
                   type="number"
                   step="0.1"
                   value={pet.tlg ?? ''}
-                  onChange={(e) => setPetParam('tlg', e.target.value ? Number(e.target.value) : null)}
+                  onChange={(e) => setPetParam('tlg', e.target.value === '' ? null : Number(e.target.value))}
                   className="w-full px-2 py-1 border rounded text-sm"
                   placeholder="≥ 29"
                 />
               </div>
             </div>
-            {pet.suvMax !== null && (
+            {Object.values(pet).some((v) => v !== null) && (
               <p className="text-xs mt-2">
                 PET:
                 <span

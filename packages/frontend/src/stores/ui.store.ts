@@ -12,5 +12,5 @@ export const useUiStore = create<UiState>((set) => ({
   page: 'home',
   selectedCaseId: null,
 
-  navigate: (page, caseId) => set({ page, selectedCaseId: caseId ?? null }),
+  navigate: (page, caseId) => set({ page, selectedCaseId: page === 'detail' ? (caseId ?? null) : null }),
 }))

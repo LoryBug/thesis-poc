@@ -12,7 +12,11 @@ const labels: [keyof CmrFeatures, string][] = [
 ]
 
 export function CmrCard() {
-  const { cmr, cmrAvailable, setCmrAvailable, setCmrFeature } = useCaseStore()
+  const cmr = useCaseStore((s) => s.cmr)
+  const cmrAvailable = useCaseStore((s) => s.cmrAvailable)
+  const setCmrAvailable = useCaseStore((s) => s.setCmrAvailable)
+  const setCmrFeature = useCaseStore((s) => s.setCmrFeature)
+
   const hasFeatures = Object.values(cmr).some(Boolean)
   const score = hasFeatures ? calculateCmrScore(cmr) : null
 

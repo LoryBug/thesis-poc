@@ -9,20 +9,22 @@ interface HistoryState {
   clearAll: () => void
 }
 
-export const useHistoryStore = create<HistoryState>((set, get) => ({
+export const useHistoryStore = create<HistoryState>((set) => ({
   cases: loadCases(),
 
-  addCase: (c) => {
-    const updated = [c, ...get().cases]
-    set({ cases: updated })
-    saveCases(updated)
-  },
+  addCase: (c) =>
+    set((s) => {
+      const updated = [c, ...s.cases]
+      saveCases(updated)
+      return { cases: updated }
+    }),
 
-  removeCase: (id) => {
-    const updated = get().cases.filter((c) => c.id !== id)
-    set({ cases: updated })
-    saveCases(updated)
-  },
+  removeCase: (id) =>
+    set((s) => {
+      const updated = s.cases.filter((c) => c.id !== id)
+      saveCases(updated)
+      return { cases: updated }
+    }),
 
   clearAll: () => {
     set({ cases: [] })
