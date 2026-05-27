@@ -1,0 +1,1356 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cardiac Mass Decision Support - POC</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #172033;
+      --muted: #607089;
+      --line: #d9e2ef;
+      --primary: #173b68;
+      --primary-2: #245b94;
+      --accent: #0f8b8d;
+      --low: #16784c;
+      --mid: #b7791f;
+      --high: #b42318;
+      --shadow: 0 18px 40px rgba(23, 59, 104, 0.12);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(15, 139, 141, 0.16), transparent 32rem),
+        linear-gradient(180deg, #eef4fb 0%, var(--bg) 42%, #edf2f7 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      width: min(1320px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(217, 226, 239, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-main {
+      padding: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      top: -70px;
+      right: -80px;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(36, 91, 148, 0.16), rgba(15, 139, 141, 0.12));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--primary-2);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(15, 139, 141, 0.14);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(32px, 5vw, 56px);
+      letter-spacing: -0.04em;
+      color: #0f223d;
+    }
+
+    h2 {
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: 16px;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .hero-side {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .status-panel {
+      padding: 18px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #10233e, #173b68);
+      color: #ffffff;
+    }
+
+    .status-label {
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-value {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .status-subtitle {
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mini-stat {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-2);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .mini-stat span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .card-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eaf2fb;
+      color: var(--primary-2);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pill.low {
+      background: rgba(22, 120, 76, 0.11);
+      color: var(--low);
+    }
+
+    .pill.mid {
+      background: rgba(183, 121, 31, 0.13);
+      color: var(--mid);
+    }
+
+    .pill.high {
+      background: rgba(180, 35, 24, 0.11);
+      color: var(--high);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    label.field {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      padding: 12px 12px;
+      outline: none;
+      transition: border 160ms ease, box-shadow 160ms ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      border-color: rgba(36, 91, 148, 0.75);
+      box-shadow: 0 0 0 4px rgba(36, 91, 148, 0.12);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .feature {
+      position: relative;
+    }
+
+    .feature input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .feature span {
+      display: block;
+      min-height: 74px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 13px 13px 13px 43px;
+      cursor: pointer;
+      transition: transform 140ms ease, border 140ms ease, background 140ms ease, box-shadow 140ms ease;
+    }
+
+    .feature span::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 17px;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #bac7d8;
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .feature span::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 21px;
+      width: 5px;
+      height: 9px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      opacity: 0;
+      transform: rotate(45deg);
+    }
+
+    .feature input:checked + span {
+      border-color: rgba(15, 139, 141, 0.75);
+      background: rgba(15, 139, 141, 0.06);
+      box-shadow: 0 10px 22px rgba(15, 139, 141, 0.10);
+    }
+
+    .feature input:checked + span::before {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .feature input:checked + span::after {
+      opacity: 1;
+    }
+
+    .feature b {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .feature small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .score-strip {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-2);
+    }
+
+    .score-number {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -0.05em;
+    }
+
+    .score-number span {
+      color: var(--muted);
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e1e8f2;
+    }
+
+    .bar > i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--low), var(--mid), var(--high));
+      transition: width 180ms ease;
+    }
+
+    .score-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .exam-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .exam-toggle input {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+
+    .disabled-section {
+      opacity: 0.44;
+      filter: grayscale(0.3);
+    }
+
+    .disabled-section label,
+    .disabled-section input,
+    .disabled-section select {
+      pointer-events: none;
+    }
+
+    .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .decision {
+      border-top: 6px solid var(--primary);
+    }
+
+    .decision.low {
+      border-top-color: var(--low);
+    }
+
+    .decision.mid {
+      border-top-color: var(--mid);
+    }
+
+    .decision.high {
+      border-top-color: var(--high);
+    }
+
+    .decision h2 {
+      font-size: 24px;
+    }
+
+    .decision-text {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .next-step {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f4f7fb;
+      border: 1px solid var(--line);
+    }
+
+    .next-step strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--primary);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .next-step p {
+      margin: 0;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .consensus-box {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .consensus-row {
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #ffffff;
+    }
+
+    .consensus-row span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .consensus-row strong {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .consensus-row small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .evidence-list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .evidence-list li {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .evidence-list li::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      margin-top: 5px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 230px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfdff;
+      color: var(--text);
+      font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      padding: 14px;
+      outline: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 13px;
+      background: var(--primary);
+      color: #ffffff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease;
+    }
+
+    button:hover {
+      background: var(--primary-2);
+      transform: translateY(-1px);
+    }
+
+    button.secondary {
+      background: #e6edf6;
+      color: var(--primary);
+    }
+
+    button.secondary:hover {
+      background: #d9e5f3;
+    }
+
+    .disclaimer {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page {
+        width: min(100% - 20px, 1320px);
+        padding-top: 10px;
+      }
+
+      .hero-main,
+      .hero-side,
+      .card {
+        padding: 18px;
+        border-radius: 16px;
+      }
+
+      .form-grid,
+      .feature-grid,
+      .pet-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-main">
+        <div class="eyebrow">Proof of concept</div>
+        <h1>Cardiac Mass Decision Support</h1>
+        <p class="lead">
+          Prototipo rapido per applicare score diagnostici sulle masse cardiache, motivare il sospetto clinico e proporre un possibile next step di imaging.
+        </p>
+      </div>
+
+      <aside class="hero-side">
+        <div class="status-panel">
+          <div class="status-label">Output integrato</div>
+          <div class="status-value" id="heroRisk">Non valutato</div>
+          <div class="status-subtitle" id="heroSubtitle">Seleziona gli esami disponibili e le feature osservate.</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-stat"><strong id="heroDem">-</strong><span>DEM</span></div>
+          <div class="mini-stat"><strong id="heroCmr">-</strong><span>CMR</span></div>
+          <div class="mini-stat"><strong id="heroCt">-</strong><span>CT signs</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout">
+      <div class="stack">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Dati del caso</h2>
+              <p>Campi opzionali per generare un report sintetico copiabile.</p>
+            </div>
+            <span class="pill">Input clinico</span>
+          </div>
+          <div class="form-grid">
+            <label class="field">
+              ID caso / paziente
+              <input id="caseId" type="text" placeholder="Es. CM-001">
+            </label>
+            <label class="field">
+              Contesto clinico
+              <select id="clinicalContext">
+                <option value="Sospetta massa cardiaca">Sospetta massa cardiaca</option>
+                <option value="Riscontro incidentale">Riscontro incidentale</option>
+                <option value="Paziente oncologico">Paziente oncologico</option>
+                <option value="Sospetto trombo">Sospetto trombo</option>
+                <option value="Sospetta endocardite">Sospetta endocardite</option>
+              </select>
+            </label>
+            <label class="field">
+              Localizzazione prevalente
+              <select id="location">
+                <option value="Non specificata">Non specificata</option>
+                <option value="Camere sinistre">Camere sinistre</option>
+                <option value="Camere destre">Camere destre</option>
+                <option value="Pericardio">Pericardio</option>
+                <option value="Grossi vasi">Grossi vasi</option>
+              </select>
+            </label>
+            <label class="field">
+              Nota rapida
+              <input id="freeNote" type="text" placeholder="Es. massa atriale destra, dispnea NYHA III">
+            </label>
+          </div>
+        </article>
+
+        <article class="card" data-exam-card="echo">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Ecocardiografia - DEM Score</h2>
+              <p>Score ecocardiografico pesato per sospetto di malignita. Cutoff operativo: DEM >= 3.</p>
+            </div>
+            <label class="exam-toggle"><input id="echoAvailable" type="checkbox" checked> Eco disponibile</label>
+          </div>
+          <div data-exam-body="echo">
+            <div class="feature-grid">
+              <label class="feature">
+                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Infiltrazione">
+                <span><b>Infiltrazione</b><small>Estensione in miocardio/pericardio o tessuti vicini.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Massa polilobata">
+                <span><b>Massa polilobata</b><small>Due o piu lobi, morfologia complessa.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Versamento pericardico moderato/severo">
+                <span><b>Versamento pericardico</b><small>Moderato/severo o clinicamente significativo.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Aspetto sessile">
+                <span><b>Aspetto sessile</b><small>Base larga, assenza di peduncolo evidente.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Disomogeneita">
+                <span><b>Disomogeneita</b><small>Ecogenicita eterogenea rispetto al miocardio.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Localizzazione non sinistra">
+                <span><b>Localizzazione non sinistra</b><small>Cuore destro, pericardio o grossi vasi.</small></span>
+              </label>
+            </div>
+
+            <div class="score-strip">
+              <div class="score-number"><span id="demScore">0</span><span>/9</span></div>
+              <div>
+                <div class="bar"><i id="demBar"></i></div>
+                <div class="score-note" id="demNote">Probabilita DEM stimata: 0%. Sotto cutoff.</div>
+              </div>
+              <span class="pill low" id="demBadge">Basso sospetto</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-exam-card="cmr">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Risonanza magnetica - CMR Mass Score</h2>
+              <p>Integra morfologia e caratterizzazione tissutale. Cutoff operativo: CMR Mass Score >= 5.</p>
+            </div>
+            <label class="exam-toggle"><input id="cmrAvailable" type="checkbox"> CMR disponibile</label>
+          </div>
+          <div data-exam-body="cmr" class="disabled-section">
+            <div class="feature-grid">
+              <label class="feature">
+                <input type="checkbox" data-score="cmr" data-points="2" data-label="Infiltrazione CMR">
+                <span><b>Infiltrazione</b><small>Disruption/estensione nei tessuti adiacenti.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="cmr" data-points="2" data-label="First-pass contrast perfusion">
+                <span><b>First-pass perfusion</b><small>Perfusione della massa dopo gadolinio.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="Versamento pericardico CMR">
+                <span><b>Versamento pericardico</b><small>Piu che lieve o post-pericardiocentesi.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="Aspetto sessile CMR">
+                <span><b>Aspetto sessile</b><small>Impianto diretto su parete/base larga.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="Forma polilobata CMR">
+                <span><b>Forma polilobata</b><small>Due o piu lobi alla valutazione multiplanare.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="Enhancement eterogeneo">
+                <span><b>Enhancement eterogeneo</b><small>Pattern disomogeneo post-contrasto.</small></span>
+              </label>
+            </div>
+
+            <div class="score-strip">
+              <div class="score-number"><span id="cmrScore">0</span><span>/8</span></div>
+              <div>
+                <div class="bar"><i id="cmrBar"></i></div>
+                <div class="score-note" id="cmrNote">CMR non disponibile: score non usato nella decisione.</div>
+              </div>
+              <span class="pill" id="cmrBadge">Non calcolato</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-exam-card="ctpet">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>TC cardiaca e PET/TC</h2>
+              <p>Conteggio dei segni TC: <=2 basso sospetto, 3-4 zona grigia, >=5 alto sospetto. PET utile soprattutto nella zona grigia o per staging.</p>
+            </div>
+            <label class="exam-toggle"><input id="ctpetAvailable" type="checkbox"> TC/PET disponibile</label>
+          </div>
+          <div data-exam-body="ctpet" class="disabled-section">
+            <div class="feature-grid">
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Margini irregolari TC">
+                <span><b>Margini irregolari</b><small>Profilo non circoscritto o spiculato.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Versamento pericardico TC">
+                <span><b>Versamento pericardico</b><small>Associato a massa sospetta.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Invasione TC">
+                <span><b>Invasione</b><small>Disruption o estensione in strutture vicine.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Natura solida TC">
+                <span><b>Natura solida</b><small>Densita compatibile con componente solida.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Diametro maggiore di 30 mm">
+                <span><b>Diametro &gt; 30 mm</b><small>Dimensione elevata, non diagnostica da sola.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Uptake contrastografico TC">
+                <span><b>Uptake di contrasto</b><small>Aumento densita dopo mezzo di contrasto.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Segnale isodenso pre-contrasto TC">
+                <span><b>Isodenso pre-contrasto</b><small>Caratteristica pre-contrastografica associata a malignita nello studio TC.</small></span>
+              </label>
+              <label class="feature">
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Calcificazioni TC">
+                <span><b>Calcificazioni</b><small>Segno incluso nello studio, meno discriminante.</small></span>
+              </label>
+            </div>
+
+            <div class="pet-grid">
+              <label class="field">
+                SUVmax
+                <input id="suvMax" type="number" step="0.1" min="0" placeholder="Cutoff 4.9">
+              </label>
+              <label class="field">
+                MTV
+                <input id="mtv" type="number" step="0.1" min="0" placeholder="Cutoff 8.2">
+              </label>
+              <label class="field">
+                TLG
+                <input id="tlg" type="number" step="0.1" min="0" placeholder="Cutoff 29">
+              </label>
+            </div>
+
+            <div class="score-strip">
+              <div class="score-number"><span id="ctScore">0</span><span>/8</span></div>
+              <div>
+                <div class="bar"><i id="ctBar"></i></div>
+                <div class="score-note" id="ctNote">TC/PET non disponibile: score non usato nella decisione.</div>
+              </div>
+              <span class="pill" id="ctBadge">Non calcolato</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="sidebar">
+        <article class="card decision" id="decisionCard">
+          <div class="card-header">
+            <div class="card-title">
+              <h2 id="decisionTitle">Decisione non valutata</h2>
+              <p id="decisionSubtitle">Inserisci almeno un esame disponibile.</p>
+            </div>
+            <span class="pill" id="decisionBadge">POC</span>
+          </div>
+          <p class="decision-text" id="decisionText">
+            Il sistema applica regole derivate dagli studi letti: DEM Score, CMR Mass Score e approccio TC/PET.
+          </p>
+          <div class="consensus-box" aria-label="Consenso multimodale">
+            <div class="consensus-row">
+              <span>Eco</span>
+              <div><strong id="consensusEcho">Non valutata</strong><small id="consensusEchoNote">Primo livello: triage e indicazione a imaging avanzato.</small></div>
+            </div>
+            <div class="consensus-row">
+              <span>CMR</span>
+              <div><strong id="consensusCmr">Non disponibile</strong><small id="consensusCmrNote">Esame dominante quando disponibile per caratterizzazione tissutale.</small></div>
+            </div>
+            <div class="consensus-row">
+              <span>TC/PET</span>
+              <div><strong id="consensusCtPet">Non disponibile</strong><small id="consensusCtPetNote">Percorso alternativo o complementare, soprattutto in zona grigia.</small></div>
+            </div>
+            <div class="consensus-row">
+              <span>Integrato</span>
+              <div><strong id="consensusIntegrated">In attesa di input</strong><small id="consensusIntegratedNote">Gli esami non vengono sommati: si valuta concordanza, discordanza e gerarchia clinica.</small></div>
+            </div>
+          </div>
+          <div class="next-step">
+            <strong>Next step suggerito</strong>
+            <p id="nextStep">Completare input clinico-imaging.</p>
+          </div>
+          <ul class="evidence-list" id="evidenceList">
+            <li>Nessuna evidenza selezionata.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Report copiabile</h2>
+              <p>Bozza automatica per discussione in Heart Team o meeting.</p>
+            </div>
+          </div>
+          <textarea id="report" readonly></textarea>
+          <div class="actions">
+            <button id="copyReport" type="button">Copia report</button>
+            <button id="resetForm" class="secondary" type="button">Reset</button>
+          </div>
+        </article>
+
+        <article class="card disclaimer">
+          <strong>Nota POC</strong><br>
+          Questo prototipo e solo dimostrativo e non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida. Le soglie sono derivate dagli articoli forniti.
+        </article>
+      </aside>
+    </section>
+
+    <p class="footer-note">Prototype HTML/CSS/vanilla JS - Masse cardiache, score diagnostici e supporto decisionale.</p>
+  </main>
+
+  <script>
+    const demProbability = {
+      0: 0,
+      1: 2,
+      2: 8,
+      3: 29,
+      4: 65,
+      5: 89,
+      6: 97,
+      7: 99,
+      8: 100,
+      9: 100
+    };
+
+    const state = {
+      dem: 0,
+      echoCount: 0,
+      cmr: 0,
+      ct: 0,
+      petAbnormal: 0,
+      evidence: []
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+    function cutoffLevel(score, cutoff, unavailable) {
+      if (unavailable) return { label: "Non calcolato", className: "" };
+      if (score >= cutoff) return { label: "Sopra cutoff", className: "high" };
+      return { label: "Sotto cutoff", className: "low" };
+    }
+
+    function ctPetLevel(ctSigns, petAbnormal, unavailable) {
+      if (unavailable) return { label: "Non calcolato", className: "" };
+      if (ctSigns >= 5) return { label: "Alto sospetto TC", className: "high" };
+      if (ctSigns >= 3 && ctSigns <= 4 && petAbnormal > 0) return { label: "Alto sospetto TC/PET", className: "high" };
+      if (ctSigns >= 3 && ctSigns <= 4) return { label: "Zona grigia TC", className: "mid" };
+      if (petAbnormal > 0) return { label: "Discordante", className: "mid" };
+      return { label: "Basso sospetto TC", className: "low" };
+    }
+
+    function setBadge(element, level) {
+      element.className = "pill" + (level.className ? " " + level.className : "");
+      element.textContent = level.label;
+    }
+
+    function checkedScore(name) {
+      return $$(`input[data-score="${name}"]:checked`).reduce((sum, item) => sum + Number(item.dataset.points || 0), 0);
+    }
+
+    function checkedCount(name) {
+      return $$(`input[data-count="${name}"]:checked`).length;
+    }
+
+    function checkedLabels(selector) {
+      return $$(selector).map((item) => item.dataset.label).filter(Boolean);
+    }
+
+    function valueNumber(id) {
+      const raw = $(id).value;
+      if (raw === "") return null;
+      const parsed = Number(raw);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    function toggleExam(name, available) {
+      const body = $(`[data-exam-body="${name}"]`);
+      if (!body) return;
+      body.classList.toggle("disabled-section", !available);
+    }
+
+    function updateScores() {
+      const echoAvailable = $("#echoAvailable").checked;
+      const cmrAvailable = $("#cmrAvailable").checked;
+      const ctpetAvailable = $("#ctpetAvailable").checked;
+
+      toggleExam("echo", echoAvailable);
+      toggleExam("cmr", cmrAvailable);
+      toggleExam("ctpet", ctpetAvailable);
+
+      state.dem = echoAvailable ? checkedScore("dem") : 0;
+      state.echoCount = echoAvailable ? checkedCount("echo") : 0;
+      state.cmr = cmrAvailable ? checkedScore("cmr") : 0;
+      state.ct = ctpetAvailable ? checkedScore("ct") : 0;
+
+      const suv = ctpetAvailable ? valueNumber("#suvMax") : null;
+      const mtv = ctpetAvailable ? valueNumber("#mtv") : null;
+      const tlg = ctpetAvailable ? valueNumber("#tlg") : null;
+      state.petAbnormal = 0;
+      if (suv !== null && suv >= 4.9) state.petAbnormal += 1;
+      if (mtv !== null && mtv >= 8.2) state.petAbnormal += 1;
+      if (tlg !== null && tlg >= 29) state.petAbnormal += 1;
+
+      updateScoreUi(echoAvailable, cmrAvailable, ctpetAvailable);
+      updateDecision(echoAvailable, cmrAvailable, ctpetAvailable, { suv, mtv, tlg });
+      updateReport(echoAvailable, cmrAvailable, ctpetAvailable, { suv, mtv, tlg });
+    }
+
+    function updateScoreUi(echoAvailable, cmrAvailable, ctpetAvailable) {
+      const demLevel = cutoffLevel(state.dem, 3, !echoAvailable);
+      $("#demScore").textContent = echoAvailable ? state.dem : "-";
+      $("#demBar").style.width = echoAvailable ? `${Math.min(100, state.dem / 9 * 100)}%` : "0%";
+      $("#demNote").textContent = echoAvailable
+        ? `Probabilita DEM stimata: ${demProbability[state.dem]}%. Count non pesato: ${state.echoCount}/6.`
+        : "Eco non disponibile: DEM Score non usato nella decisione.";
+      setBadge($("#demBadge"), demLevel);
+
+      const cmrLevel = cutoffLevel(state.cmr, 5, !cmrAvailable);
+      $("#cmrScore").textContent = cmrAvailable ? state.cmr : "-";
+      $("#cmrBar").style.width = cmrAvailable ? `${Math.min(100, state.cmr / 8 * 100)}%` : "0%";
+      $("#cmrNote").textContent = cmrAvailable
+        ? `Cutoff CMR Mass Score >= 5. Score corrente: ${state.cmr}/8.`
+        : "CMR non disponibile: score non usato nella decisione.";
+      setBadge($("#cmrBadge"), cmrLevel);
+
+      const ctLevel = ctPetLevel(state.ct, state.petAbnormal, !ctpetAvailable);
+      $("#ctScore").textContent = ctpetAvailable ? state.ct : "-";
+      $("#ctBar").style.width = ctpetAvailable ? `${Math.min(100, state.ct / 8 * 100)}%` : "0%";
+      $("#ctNote").textContent = ctpetAvailable
+        ? `TC signs: ${state.ct}/8. Parametri PET patologici: ${state.petAbnormal}/3.`
+        : "TC/PET non disponibile: score non usato nella decisione.";
+      setBadge($("#ctBadge"), ctLevel);
+
+      $("#heroDem").textContent = echoAvailable ? `${state.dem}/9` : "-";
+      $("#heroCmr").textContent = cmrAvailable ? `${state.cmr}/8` : "-";
+      $("#heroCt").textContent = ctpetAvailable ? `${state.ct}/8` : "-";
+    }
+
+    function updateDecision(echoAvailable, cmrAvailable, ctpetAvailable, pet) {
+      const evidence = [];
+      const echoLabels = checkedLabels('input[data-score="dem"]:checked');
+      const cmrLabels = checkedLabels('input[data-score="cmr"]:checked');
+      const ctLabels = checkedLabels('input[data-score="ct"]:checked');
+
+      const echoPositive = echoAvailable && state.dem >= 3;
+      const echoCountPositive = echoAvailable && state.echoCount >= 3;
+      const cmrPositive = cmrAvailable && state.cmr >= 5;
+      const cmrNegative = cmrAvailable && state.cmr < 5;
+      const ctHigh = ctpetAvailable && state.ct >= 5;
+      const ctGray = ctpetAvailable && state.ct >= 3 && state.ct <= 4;
+      const ctLow = ctpetAvailable && state.ct <= 2;
+      const petAvailable = ctpetAvailable && [pet.suv, pet.mtv, pet.tlg].some((value) => value !== null);
+      const petPositive = ctpetAvailable && state.petAbnormal > 0;
+      const petNegative = petAvailable && !petPositive;
+      const ctPetPositive = ctHigh || (ctGray && petPositive);
+      const ctPetLow = (ctLow && !petPositive) || (ctGray && petNegative);
+      const ctPetDiscordant = ctLow && petPositive;
+      const anyExam = echoAvailable || cmrAvailable || ctpetAvailable;
+
+      const consensus = {
+        echo: echoAvailable ? (echoPositive ? `DEM positivo (${state.dem}/9)` : `DEM sotto cutoff (${state.dem}/9)`) : "Non disponibile",
+        echoNote: echoAvailable
+          ? (echoPositive ? "Primo livello positivo: nei paper indica approfondimento con imaging avanzato." : "Primo livello senza cutoff di malignita; resta dipendente da finestra acustica e contesto.")
+          : "Primo livello non inserito.",
+        cmr: cmrAvailable ? (cmrPositive ? `CMR Mass Score positivo (${state.cmr}/8)` : `CMR Mass Score sotto cutoff (${state.cmr}/8)`) : "Non disponibile",
+        cmrNote: cmrAvailable
+          ? (cmrPositive ? "Esame dominante positivo: integra morfologia e caratterizzazione tissutale." : "Esame dominante sotto cutoff; utile per chiarire sospetti ecocardiografici.")
+          : "Nei paper e l'esame non invasivo piu completo dopo ecocardiografia.",
+        ctPet: "Non disponibile",
+        ctPetNote: "Percorso alternativo/complementare se CMR non fattibile, inconclusiva o per staging.",
+        integrated: "In attesa di input",
+        integratedNote: "Gli esami non vengono sommati: si valuta concordanza, discordanza e gerarchia clinica."
+      };
+
+      if (ctpetAvailable) {
+        if (ctHigh) {
+          consensus.ctPet = `TC ad alto sospetto (${state.ct}/8)`;
+          consensus.ctPetNote = "Almeno 5 segni TC: nel paper identifica fortemente la natura maligna.";
+        } else if (ctGray && petPositive) {
+          consensus.ctPet = `Zona grigia TC + PET positiva (${state.ct}/8)`;
+          consensus.ctPetNote = "La PET viene usata per risolvere i casi TC 3-4 segni verso malignita.";
+        } else if (ctGray && petNegative) {
+          consensus.ctPet = `Zona grigia TC + PET negativa (${state.ct}/8)`;
+          consensus.ctPetNote = "Nel paper valori PET sotto cutoff aiutano a riclassificare i casi grigi verso benignita.";
+        } else if (ctGray) {
+          consensus.ctPet = `Zona grigia TC (${state.ct}/8)`;
+          consensus.ctPetNote = "Servono PET/TC o integrazione con CMR per aumentare la confidenza.";
+        } else if (ctPetDiscordant) {
+          consensus.ctPet = `Discordanza TC/PET (${state.ct}/8)`;
+          consensus.ctPetNote = "TC <=2 segni ma PET positiva: combinazione non equivalente all'algoritmo principale del paper.";
+        } else {
+          consensus.ctPet = `TC a basso sospetto (${state.ct}/8)`;
+          consensus.ctPetNote = "Due o meno segni TC: nel paper escludeva malignita nel campione studiato.";
+        }
+      }
+
+      if (echoPositive) evidence.push(`Ecocardiografia positiva: DEM Score ${state.dem}/9 (${echoLabels.join(", ")}).`);
+      if (echoCountPositive) evidence.push(`Check-list eco non pesata positiva: ${state.echoCount}/6 feature di malignita.`);
+      if (cmrPositive) evidence.push(`CMR positiva: CMR Mass Score ${state.cmr}/8 (${cmrLabels.join(", ")}).`);
+      if (cmrNegative && echoPositive) evidence.push("Discordanza eco-CMR: DEM positivo ma CMR Mass Score sotto cutoff.");
+      if (ctHigh) evidence.push(`TC positiva: almeno 5 segni patologici (${state.ct}/8: ${ctLabels.join(", ")}).`);
+      if (ctGray) evidence.push(`TC in zona grigia (${state.ct}/8): nel paper richiede PET/TC o integrazione multimodale.`);
+      if (ctGray && petPositive) evidence.push(`PET/TC positiva nella zona grigia TC: ${formatPetEvidence(pet)}.`);
+      if (ctGray && petNegative) evidence.push(`PET/TC sotto cutoff nella zona grigia TC: ${formatPetEvidence(pet)}.`);
+      if (ctPetDiscordant) evidence.push(`Dato discordante: TC <=2 segni ma PET/TC patologica (${formatPetEvidence(pet)}).`);
+
+      let risk = "not";
+      let title = "Decisione non valutata";
+      let subtitle = "Inserisci almeno un esame disponibile.";
+      let text = "Il sistema applica regole derivate dagli studi letti: DEM Score, CMR Mass Score e approccio TC/PET.";
+      let next = "Completare input clinico-imaging.";
+
+      if (!anyExam) {
+        risk = "not";
+      } else if (cmrPositive && echoPositive) {
+        risk = "high";
+        title = "Concordanza eco-CMR ad alto sospetto";
+        subtitle = "DEM e CMR Mass Score sono entrambi sopra cutoff.";
+        text = "La combinazione e coerente con la logica multimodale dei paper: l'eco segnala il rischio e la CMR conferma con caratterizzazione tissutale.";
+        next = "Discussione rapida in Heart Team; completare staging se contesto oncologico; valutare biopsia/chirurgia se utile alla gestione.";
+      } else if (cmrPositive) {
+        risk = "high";
+        title = "Alto sospetto guidato da CMR";
+        subtitle = "CMR Mass Score sopra cutoff, anche se eco non positiva o non disponibile.";
+        text = "Quando disponibile, la CMR e l'esame non invasivo piu completo e nel paper supera l'ecocardiografia per accuratezza diagnostica.";
+        next = "Gestire come alto sospetto: Heart Team, staging/TC/PET se indicati, valutazione istologica o terapeutica secondo fattibilita clinica.";
+      } else if (ctPetPositive && cmrNegative) {
+        risk = "high";
+        title = "Discordanza tra metodiche avanzate";
+        subtitle = "CMR sotto cutoff ma TC/PET con criteri di alto sospetto.";
+        text = "La discordanza non va risolta con una somma di score: va rivalutata su immagini, qualita tecnica e contesto oncologico.";
+        next = "Rivedere collegialmente CMR, TC e PET; considerare Heart Team e diagnosi istologica se la decisione terapeutica dipende dalla natura della massa.";
+      } else if (ctPetPositive) {
+        risk = "high";
+        title = "Alto sospetto guidato da TC/PET";
+        subtitle = "Percorso TC/PET positivo secondo algoritmo del paper.";
+        text = "In assenza di CMR conclusiva o disponibile, TC e PET/TC forniscono evidenza anatomica e metabolica complementare.";
+        next = "Completare staging e discutere in Heart Team; considerare CMR se fattibile e utile per caratterizzazione locale o planning.";
+      } else if (echoPositive && cmrNegative) {
+        risk = "mid";
+        title = "Discordanza eco-CMR";
+        subtitle = "Eco sopra cutoff, CMR sotto cutoff.";
+        text = "La CMR riduce il sospetto ma non cancella automaticamente il segnale ecocardiografico: nei paper le metodiche vengono integrate e confrontate.";
+        next = "Rivalutare qualita delle immagini e feature discordanti; considerare TC/PET o follow-up se il sospetto clinico resta elevato.";
+      } else if (echoPositive) {
+        risk = "mid";
+        title = "Sospetto ecocardiografico significativo";
+        subtitle = "DEM Score sopra cutoff: indicato imaging di secondo livello.";
+        text = "L'ecocardiografia e il primo filtro: se positiva, la logica dei paper porta a CMR per caratterizzazione tissutale e conferma.";
+        next = "Eseguire CMR cardiaca se disponibile. Se CMR non fattibile, considerare TC cardiaca; PET/TC se TC e in zona grigia o se contesto oncologico.";
+      } else if (ctGray && !petAvailable) {
+        risk = "mid";
+        title = "Zona grigia TC";
+        subtitle = "TC con 3-4 segni e PET non inserita.";
+        text = "Nel paper TC 3-4 segni non discrimina in modo sufficiente; la PET/TC aggiunge informazione metabolica.";
+        next = "Integrare con PET/TC 18F-FDG oppure rivalutare con CMR, in base a disponibilita e contesto clinico.";
+      } else if (ctPetDiscordant) {
+        risk = "mid";
+        title = "Risultato TC/PET discordante";
+        subtitle = "PET patologica con basso numero di segni TC.";
+        text = "Questa combinazione va rivalutata nel contesto clinico e non va trattata come classificazione automatica del paper.";
+        next = "Rivedere qualita/preparazione PET, confrontare con CMR/TC e discutere in Heart Team se il sospetto clinico resta elevato.";
+      } else {
+        risk = "low";
+        title = "Basso sospetto con dati disponibili";
+        subtitle = cmrAvailable ? "CMR sotto cutoff e nessuna evidenza avanzata positiva." : "Nessun cutoff di malignita superato.";
+        text = "Le feature disponibili non raggiungono le soglie proposte dagli studi. La conclusione resta dipendente da qualita dell'esame e contesto clinico.";
+        next = "Se il quadro clinico e coerente con benignita/trombo, gestire secondo sospetto clinico. Considerare follow-up o imaging avanzato se referto non conclusivo.";
+      }
+
+      consensus.integrated = title;
+      consensus.integratedNote = subtitle;
+
+      $("#consensusEcho").textContent = consensus.echo;
+      $("#consensusEchoNote").textContent = consensus.echoNote;
+      $("#consensusCmr").textContent = consensus.cmr;
+      $("#consensusCmrNote").textContent = consensus.cmrNote;
+      $("#consensusCtPet").textContent = consensus.ctPet;
+      $("#consensusCtPetNote").textContent = consensus.ctPetNote;
+      $("#consensusIntegrated").textContent = consensus.integrated;
+      $("#consensusIntegratedNote").textContent = consensus.integratedNote;
+
+      $("#decisionCard").className = `card decision ${risk === "not" ? "" : risk}`;
+      $("#decisionTitle").textContent = title;
+      $("#decisionSubtitle").textContent = subtitle;
+      $("#decisionText").textContent = text;
+      $("#nextStep").textContent = next;
+      $("#decisionBadge").textContent = risk === "not" ? "POC" : risk === "high" ? "Alta priorita" : risk === "mid" ? "Approfondire" : "Basso rischio";
+      $("#decisionBadge").className = "pill" + (risk === "not" ? "" : ` ${risk}`);
+
+      $("#heroRisk").textContent = title.replace("Decisione non valutata", "Non valutato");
+      $("#heroSubtitle").textContent = subtitle;
+
+      const list = $("#evidenceList");
+      list.innerHTML = "";
+      const finalEvidence = evidence.length ? evidence : ["Nessuna red flag selezionata o nessun esame avanzato disponibile."];
+      finalEvidence.forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+      });
+
+      state.evidence = finalEvidence;
+      state.consensus = consensus;
+      state.decision = { title, subtitle, text, next, risk };
+    }
+
+    function formatPetEvidence(pet) {
+      const parts = [];
+      if (pet.suv !== null) parts.push(`SUVmax ${pet.suv}${pet.suv >= 4.9 ? " >= 4.9" : ""}`);
+      if (pet.mtv !== null) parts.push(`MTV ${pet.mtv}${pet.mtv >= 8.2 ? " >= 8.2" : ""}`);
+      if (pet.tlg !== null) parts.push(`TLG ${pet.tlg}${pet.tlg >= 29 ? " >= 29" : ""}`);
+      return parts.length ? parts.join(", ") : "nessun valore numerico inserito";
+    }
+
+    function updateReport(echoAvailable, cmrAvailable, ctpetAvailable, pet) {
+      const caseId = $("#caseId").value.trim() || "non specificato";
+      const context = $("#clinicalContext").value;
+      const location = $("#location").value;
+      const note = $("#freeNote").value.trim() || "-";
+
+      const echoLabels = checkedLabels('input[data-score="dem"]:checked');
+      const cmrLabels = checkedLabels('input[data-score="cmr"]:checked');
+      const ctLabels = checkedLabels('input[data-score="ct"]:checked');
+
+      const report = [
+        "CARDIAC MASS DECISION SUPPORT - POC",
+        "",
+        `Caso: ${caseId}`,
+        `Contesto: ${context}`,
+        `Localizzazione prevalente: ${location}`,
+        `Nota: ${note}`,
+        "",
+        "SCORE E FEATURE",
+        echoAvailable
+          ? `Ecocardiografia / DEM Score: ${state.dem}/9; count non pesato ${state.echoCount}/6; probabilita DEM stimata ${demProbability[state.dem]}%. Feature: ${echoLabels.join(", ") || "nessuna"}.`
+          : "Ecocardiografia / DEM Score: non disponibile.",
+        cmrAvailable
+          ? `CMR Mass Score: ${state.cmr}/8. Feature: ${cmrLabels.join(", ") || "nessuna"}.`
+          : "CMR Mass Score: non disponibile.",
+        ctpetAvailable
+          ? `TC/PET: CT signs ${state.ct}/8; PET patologici ${state.petAbnormal}/3; ${formatPetEvidence(pet)}. Feature TC: ${ctLabels.join(", ") || "nessuna"}.`
+          : "TC/PET: non disponibile.",
+        "",
+        "CONSENSO MULTIMODALE",
+        `Eco: ${state.consensus?.echo || "non valutata"}. ${state.consensus?.echoNote || ""}`,
+        `CMR: ${state.consensus?.cmr || "non valutata"}. ${state.consensus?.cmrNote || ""}`,
+        `TC/PET: ${state.consensus?.ctPet || "non valutata"}. ${state.consensus?.ctPetNote || ""}`,
+        `Integrato: ${state.consensus?.integrated || "non valutato"}. ${state.consensus?.integratedNote || ""}`,
+        "",
+        "INTERPRETAZIONE",
+        `${state.decision?.title || "Decisione non valutata"}. ${state.decision?.text || ""}`,
+        "",
+        "EVIDENZE",
+        ...(state.evidence || []).map((item) => `- ${item}`),
+        "",
+        "NEXT STEP SUGGERITO",
+        state.decision?.next || "Completare input clinico-imaging.",
+        "",
+        "Nota: prototipo dimostrativo. Non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida."
+      ].join("\n");
+
+      $("#report").value = report;
+    }
+
+    function resetForm() {
+      $$('input[type="checkbox"]').forEach((input) => {
+        input.checked = input.id === "echoAvailable";
+      });
+      $$('input[type="text"], input[type="number"]').forEach((input) => {
+        input.value = "";
+      });
+      $("#clinicalContext").selectedIndex = 0;
+      $("#location").selectedIndex = 0;
+      updateScores();
+    }
+
+    async function copyReport() {
+      const report = $("#report").value;
+      try {
+        await navigator.clipboard.writeText(report);
+        $("#copyReport").textContent = "Copiato";
+        setTimeout(() => $("#copyReport").textContent = "Copia report", 1200);
+      } catch (error) {
+        $("#report").select();
+        document.execCommand("copy");
+      }
+    }
+
+    $$('input, select').forEach((element) => {
+      element.addEventListener("input", updateScores);
+      element.addEventListener("change", updateScores);
+    });
+
+    $("#resetForm").addEventListener("click", resetForm);
+    $("#copyReport").addEventListener("click", copyReport);
+
+    updateScores();
+  </script>
+</body>
+</html>
