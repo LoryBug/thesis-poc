@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
-import { calculateCmrScore, calculateCtSigns, calculateDemScore, evaluatePet } from '@cm-dss/core'
+import { buildTraceability, calculateCmrScore, calculateCtSigns, calculateDemScore, evaluatePet } from '@cm-dss/core'
 import { useHistoryStore } from '../stores/history.store'
 import { useUiStore } from '../stores/ui.store'
 import { buildClinicalReport } from '../lib/report'
 import { ConsensusPanel } from '../components/ConsensusPanel'
 import { ReportCard } from '../components/ReportCard'
+import { TraceabilityPanel } from '../components/TraceabilityPanel'
 
 export function CaseDetail() {
   const caseId = useUiStore((s) => s.selectedCaseId)
@@ -33,6 +34,7 @@ export function CaseDetail() {
   const ctScore = data.ctpetAvailable && data.ct ? calculateCtSigns(data.ct) : null
   const petDataEntered = data.ctpetAvailable && data.pet && Object.values(data.pet).some((value) => value !== null)
   const petPositive = petDataEntered && data.pet ? evaluatePet(data.pet) : null
+  const traceability = buildTraceability(data, savedCase.result)
   const report = buildClinicalReport({
     metadata: savedCase.metadata,
     result: savedCase.result,
@@ -40,6 +42,7 @@ export function CaseDetail() {
     cmrScore,
     ctScore,
     petPositive,
+    traceability,
   })
 
   return (
@@ -81,6 +84,7 @@ export function CaseDetail() {
           </article>
 
           <ConsensusPanel result={savedCase.result} />
+          <TraceabilityPanel traceability={traceability} />
 
           <details className="cm-card">
             <summary className="font-bold cursor-pointer" style={{ color: 'var(--cm-primary)' }}>Original imaging data</summary>

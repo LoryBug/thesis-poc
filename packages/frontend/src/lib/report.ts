@@ -1,5 +1,5 @@
 import { demProbability } from '@cm-dss/core'
-import type { ConsensusResult } from '@cm-dss/core'
+import type { ClinicalTraceability, ConsensusResult, TraceNode } from '@cm-dss/core'
 import type { CaseMetadata } from './storage'
 
 const fallbackMetadata: CaseMetadata = {
@@ -16,7 +16,10 @@ export interface ClinicalReportInput {
   cmrScore: number | null
   ctScore: number | null
   petPositive: boolean | null
+  traceability?: ClinicalTraceability
 }
+
+const reportEvidenceKinds = new Set<TraceNode['kind']>(['feature', 'score', 'cutoff', 'finding'])
 
 export function buildClinicalReport({
   metadata = fallbackMetadata,
@@ -25,7 +28,10 @@ export function buildClinicalReport({
   cmrScore,
   ctScore,
   petPositive,
+  traceability,
 }: ClinicalReportInput) {
+  const traceEvidence = traceability?.nodes.filter((node) => reportEvidenceKinds.has(node.kind)) ?? []
+
   return [
     'CARDIAC MASS DECISION SUPPORT - POC',
     '',
@@ -56,6 +62,19 @@ export function buildClinicalReport({
     '',
     'EVIDENCE',
     ...(result.evidence.length ? result.evidence : ['No red flag selected or no advanced imaging available.']).map((item) => `- ${item}`),
+    '',
+    'CLINICAL TRACEABILITY',
+    traceability ? `Summary: ${traceability.summary}` : 'Traceability: not available.',
+    ...(traceability ? [
+      'Activated rules:',
+      ...traceability.activatedRules.map((rule) => `- ${rule}`),
+      'Evidence chain:',
+      ...traceEvidence.map((node) => `- ${node.label}${node.detail ? `: ${node.detail}` : ''}`),
+      'Missing data:',
+      ...(traceability.missingData.length ? traceability.missingData.map((item) => `- ${item}`) : ['- None']),
+      'Sources:',
+      ...traceability.sources.map((source) => `- ${source.citation}`),
+    ] : []),
     '',
     'SUGGESTED NEXT STEP',
     result.nextStep,

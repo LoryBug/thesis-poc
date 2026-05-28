@@ -31,6 +31,7 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByText('Echocardiography - DEM Score')).toBeVisible()
     await expect(page.getByText('Cardiac magnetic resonance - CMR Mass Score')).toBeVisible()
     await expect(page.getByText('Cardiac CT and 18F-FDG PET/CT')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Save evaluation' })).toBeVisible()
   })
 
@@ -65,6 +66,8 @@ test.describe('Complete clinical workflow', () => {
 
     // Live result -> both echo and CMR are positive.
     await expect(page.getByRole('heading', { name: 'Concordant high-suspicion echo-CMR' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
+    await expect(page.getByText('Activated rules', { exact: true })).toBeVisible()
     await expect(page.getByText('Save evaluation')).toBeVisible()
 
     // Save -> Dashboard with saved case.
@@ -90,6 +93,7 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByText('Explanation')).toBeVisible()
     await expect(page.getByText('Next step', { exact: true })).toBeVisible()
     await expect(page.getByText('Evidence', { exact: true }).first()).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
     await page.getByText('Original imaging data').click()
     await expect(page.locator('pre')).toBeVisible()
   })

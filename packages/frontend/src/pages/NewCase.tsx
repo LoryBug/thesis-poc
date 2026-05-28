@@ -3,6 +3,7 @@ import {
   calculateCmrScore,
   calculateCtSigns,
   calculateDemScore,
+  buildTraceability,
   evaluateConsensus,
   evaluatePet,
 } from '@cm-dss/core'
@@ -17,6 +18,7 @@ import { ConsensusPanel } from '../components/ConsensusPanel'
 import { CaseHero } from '../components/CaseHero'
 import { CaseMetadataCard } from '../components/CaseMetadataCard'
 import { ReportCard } from '../components/ReportCard'
+import { TraceabilityPanel } from '../components/TraceabilityPanel'
 
 export function NewCase() {
   const store = useCaseStore()
@@ -36,7 +38,8 @@ export function NewCase() {
   const petDataEntered = store.ctpetAvailable && Object.values(store.pet).some((value) => value !== null)
   const petPositive = petDataEntered ? evaluatePet(store.pet) : null
   const metadata = store.toCaseMetadata()
-  const report = buildClinicalReport({ metadata, result, demScore, cmrScore, ctScore, petPositive })
+  const traceability = buildTraceability(imagingData, result)
+  const report = buildClinicalReport({ metadata, result, demScore, cmrScore, ctScore, petPositive, traceability })
 
   function handleSave() {
     if (!hasAnyExam) return
@@ -68,6 +71,7 @@ export function NewCase() {
 
         <aside className="cm-sidebar">
           <ConsensusPanel result={result} />
+          <TraceabilityPanel traceability={traceability} />
 
           <article className="cm-card">
             <div className="cm-card-header">
