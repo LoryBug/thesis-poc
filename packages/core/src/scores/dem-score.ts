@@ -13,8 +13,8 @@ export const DEM_MAX = 9
 export const DEM_CUTOFF = 3
 
 export function calculateDemScore(features: EchoFeatures): number {
-  return Object.entries(features).reduce(
-    (sum, [key, value]) => sum + (value ? DEM_WEIGHTS[key as keyof EchoFeatures] : 0),
+  return Object.entries(DEM_WEIGHTS).reduce(
+    (sum, [key, weight]) => sum + (features[key as keyof EchoFeatures] ? weight : 0),
     0,
   )
 }

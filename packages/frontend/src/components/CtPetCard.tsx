@@ -31,6 +31,12 @@ const levelRisk: Record<CtPetLevel, 'high' | 'mid' | 'low' | 'not'> = {
   unavailable: 'not',
 }
 
+function parsePetInput(value: string) {
+  if (value === '') return null
+  const parsed = Number(value)
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null
+}
+
 export function CtPetCard() {
   const ct = useCaseStore((s) => s.ct)
   const pet = useCaseStore((s) => s.pet)
@@ -92,7 +98,7 @@ export function CtPetCard() {
                   step="0.1"
                   min="0"
                   value={pet[key] ?? ''}
-                  onChange={(event) => setPetParam(key, event.target.value === '' ? null : Number(event.target.value))}
+                  onChange={(event) => setPetParam(key, parsePetInput(event.target.value))}
                   placeholder={hint}
                 />
               </label>

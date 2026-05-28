@@ -32,7 +32,7 @@ export function CaseDetail() {
   const demScore = data.echoAvailable && data.echo ? calculateDemScore(data.echo) : null
   const cmrScore = data.cmrAvailable && data.cmr ? calculateCmrScore(data.cmr) : null
   const ctScore = data.ctpetAvailable && data.ct ? calculateCtSigns(data.ct) : null
-  const petDataEntered = data.ctpetAvailable && data.pet && Object.values(data.pet).some((value) => value !== null)
+  const petDataEntered = Boolean(data.ctpetAvailable && data.pet && Object.values(data.pet).some((value) => value !== null))
   const petPositive = petDataEntered && data.pet ? evaluatePet(data.pet) : null
   const traceability = buildTraceability(data, savedCase.result)
   const report = buildClinicalReport({

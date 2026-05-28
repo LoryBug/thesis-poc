@@ -13,14 +13,15 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
   const demScore = data.echoAvailable && data.echo !== null ? calculateDemScore(data.echo) : null
   const cmrScore = data.cmrAvailable && data.cmr !== null ? calculateCmrScore(data.cmr) : null
 
-  const petDataEntered = data.pet !== null && (data.pet.suvMax !== null || data.pet.mtv !== null || data.pet.tlg !== null)
+  const pet = data.pet
+  const petDataEntered = pet !== null && (pet.suvMax !== null || pet.mtv !== null || pet.tlg !== null)
   const ctSigns = data.ctpetAvailable && data.ct !== null ? calculateCtSigns(data.ct) : 0
-  const petPositive = petDataEntered ? evaluatePet(data.pet!) : false
+  const petPositive = pet !== null && petDataEntered ? evaluatePet(pet) : false
   const ctLevel = data.ctpetAvailable ? ctPetLevel(ctSigns, petPositive, petDataEntered) : 'unavailable'
   const ctHigh = ctLevel === 'high'
   const ctGray = ctLevel === 'gray'
   const ctDiscordant = ctLevel === 'discordant'
-  const ctUnavailable = ctLevel === 'unavailable'
+  const ctGrayWithoutPet = ctLevel === 'unavailable' && ctSigns >= 3
 
   const evidence: string[] = []
 
@@ -136,7 +137,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     nextStep = 'Perform cardiac CMR if available. If CMR is not feasible, consider cardiac CT; PET/CT if CT is in the gray zone or in an oncology context.'
     integratedStatus = title
     integratedNote = subtitle
-  } else if (ctUnavailable && ctSigns >= 3) {
+  } else if (ctGrayWithoutPet) {
     risk = 'mid'
     title = 'Cardiac CT gray zone'
     subtitle = 'CT with 3-4 signs and PET unavailable.'

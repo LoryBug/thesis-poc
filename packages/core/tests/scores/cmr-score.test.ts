@@ -47,6 +47,11 @@ describe('CMR Mass Score', () => {
       calculateCmrScore(features)
       expect(features).toEqual(original)
     })
+
+    it('ignores unexpected runtime keys', () => {
+      const features = { ...cmrPartial(['infiltration']), unexpected: true }
+      expect(calculateCmrScore(features)).toBe(2)
+    })
   })
 
   describe('CMR_CUTOFF', () => {

@@ -5,8 +5,19 @@ export const SUV_CUTOFF = 4.9
 export const MTV_CUTOFF = 8.2
 export const TLG_CUTOFF = 29
 
+const CT_FEATURE_KEYS: (keyof CtFeatures)[] = [
+  'irregularMargins',
+  'pericardialEffusion',
+  'invasion',
+  'solidNature',
+  'diameterOver30mm',
+  'contrastUptake',
+  'preContrastSuspicious',
+  'calcifications',
+]
+
 export function calculateCtSigns(features: CtFeatures): number {
-  return Object.values(features).filter(Boolean).length
+  return CT_FEATURE_KEYS.filter((key) => features[key]).length
 }
 
 export function evaluatePet(params: PetParameters): boolean {

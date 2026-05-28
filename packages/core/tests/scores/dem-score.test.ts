@@ -47,6 +47,11 @@ describe('DEM Score', () => {
       calculateDemScore(features)
       expect(features).toEqual(original)
     })
+
+    it('ignores unexpected runtime keys', () => {
+      const features = { ...echoPartial(['infiltration']), unexpected: true }
+      expect(calculateDemScore(features)).toBe(2)
+    })
   })
 
   describe('demProbability', () => {

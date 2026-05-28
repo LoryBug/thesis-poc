@@ -13,8 +13,8 @@ export const CMR_MAX = 8
 export const CMR_CUTOFF = 5
 
 export function calculateCmrScore(features: CmrFeatures): number {
-  return Object.entries(features).reduce(
-    (sum, [key, value]) => sum + (value ? CMR_WEIGHTS[key as keyof CmrFeatures] : 0),
+  return Object.entries(CMR_WEIGHTS).reduce(
+    (sum, [key, weight]) => sum + (features[key as keyof CmrFeatures] ? weight : 0),
     0,
   )
 }

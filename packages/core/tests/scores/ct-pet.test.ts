@@ -24,6 +24,11 @@ describe('CT/PET scoring', () => {
     it('returns 5 for 5 CT signs', () => {
       expect(calculateCtSigns(ctPartial(5))).toBe(5)
     })
+
+    it('ignores unexpected runtime keys', () => {
+      const features = { ...ctPartial(1), unexpected: true }
+      expect(calculateCtSigns(features)).toBe(1)
+    })
   })
 
   describe('evaluatePet', () => {
