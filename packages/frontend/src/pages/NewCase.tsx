@@ -19,6 +19,7 @@ import { CaseHero } from '../components/CaseHero'
 import { CaseMetadataCard } from '../components/CaseMetadataCard'
 import { ReportCard } from '../components/ReportCard'
 import { TraceabilityPanel } from '../components/TraceabilityPanel'
+import { SyntheticCaseLoader } from '../components/SyntheticCaseLoader'
 
 export function NewCase() {
   const store = useCaseStore()
@@ -72,6 +73,7 @@ export function NewCase() {
         <aside className="cm-sidebar">
           <ConsensusPanel result={result} />
           <TraceabilityPanel traceability={traceability} />
+          <SyntheticCaseLoader />
 
           <article className="cm-card">
             <div className="cm-card-header">

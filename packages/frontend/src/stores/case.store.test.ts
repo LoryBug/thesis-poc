@@ -130,4 +130,27 @@ describe('case.store', () => {
     expect(s.ct.solidNature).toBe(true)
     expect(s.pet.suvMax).toBe(6.1)
   })
+
+  it('loadFrom can load case metadata with imaging data', () => {
+    useCaseStore.getState().loadFrom({
+      echoAvailable: true,
+      echo: { infiltration: true, polylobated: false, pericardialEffusion: false, sessile: false, inhomogeneity: false, nonLeftLocation: false },
+      cmrAvailable: false,
+      cmr: null,
+      ctpetAvailable: false,
+      ct: null,
+      pet: null,
+    }, {
+      caseId: 'GC-02',
+      clinicalContext: 'Suspected cardiac mass',
+      location: 'Unspecified',
+      note: 'Echo-positive only',
+    })
+
+    const s = useCaseStore.getState()
+    expect(s.metadata.caseId).toBe('GC-02')
+    expect(s.metadata.note).toBe('Echo-positive only')
+    expect(s.echoAvailable).toBe(true)
+    expect(s.echo.infiltration).toBe(true)
+  })
 })

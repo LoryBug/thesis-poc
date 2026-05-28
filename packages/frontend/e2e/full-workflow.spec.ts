@@ -32,7 +32,20 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByText('Cardiac magnetic resonance - CMR Mass Score')).toBeVisible()
     await expect(page.getByText('Cardiac CT and 18F-FDG PET/CT')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Synthetic Case Loader' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Save evaluation' })).toBeVisible()
+  })
+
+  test('Loads a synthetic golden case into the evaluation form', async ({ page }) => {
+    await newCaseBtn(page).click()
+
+    await page.getByLabel('Golden case').selectOption('GC-04')
+    await page.getByRole('button', { name: 'Load synthetic case' }).click()
+
+    await expect(page.getByLabel('Case / patient ID')).toHaveValue('GC-04')
+    await expect(scoreNumber(cmrSection(page), '5/8')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'CMR-driven high suspicion' })).toBeVisible()
+    await expect(page.getByText('CMR Mass Score above cutoff', { exact: true }).first()).toBeVisible()
   })
 
   test('Complete flow: fill, evaluate, save, and verify', async ({ page }) => {

@@ -58,7 +58,7 @@ interface CaseState {
   setCtFeature: (key: keyof CtFeatures, value: boolean) => void
   setPetParam: (key: keyof PetParameters, value: number | null) => void
   setMetadataField: <K extends keyof CaseMetadata>(key: K, value: CaseMetadata[K]) => void
-  loadFrom: (data: ImagingData) => void
+  loadFrom: (data: ImagingData, metadata?: CaseMetadata) => void
   toImagingData: () => ImagingData
   toCaseMetadata: () => CaseMetadata
   reset: () => void
@@ -89,8 +89,9 @@ export const useCaseStore = create<CaseState>((set, get) => ({
   setMetadataField: (key, value) =>
     set((s) => ({ metadata: { ...s.metadata, [key]: value } })),
 
-  loadFrom: (data) =>
+  loadFrom: (data, metadata) =>
     set({
+      ...(metadata ? { metadata: { ...metadata } } : {}),
       echoAvailable: data.echoAvailable,
       cmrAvailable: data.cmrAvailable,
       ctpetAvailable: data.ctpetAvailable,
