@@ -21,6 +21,13 @@ describe('case.store', () => {
     expect(s.ctpetAvailable).toBe(false)
   })
 
+  it('inizia con metadata clinico predefinito', () => {
+    const s = useCaseStore.getState()
+    expect(s.metadata.caseId).toBe('')
+    expect(s.metadata.clinicalContext).toBe('Sospetta massa cardiaca')
+    expect(s.metadata.location).toBe('Non specificata')
+  })
+
   it('toImagingData restituisce echo null quando echo non disponibile', () => {
     useCaseStore.getState().setEchoAvailable(false)
     const data = useCaseStore.getState().toImagingData()
@@ -62,6 +69,7 @@ describe('case.store', () => {
 
   it('reset riporta allo stato iniziale', () => {
     const store = useCaseStore.getState()
+    store.setMetadataField('caseId', 'CM-001')
     store.setEchoAvailable(true)
     store.setEchoFeature('infiltration', true)
     store.setCmrAvailable(true)
@@ -73,8 +81,20 @@ describe('case.store', () => {
     expect(s.echoAvailable).toBe(false)
     expect(s.cmrAvailable).toBe(false)
     expect(s.ctpetAvailable).toBe(false)
+    expect(s.metadata.caseId).toBe('')
     expect(s.echo.infiltration).toBe(false)
     expect(s.pet.suvMax).toBeNull()
+  })
+
+  it('toCaseMetadata restituisce una copia dei metadata', () => {
+    const store = useCaseStore.getState()
+    store.setMetadataField('caseId', 'CM-001')
+    store.setMetadataField('note', 'massa atriale destra')
+    const metadata = store.toCaseMetadata()
+
+    expect(metadata.caseId).toBe('CM-001')
+    expect(metadata.note).toBe('massa atriale destra')
+    expect(metadata).not.toBe(useCaseStore.getState().metadata)
   })
 
   it('setPetParam aggiorna il parametro corretto', () => {

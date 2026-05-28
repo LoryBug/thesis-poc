@@ -1,6 +1,12 @@
-import { useState, useEffect } from 'react'
-import { evaluateConsensus } from '@cm-dss/core'
-import type { ImagingData, ConsensusResult } from '@cm-dss/core'
+import { useEffect } from 'react'
+import {
+  calculateCmrScore,
+  calculateCtSigns,
+  calculateDemScore,
+  evaluateConsensus,
+  evaluatePet,
+} from '@cm-dss/core'
+import { buildClinicalReport } from '../lib/report'
 import { useCaseStore } from '../stores/case.store'
 import { useHistoryStore } from '../stores/history.store'
 import { useUiStore } from '../stores/ui.store'
@@ -8,31 +14,37 @@ import { EchoCard } from '../components/EchoCard'
 import { CmrCard } from '../components/CmrCard'
 import { CtPetCard } from '../components/CtPetCard'
 import { ConsensusPanel } from '../components/ConsensusPanel'
+import { CaseHero } from '../components/CaseHero'
+import { CaseMetadataCard } from '../components/CaseMetadataCard'
+import { ReportCard } from '../components/ReportCard'
 
 export function NewCase() {
-  const [result, setResult] = useState<ConsensusResult | null>(null)
   const store = useCaseStore()
   const addCase = useHistoryStore((s) => s.addCase)
   const navigate = useUiStore((s) => s.navigate)
 
   useEffect(() => {
     store.reset()
-    setResult(null)
   }, [])
 
-  function handleRun() {
-    const data: ImagingData = store.toImagingData()
-    const res = evaluateConsensus(data)
-    setResult(res)
-  }
+  const imagingData = store.toImagingData()
+  const result = evaluateConsensus(imagingData)
+  const hasAnyExam = store.echoAvailable || store.cmrAvailable || store.ctpetAvailable
+  const demScore = store.echoAvailable ? calculateDemScore(store.echo) : null
+  const cmrScore = store.cmrAvailable ? calculateCmrScore(store.cmr) : null
+  const ctScore = store.ctpetAvailable ? calculateCtSigns(store.ct) : null
+  const petDataEntered = store.ctpetAvailable && Object.values(store.pet).some((value) => value !== null)
+  const petPositive = petDataEntered ? evaluatePet(store.pet) : null
+  const metadata = store.toCaseMetadata()
+  const report = buildClinicalReport({ metadata, result, demScore, cmrScore, ctScore, petPositive })
 
   function handleSave() {
-    if (!result) return
-    const data = store.toImagingData()
+    if (!hasAnyExam) return
     addCase({
       id: crypto.randomUUID(),
       date: new Date().toISOString(),
-      imagingData: data,
+      metadata,
+      imagingData,
       result,
     })
     navigate('home')
@@ -40,65 +52,46 @@ export function NewCase() {
 
   function handleReset() {
     store.reset()
-    setResult(null)
   }
 
   return (
-    <div className="space-y-6 pb-8" style={{ maxWidth: '1320px', margin: '0 auto' }}>
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#0f223d' }}>Nuova Valutazione</h2>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="px-3 py-1.5 text-sm font-semibold rounded-xl cursor-pointer"
-            style={{ color: '#607089', border: '1px solid rgba(217,226,239,0.9)' }}
-          >
-            Reset
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('home')}
-            className="px-3 py-1.5 text-sm font-semibold rounded-xl cursor-pointer"
-            style={{ color: '#245b94', border: '1px solid rgba(217,226,239,0.9)' }}
-          >
-            Indietro
-          </button>
+    <div className="cm-page">
+      <CaseHero result={result} demScore={demScore} cmrScore={cmrScore} ctScore={ctScore} />
+
+      <section className="cm-layout">
+        <div className="cm-stack">
+          <CaseMetadataCard />
+          <EchoCard />
+          <CmrCard />
+          <CtPetCard />
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-6" style={{ maxWidth: '860px' }}>
-        <EchoCard />
-        <CmrCard />
-        <CtPetCard />
-      </div>
-
-      <div className="flex justify-left" style={{ maxWidth: '860px' }}>
-        <button
-          type="button"
-          onClick={handleRun}
-          className="px-8 py-3 font-semibold text-white rounded-xl cursor-pointer transition-opacity"
-          style={{ background: 'linear-gradient(135deg, #245b94, #173b68)' }}
-        >
-          Esegui Valutazione
-        </button>
-      </div>
-
-      {result && (
-        <div className="space-y-4" style={{ maxWidth: '860px' }}>
+        <aside className="cm-sidebar">
           <ConsensusPanel result={result} />
-          <div className="flex justify-left gap-3">
-            <button
-              type="button"
-              onClick={handleSave}
-              className="px-6 py-2 font-semibold text-white rounded-xl cursor-pointer"
-              style={{ background: '#16784c' }}
-            >
-              Salva valutazione
-            </button>
-          </div>
-        </div>
-      )}
+
+          <article className="cm-card">
+            <div className="cm-card-header">
+              <div className="cm-card-title">
+                <h2>Azioni</h2>
+                <p>La valutazione è aggiornata in tempo reale. Salva solo quando vuoi archiviare il caso.</p>
+              </div>
+            </div>
+            <div className="cm-actions">
+              <button type="button" className="cm-button" onClick={handleSave} disabled={!hasAnyExam}>Salva valutazione</button>
+              <button type="button" className="cm-button secondary" onClick={() => navigate('home')}>Dashboard</button>
+            </div>
+          </article>
+
+          <ReportCard report={report} onReset={handleReset} />
+
+          <article className="cm-card cm-disclaimer">
+            <strong>Nota POC</strong><br />
+            Questo prototipo è solo dimostrativo e non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida. Le soglie sono derivate dagli articoli forniti.
+          </article>
+        </aside>
+      </section>
+
+      <p className="cm-footer-note">Prototype React/TypeScript - Masse cardiache, score diagnostici e supporto decisionale.</p>
     </div>
   )
 }

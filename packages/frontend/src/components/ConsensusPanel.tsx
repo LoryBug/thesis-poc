@@ -1,59 +1,61 @@
 import type { ConsensusResult } from '@cm-dss/core'
-import { DecisionCard } from './DecisionCard'
+import { RiskPill } from './ui/RiskPill'
 
 interface Props {
   result: ConsensusResult
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-[18px] p-5 border" style={{ background: 'rgba(255,255,255,0.88)', borderColor: 'rgba(217,226,239,0.9)', boxShadow: '0 18px 40px rgba(23,59,104,0.12)' }}>
-      <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#607089' }}>{title}</p>
-      {typeof children === 'string' ? (
-        <p className="text-sm leading-relaxed" style={{ color: '#172033' }}>{children}</p>
-      ) : (
-        children
-      )}
-    </div>
-  )
+const badgeByRisk: Record<ConsensusResult['risk'], string> = {
+  high: 'Alta priorità',
+  mid: 'Approfondire',
+  low: 'Basso rischio',
+  not: 'POC',
 }
 
 export function ConsensusPanel({ result }: Props) {
+  const evidence = result.evidence.length > 0
+    ? result.evidence
+    : ['Nessuna evidenza generata.']
+
   return (
-    <div className="space-y-4">
-      <DecisionCard result={result} />
+    <article className={`cm-card cm-decision ${result.risk === 'not' ? '' : result.risk}`}>
+      <div className="cm-card-header">
+        <div className="cm-card-title">
+          <h2 className="cm-decision-title">{result.title}</h2>
+          <p>{result.subtitle}</p>
+        </div>
+        <RiskPill level={result.risk}>{badgeByRisk[result.risk]}</RiskPill>
+      </div>
 
-      <Section title="Spiegazione">
-        {result.explanation}
-      </Section>
+      <p className="mt-1 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Spiegazione</p>
+      <p className="cm-decision-text">{result.explanation}</p>
 
-      <Section title="Prossimo passo">
-        {result.nextStep}
-      </Section>
-
-      <Section title="Evidenze">
-        {result.evidence.length > 0 ? (
-          <ul className="list-disc list-inside text-sm space-y-1" style={{ color: '#172033' }}>
-            {result.evidence.map((e, i) => <li key={i}>{e}</li>)}
-          </ul>
-        ) : (
-          <p className="text-sm italic" style={{ color: '#607089' }}>Nessuna evidenza generata.</p>
-        )}
-      </Section>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="cm-consensus-box" aria-label="Consenso multimodale">
         {([
-          ['Ecocardiografia', result.modalities.echo],
+          ['Eco', result.modalities.echo],
           ['CMR', result.modalities.cmr],
           ['TC/PET', result.modalities.ctPet],
-        ] as const).map(([label, mod]) => (
-          <div key={label} className="rounded-[14px] p-4 border" style={{ background: 'rgba(255,255,255,0.88)', borderColor: 'rgba(217,226,239,0.9)' }}>
-            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#607089' }}>{label}</p>
-            <p className="text-xs font-semibold mb-0.5" style={{ color: '#173b68' }}>{mod.status}</p>
-            <p className="text-xs" style={{ color: '#607089' }}>{mod.note}</p>
+          ['Integrato', result.integrated],
+        ] as const).map(([label, modality]) => (
+          <div key={label} className="cm-consensus-row">
+            <span>{label}</span>
+            <div>
+              <strong>{modality.status}</strong>
+              <small>{modality.note}</small>
+            </div>
           </div>
         ))}
       </div>
-    </div>
+
+      <div className="cm-next-step">
+        <strong>Prossimo passo</strong>
+        <p>{result.nextStep}</p>
+      </div>
+
+      <p className="mt-4 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Evidenze</p>
+      <ul className="cm-evidence-list">
+        {evidence.map((item) => <li key={item}>{item}</li>)}
+      </ul>
+    </article>
   )
 }

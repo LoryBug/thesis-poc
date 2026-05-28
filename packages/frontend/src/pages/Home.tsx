@@ -1,12 +1,6 @@
 import { useUiStore } from '../stores/ui.store'
 import { useHistoryStore } from '../stores/history.store'
-
-const riskColors: Record<string, { bg: string; text: string }> = {
-  high: { bg: 'rgba(180,35,24,0.08)', text: '#b42318' },
-  mid: { bg: 'rgba(183,121,31,0.08)', text: '#b7791f' },
-  low: { bg: 'rgba(22,120,76,0.08)', text: '#16784c' },
-  not: { bg: 'rgba(217,226,239,0.3)', text: '#607089' },
-}
+import { RiskPill } from '../components/ui/RiskPill'
 
 export function Home() {
   const navigate = useUiStore((s) => s.navigate)
@@ -15,92 +9,74 @@ export function Home() {
   const clearAll = useHistoryStore((s) => s.clearAll)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#0f223d' }}>Dashboard</h2>
-        <div className="flex gap-2">
-          {cases.length > 0 && (
-            <button
-              type="button"
-              onClick={clearAll}
-              className="px-3 py-1.5 text-sm font-semibold rounded-xl cursor-pointer transition-opacity"
-              style={{ color: '#607089', border: '1px solid rgba(217,226,239,0.9)' }}
-            >
-              Cancella cronologia
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => navigate('new')}
-            className="px-4 py-1.5 text-sm font-semibold text-white rounded-xl cursor-pointer"
-            style={{ background: 'linear-gradient(135deg, #245b94, #173b68)' }}
-          >
-            Nuova Valutazione
-          </button>
+    <div className="cm-page">
+      <section className="cm-hero">
+        <div className="cm-hero-main">
+          <div className="cm-eyebrow">Dashboard</div>
+          <h1 className="cm-title-xl">Valutazioni salvate</h1>
+          <p className="cm-lead">Cronologia locale dei casi valutati con score multimodale e decisione integrata.</p>
         </div>
-      </div>
+        <aside className="cm-hero-side">
+          <div className="cm-status-panel">
+            <div className="cm-status-label">Casi archiviati</div>
+            <div className="cm-status-value">{cases.length}</div>
+            <div className="cm-status-subtitle">Salvati nel browser corrente.</div>
+          </div>
+          <button type="button" className="cm-button" onClick={() => navigate('new')}>Nuova Valutazione</button>
+        </aside>
+      </section>
 
-      {cases.length === 0 ? (
-        <div
-          className="text-center py-12 rounded-[18px] border"
-          style={{ background: 'rgba(255,255,255,0.88)', borderColor: 'rgba(217,226,239,0.9)', boxShadow: '0 18px 40px rgba(23,59,104,0.12)' }}
-        >
-          <p className="mb-4" style={{ color: '#607089' }}>Nessuna valutazione salvata.</p>
-          <button
-            type="button"
-            onClick={() => navigate('new')}
-            className="px-6 py-2 font-semibold text-white rounded-xl cursor-pointer"
-            style={{ background: 'linear-gradient(135deg, #245b94, #173b68)' }}
-          >
-            Inizia una nuova valutazione
-          </button>
+      <section className="cm-stack">
+        <div className="cm-card-header" style={{ marginBottom: 0 }}>
+          <div className="cm-card-title">
+            <h2>Archivio casi</h2>
+            <p>Apri un dettaglio per rivedere consenso, next step e dati imaging originali.</p>
+          </div>
+          {cases.length > 0 && (
+            <button type="button" className="cm-button danger" onClick={clearAll}>Cancella cronologia</button>
+          )}
         </div>
-      ) : (
-        <div className="space-y-3">
-          {cases.map((c) => {
-            const rc = riskColors[c.result.risk] ?? riskColors.not
-            return (
-              <div
-                key={c.id}
-                className="rounded-[18px] p-4 border flex items-center justify-between"
-                style={{ background: 'rgba(255,255,255,0.88)', borderColor: 'rgba(217,226,239,0.9)', boxShadow: '0 18px 40px rgba(23,59,104,0.12)' }}
-              >
-                <div>
-                  <p className="font-medium text-sm" style={{ color: '#172033' }}>
-                    Valutazione del{' '}
-                    {new Date(c.date).toLocaleDateString('it-IT', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </p>
-                  <p className="text-xs font-bold mt-1" style={{ color: rc.text }}>{c.result.title}</p>
+
+        {cases.length === 0 ? (
+          <div className="cm-card" style={{ textAlign: 'center', padding: '48px 22px' }}>
+            <p className="mb-4" style={{ color: 'var(--cm-muted)' }}>Nessuna valutazione salvata.</p>
+            <button type="button" className="cm-button" onClick={() => navigate('new')}>Inizia una nuova valutazione</button>
+          </div>
+        ) : (
+          <div className="cm-stack">
+            {cases.map((savedCase) => (
+              <article key={savedCase.id} className="cm-card">
+                <div className="cm-card-header">
+                  <div className="cm-card-title">
+                    <h2>{savedCase.metadata?.caseId || 'Valutazione senza ID'}</h2>
+                    <p>
+                      Valutazione del{' '}
+                      {new Date(savedCase.date).toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                  </div>
+                  <RiskPill level={savedCase.result.risk}>{savedCase.result.risk === 'high' ? 'Alta priorità' : savedCase.result.risk === 'mid' ? 'Approfondire' : savedCase.result.risk === 'low' ? 'Basso rischio' : 'POC'}</RiskPill>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => navigate('detail', c.id)}
-                    className="px-3 py-1 text-sm font-semibold rounded-xl cursor-pointer"
-                    style={{ color: '#245b94', border: '1px solid rgba(217,226,239,0.9)' }}
-                  >
-                    Dettaglio
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => removeCase(c.id)}
-                    className="px-3 py-1 text-sm font-semibold rounded-xl cursor-pointer"
-                    style={{ color: '#b42318', border: '1px solid rgba(217,226,239,0.9)' }}
-                  >
-                    Elimina
-                  </button>
+
+                <p className="font-bold" style={{ color: 'var(--cm-dark)' }}>{savedCase.result.title}</p>
+                <p className="mt-1 text-sm" style={{ color: 'var(--cm-muted)' }}>
+                  {savedCase.metadata?.clinicalContext || 'Contesto non specificato'} · {savedCase.metadata?.location || 'Localizzazione non specificata'}
+                </p>
+
+                <div className="cm-actions">
+                  <button type="button" className="cm-button secondary" onClick={() => navigate('detail', savedCase.id)}>Dettaglio</button>
+                  <button type="button" className="cm-button danger" onClick={() => removeCase(savedCase.id)}>Elimina</button>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   )
 }

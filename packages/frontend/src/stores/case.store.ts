@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { EchoFeatures, CmrFeatures, CtFeatures, PetParameters, ImagingData } from '@cm-dss/core'
+import type { CaseMetadata } from '../lib/storage'
 
 const defaultEcho: EchoFeatures = {
   infiltration: false,
@@ -32,7 +33,15 @@ const defaultCt: CtFeatures = {
 
 const defaultPet: PetParameters = { suvMax: null, mtv: null, tlg: null }
 
+const defaultMetadata: CaseMetadata = {
+  caseId: '',
+  clinicalContext: 'Sospetta massa cardiaca',
+  location: 'Non specificata',
+  note: '',
+}
+
 interface CaseState {
+  metadata: CaseMetadata
   echoAvailable: boolean
   cmrAvailable: boolean
   ctpetAvailable: boolean
@@ -48,12 +57,15 @@ interface CaseState {
   setCmrFeature: (key: keyof CmrFeatures, value: boolean) => void
   setCtFeature: (key: keyof CtFeatures, value: boolean) => void
   setPetParam: (key: keyof PetParameters, value: number | null) => void
+  setMetadataField: <K extends keyof CaseMetadata>(key: K, value: CaseMetadata[K]) => void
   loadFrom: (data: ImagingData) => void
   toImagingData: () => ImagingData
+  toCaseMetadata: () => CaseMetadata
   reset: () => void
 }
 
 export const useCaseStore = create<CaseState>((set, get) => ({
+  metadata: { ...defaultMetadata },
   echoAvailable: false,
   cmrAvailable: false,
   ctpetAvailable: false,
@@ -74,6 +86,8 @@ export const useCaseStore = create<CaseState>((set, get) => ({
     set((s) => ({ ct: { ...s.ct, [key]: value } })),
   setPetParam: (key, value) =>
     set((s) => ({ pet: { ...s.pet, [key]: value } })),
+  setMetadataField: (key, value) =>
+    set((s) => ({ metadata: { ...s.metadata, [key]: value } })),
 
   loadFrom: (data) =>
     set({
@@ -99,8 +113,11 @@ export const useCaseStore = create<CaseState>((set, get) => ({
     }
   },
 
+  toCaseMetadata: () => ({ ...get().metadata }),
+
   reset: () =>
     set({
+      metadata: { ...defaultMetadata },
       echoAvailable: false,
       cmrAvailable: false,
       ctpetAvailable: false,

@@ -1,9 +1,17 @@
 import type { ImagingData } from '@cm-dss/core'
 import type { ConsensusResult } from '@cm-dss/core'
 
+export interface CaseMetadata {
+  caseId: string
+  clinicalContext: string
+  location: string
+  note: string
+}
+
 export interface SavedCase {
   id: string
   date: string
+  metadata?: CaseMetadata
   imagingData: ImagingData
   result: ConsensusResult
 }

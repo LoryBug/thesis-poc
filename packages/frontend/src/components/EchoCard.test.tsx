@@ -25,10 +25,10 @@ describe('EchoCard', () => {
     expect(screen.getByText('Localizzazione non a sinistra')).toBeInTheDocument()
   })
 
-  it('mostra trattino quando nessuna feature selezionata', () => {
+  it('mostra score 0 quando nessuna feature selezionata', () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    expect(screen.getByText('—')).toBeInTheDocument()
+    expect(screen.getByText('0/9')).toBeInTheDocument()
   })
 
   it('mostra DEM Score calcolato quando si seleziona una feature', async () => {
@@ -56,9 +56,9 @@ describe('EchoCard', () => {
     expect(screen.getByText(/Probabilità stimata:/)).toBeInTheDocument()
   })
 
-  it('non mostra probabilita quando nessuna feature selezionata', () => {
+  it('mostra probabilita 0 quando nessuna feature selezionata', () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    expect(screen.queryByText(/Probabilità stimata:/)).not.toBeInTheDocument()
+    expect(screen.getByText(/Probabilità stimata: 0%/)).toBeInTheDocument()
   })
 })

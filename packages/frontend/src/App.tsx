@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="min-h-screen" style={{ background: 'radial-gradient(circle at top left, rgba(15,139,141,0.12), transparent 32rem), linear-gradient(180deg, #eef4fb 0%, #f3f6fb 42%, #edf2f7 100%)' }}>
       <Header />
-      <main className="w-full" style={{ maxWidth: '1320px', margin: '0 auto', padding: '28px 16px 40px' }}>
+      <main>
         {page === 'home' && <Home />}
         {page === 'new' && <NewCase />}
         {page === 'detail' && <CaseDetail />}
