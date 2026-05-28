@@ -19,8 +19,7 @@ import { CaseHero } from '../components/CaseHero'
 import { CaseMetadataCard } from '../components/CaseMetadataCard'
 import { ReportCard } from '../components/ReportCard'
 import { TraceabilityPanel } from '../components/TraceabilityPanel'
-import { SyntheticCaseLoader } from '../components/SyntheticCaseLoader'
-import { CaseJsonImportCard } from '../components/CaseJsonImportCard'
+import { EvaluationToolsCard } from '../components/EvaluationToolsCard'
 
 export function NewCase() {
   const store = useCaseStore()
@@ -65,8 +64,12 @@ export function NewCase() {
 
       <section className="cm-layout">
         <div className="cm-stack">
-          <SyntheticCaseLoader />
-          <CaseJsonImportCard />
+          <EvaluationToolsCard />
+          <div className="cm-workflow-ribbon" aria-label="Evaluation workflow">
+            <span><b>1</b> Case metadata</span>
+            <span><b>2</b> Imaging findings</span>
+            <span><b>3</b> Review output</span>
+          </div>
           <CaseMetadataCard />
           <EchoCard />
           <CmrCard />
@@ -86,7 +89,7 @@ export function NewCase() {
           <article className="cm-card">
             <div className="cm-card-header">
               <div className="cm-card-title">
-                <h2>Actions</h2>
+                <h2>Archive Evaluation</h2>
                 <p>The assessment updates in real time. Save only when you want to archive the case.</p>
               </div>
             </div>

@@ -504,6 +504,78 @@ textarea:focus-visible {
   pointer-events: none;
 }
 
+.cm-tools-card {
+  border-color: rgba(15, 139, 141, 0.28);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(234, 242, 251, 0.76));
+}
+
+.cm-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cm-tool-panel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 100%;
+  padding: 16px;
+  border: 1px solid var(--cm-line);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.cm-tool-panel h3 {
+  margin: 0;
+  color: var(--cm-primary);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.cm-tool-panel p {
+  margin: 5px 0 0;
+  color: var(--cm-muted);
+  font-size: 13px;
+}
+
+.cm-tool-note {
+  color: var(--cm-muted);
+  font-size: 13px;
+}
+
+.cm-workflow-ribbon {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cm-workflow-ribbon span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px;
+  border: 1px solid var(--cm-line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--cm-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cm-workflow-ribbon b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--cm-primary);
+  color: #ffffff;
+  font-size: 12px;
+}
+
 .cm-pet-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -773,7 +845,9 @@ textarea:focus-visible {
   .cm-form-grid,
   .cm-feature-grid,
   .cm-pet-grid,
-  .cm-mini-grid {
+  .cm-mini-grid,
+  .cm-tool-grid,
+  .cm-workflow-ribbon {
     grid-template-columns: 1fr;
   }
 
