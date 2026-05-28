@@ -3,6 +3,7 @@ import { Header } from './components/layout/Header'
 import { Home } from './pages/Home'
 import { NewCase } from './pages/NewCase'
 import { CaseDetail } from './pages/CaseDetail'
+import { ExplainabilityGuide } from './pages/ExplainabilityGuide'
 
 function App() {
   const page = useUiStore((s) => s.page)
@@ -14,6 +15,7 @@ function App() {
         {page === 'home' && <Home />}
         {page === 'new' && <NewCase />}
         {page === 'detail' && <CaseDetail />}
+        {page === 'guide' && <ExplainabilityGuide />}
       </main>
     </div>
   )

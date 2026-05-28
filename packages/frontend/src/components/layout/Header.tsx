@@ -20,7 +20,7 @@ export function Header() {
         >
           Cardiac Mass DSS
         </h1>
-        <nav className="flex gap-2">
+        <nav className="flex flex-wrap justify-end gap-2">
           <button
             type="button"
             onClick={() => navigate('home')}
@@ -44,6 +44,18 @@ export function Header() {
             }}
           >
             New Evaluation
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('guide')}
+            className="px-3 py-1.5 rounded text-sm font-semibold cursor-pointer transition-opacity"
+            style={{
+              background: page === 'guide' ? 'rgba(255,255,255,0.15)' : 'transparent',
+              color: 'rgba(255,255,255,0.85)',
+              letterSpacing: '0.03em',
+            }}
+          >
+            Explainability Guide
           </button>
         </nav>
       </div>

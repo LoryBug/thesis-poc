@@ -37,6 +37,15 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByRole('button', { name: 'Save evaluation' })).toBeVisible()
   })
 
+  test('Explainability Guide shows the visual methodology', async ({ page }) => {
+    await page.getByRole('button', { name: 'Explainability Guide' }).click()
+    await expect(page.getByRole('heading', { name: 'How the CDSS reaches and explains an output' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'CDSS pipeline' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Traceability chain' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Validation pyramid' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Golden case coverage' })).toBeVisible()
+  })
+
   test('Imports a case JSON file into the evaluation form', async ({ page }) => {
     await newCaseBtn(page).click()
 

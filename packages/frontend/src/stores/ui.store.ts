@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type Page = 'home' | 'new' | 'detail'
+export type Page = 'home' | 'new' | 'detail' | 'guide'
 
 interface UiState {
   page: Page

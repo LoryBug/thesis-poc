@@ -16,6 +16,12 @@ describe('ui.store', () => {
     expect(useUiStore.getState().selectedCaseId).toBeNull()
   })
 
+  it('navigates to the explainability guide', () => {
+    useUiStore.getState().navigate('guide')
+    expect(useUiStore.getState().page).toBe('guide')
+    expect(useUiStore.getState().selectedCaseId).toBeNull()
+  })
+
   it('navigate with caseId to detail sets selectedCaseId', () => {
     useUiStore.getState().navigate('detail', 'abc-123')
     expect(useUiStore.getState().page).toBe('detail')

@@ -18,6 +18,7 @@ describe('Header', () => {
     render(<Header />)
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     expect(screen.getByText('New Evaluation')).toBeInTheDocument()
+    expect(screen.getByText('Explainability Guide')).toBeInTheDocument()
   })
 
   it('clicking Dashboard navigates home', async () => {
@@ -31,6 +32,12 @@ describe('Header', () => {
     render(<Header />)
     await userEvent.click(screen.getByText('New Evaluation'))
     expect(useUiStore.getState().page).toBe('new')
+  })
+
+  it('clicking Explainability Guide navigates to guide', async () => {
+    render(<Header />)
+    await userEvent.click(screen.getByText('Explainability Guide'))
+    expect(useUiStore.getState().page).toBe('guide')
   })
 
   it('highlights the active button', () => {
