@@ -69,6 +69,8 @@ Regola:
   - consensus engine.
 - Frontend React/PWA con cockpit clinico.
 - Report copiabile.
+- Clinical Traceability implementata nel core e nella UI.
+- Report copiabile esteso con activated rules, evidence chain, missing data e sources.
 - UI/report/core user-facing copy tradotti in inglese.
 - Test unit, build ed E2E passati.
 - GitHub Pages deploy impostato.
@@ -78,7 +80,9 @@ Regola:
 
 1. Clinical Traceability Layer
 
-   Aggiungere un modello deterministico per spiegare ogni decisione.
+   Stato: implementato.
+
+   Il modello deterministico spiega ogni decisione tramite nodi e archi di traceability.
 
    Possibili tipi:
 
@@ -99,7 +103,9 @@ Regola:
 
 2. Traceability UI
 
-   Aggiungere un pannello `Clinical Traceability` nella PWA.
+   Stato: implementato.
+
+   Il pannello `Clinical Traceability` e presente nella PWA.
 
    Domande da supportare:
 
@@ -112,6 +118,8 @@ Regola:
 
 3. Paper Citation Mapping
 
+   Stato: implementazione base presente, documentazione formale ancora da completare.
+
    Mappare regole e score verso fonti cliniche:
 
    - Paolisso et al. 2022: Diagnostic Echocardiographic Mass (DEM) Score;
@@ -121,6 +129,8 @@ Regola:
    - Angeli et al.: framing clinico e approccio multimodale.
 
 4. Report Evoluto
+
+   Stato: implementato nella versione base.
 
    Integrare nel report:
 
@@ -132,6 +142,8 @@ Regola:
 
 5. Synthetic / Golden Cases
 
+   Stato: documentazione avviata in `docs/synthetic-cases.md`.
+
    Definire casi simulati riusabili per test e documentazione:
 
    - low suspicion;
@@ -142,7 +154,17 @@ Regola:
    - CT gray zone;
    - missing data / unavailable modality.
 
-6. Backend Futuro
+6. Roadmap Tesi Consolidata
+
+   Stato: avviata in `docs/thesis-roadmap.md`.
+
+   Obiettivo:
+
+   - raccogliere cosa e gia fatto;
+   - distinguere validazione funzionale da validazione clinica;
+   - definire artefatti mancanti per la scrittura finale della tesi.
+
+7. Backend Futuro
 
    Da valutare dopo traceability:
 
@@ -307,13 +329,14 @@ thesis-poc/
   packages/core/
     scores/
     consensus/
-    traceability/        future
+    traceability/
   packages/frontend/
     src/components/
     src/pages/
   docs/
     clinical-traceability-ise-plan.md
-    synthetic-cases.md   future
+    thesis-roadmap.md
+    synthetic-cases.md
 ```
 
 ### Repo ISE Futuro
