@@ -5,26 +5,43 @@ export function Header() {
   const navigate = useUiStore((s) => s.navigate)
 
   return (
-    <header className="bg-blue-900 text-white shadow-lg">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header
+      className="text-white"
+      style={{
+        background: 'linear-gradient(135deg, #10233e, #173b68)',
+        borderRadius: '0 0 18px 18px',
+        boxShadow: '0 18px 40px rgba(23, 59, 104, 0.12)',
+      }}
+    >
+      <div className="flex items-center justify-between" style={{ maxWidth: '1320px', margin: '0 auto', padding: '16px 16px' }}>
         <h1
-          className="text-xl font-bold cursor-pointer select-none"
+          className="text-xl font-bold cursor-pointer select-none tracking-tight"
           onClick={() => navigate('home')}
         >
           Cardiac Mass DSS
         </h1>
-        <nav className="flex gap-4">
+        <nav className="flex gap-2">
           <button
             type="button"
-            className={`px-3 py-1 rounded cursor-pointer ${page === 'home' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}
             onClick={() => navigate('home')}
+            className="px-3 py-1.5 rounded text-sm font-semibold cursor-pointer transition-opacity"
+            style={{
+              background: page === 'home' ? 'rgba(255,255,255,0.15)' : 'transparent',
+              color: 'rgba(255,255,255,0.85)',
+              letterSpacing: '0.03em',
+            }}
           >
             Dashboard
           </button>
           <button
             type="button"
-            className={`px-3 py-1 rounded cursor-pointer ${page === 'new' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}
             onClick={() => navigate('new')}
+            className="px-3 py-1.5 rounded text-sm font-semibold cursor-pointer transition-opacity"
+            style={{
+              background: page === 'new' ? 'rgba(255,255,255,0.15)' : 'transparent',
+              color: 'rgba(255,255,255,0.85)',
+              letterSpacing: '0.03em',
+            }}
           >
             Nuova Valutazione
           </button>

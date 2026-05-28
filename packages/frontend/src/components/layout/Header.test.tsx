@@ -37,6 +37,6 @@ describe('Header', () => {
     useUiStore.getState().navigate('home')
     render(<Header />)
     const dashBtn = screen.getByText('Dashboard')
-    expect(dashBtn.className).toContain('bg-blue-700')
+    expect(dashBtn.style.background).toBe('rgba(255, 255, 255, 0.15)')
   })
 })

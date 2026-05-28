@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+@theme {
+  --color-cm-primary: #173b68;
+  --color-cm-primary-2: #245b94;
+  --color-cm-accent: #0f8b8d;
+  --color-cm-surface: rgba(255, 255, 255, 0.88);
+  --color-cm-surface-2: #f8fafc;
+  --color-cm-line: rgba(217, 226, 239, 0.9);
+  --color-cm-muted: #607089;
+  --color-cm-text: #172033;
+  --color-cm-low: #16784c;
+  --color-cm-mid: #b7791f;
+  --color-cm-high: #b42318;
+  --color-cm-dark: #0f223d;
+  --shadow-cm: 0 18px 40px rgba(23, 59, 104, 0.12);
+  --radius-cm: 18px;
+  --font-cm: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(15, 139, 141, 0.16), transparent 32rem),
+    linear-gradient(180deg, #eef4fb 0%, #f3f6fb 42%, #edf2f7 100%);
+  color: var(--color-cm-text);
+  font-family: var(--font-cm);
+  line-height: 1.45;
+}

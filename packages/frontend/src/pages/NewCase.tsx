@@ -44,49 +44,55 @@ export function NewCase() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto pb-8">
+    <div className="space-y-6 pb-8" style={{ maxWidth: '1320px', margin: '0 auto' }}>
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-blue-900">Nuova Valutazione</h2>
+        <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#0f223d' }}>Nuova Valutazione</h2>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={handleReset}
-            className="px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50 cursor-pointer"
+            className="px-3 py-1.5 text-sm font-semibold rounded-xl cursor-pointer"
+            style={{ color: '#607089', border: '1px solid rgba(217,226,239,0.9)' }}
           >
             Reset
           </button>
           <button
             type="button"
             onClick={() => navigate('home')}
-            className="px-3 py-1.5 text-sm text-blue-600 border border-blue-300 rounded hover:bg-blue-50 cursor-pointer"
+            className="px-3 py-1.5 text-sm font-semibold rounded-xl cursor-pointer"
+            style={{ color: '#245b94', border: '1px solid rgba(217,226,239,0.9)' }}
           >
             Indietro
           </button>
         </div>
       </div>
 
-      <EchoCard />
-      <CmrCard />
-      <CtPetCard />
+      <div className="grid grid-cols-1 gap-6" style={{ maxWidth: '860px' }}>
+        <EchoCard />
+        <CmrCard />
+        <CtPetCard />
+      </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-left" style={{ maxWidth: '860px' }}>
         <button
           type="button"
           onClick={handleRun}
-          className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-lg cursor-pointer"
+          className="px-8 py-3 font-semibold text-white rounded-xl cursor-pointer transition-opacity"
+          style={{ background: 'linear-gradient(135deg, #245b94, #173b68)' }}
         >
           Esegui Valutazione
         </button>
       </div>
 
       {result && (
-        <div className="space-y-4">
+        <div className="space-y-4" style={{ maxWidth: '860px' }}>
           <ConsensusPanel result={result} />
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-left gap-3">
             <button
               type="button"
               onClick={handleSave}
-              className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
+              className="px-6 py-2 font-semibold text-white rounded-xl cursor-pointer"
+              style={{ background: '#16784c' }}
             >
               Salva valutazione
             </button>
