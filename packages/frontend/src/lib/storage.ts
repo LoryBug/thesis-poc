@@ -19,7 +19,7 @@ export interface SavedCase {
 const STORAGE_VERSION = 1
 const STORAGE_KEY = `cm-dss-history@${STORAGE_VERSION}`
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
@@ -27,7 +27,7 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string')
 }
 
-function isImagingData(value: unknown): value is ImagingData {
+export function isImagingData(value: unknown): value is ImagingData {
   if (!isRecord(value)) return false
   return typeof value.echoAvailable === 'boolean'
     && typeof value.cmrAvailable === 'boolean'
@@ -38,7 +38,7 @@ function isImagingData(value: unknown): value is ImagingData {
     && (value.pet === null || isRecord(value.pet))
 }
 
-function isConsensusResult(value: unknown): value is ConsensusResult {
+export function isConsensusResult(value: unknown): value is ConsensusResult {
   if (!isRecord(value)) return false
   return ['low', 'mid', 'high', 'not'].includes(String(value.risk))
     && typeof value.title === 'string'
@@ -50,7 +50,7 @@ function isConsensusResult(value: unknown): value is ConsensusResult {
     && isRecord(value.integrated)
 }
 
-function isCaseMetadata(value: unknown): value is CaseMetadata {
+export function isCaseMetadata(value: unknown): value is CaseMetadata {
   if (!isRecord(value)) return false
   return typeof value.caseId === 'string'
     && typeof value.clinicalContext === 'string'
@@ -58,7 +58,7 @@ function isCaseMetadata(value: unknown): value is CaseMetadata {
     && typeof value.note === 'string'
 }
 
-function isSavedCase(value: unknown): value is SavedCase {
+export function isSavedCase(value: unknown): value is SavedCase {
   if (!isRecord(value)) return false
   return typeof value.id === 'string'
     && typeof value.date === 'string'

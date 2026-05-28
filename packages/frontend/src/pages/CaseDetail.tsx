@@ -6,6 +6,7 @@ import { buildClinicalReport } from '../lib/report'
 import { ConsensusPanel } from '../components/ConsensusPanel'
 import { ReportCard } from '../components/ReportCard'
 import { TraceabilityPanel } from '../components/TraceabilityPanel'
+import { CaseJsonExportCard } from '../components/CaseJsonExportCard'
 
 export function CaseDetail() {
   const caseId = useUiStore((s) => s.selectedCaseId)
@@ -95,6 +96,7 @@ export function CaseDetail() {
         </div>
 
         <aside className="cm-sidebar">
+          <CaseJsonExportCard data={{ metadata: savedCase.metadata, imagingData: data, result: savedCase.result, traceability }} />
           <ReportCard report={report} />
         </aside>
       </section>

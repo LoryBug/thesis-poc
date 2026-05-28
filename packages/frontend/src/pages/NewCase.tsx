@@ -20,6 +20,7 @@ import { CaseMetadataCard } from '../components/CaseMetadataCard'
 import { ReportCard } from '../components/ReportCard'
 import { TraceabilityPanel } from '../components/TraceabilityPanel'
 import { SyntheticCaseLoader } from '../components/SyntheticCaseLoader'
+import { CaseJsonImportCard } from '../components/CaseJsonImportCard'
 
 export function NewCase() {
   const store = useCaseStore()
@@ -65,6 +66,7 @@ export function NewCase() {
       <section className="cm-layout">
         <div className="cm-stack">
           <SyntheticCaseLoader />
+          <CaseJsonImportCard />
           <CaseMetadataCard />
           <EchoCard />
           <CmrCard />

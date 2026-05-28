@@ -32,8 +32,47 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByText('Cardiac magnetic resonance - CMR Mass Score')).toBeVisible()
     await expect(page.getByText('Cardiac CT and 18F-FDG PET/CT')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Synthetic Case Loader' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Import Case JSON' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Why this output?' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Save evaluation' })).toBeVisible()
+  })
+
+  test('Imports a case JSON file into the evaluation form', async ({ page }) => {
+    await newCaseBtn(page).click()
+
+    await page.getByLabel('Case JSON file').setInputFiles({
+      name: 'gc-04.cm-dss.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify({
+        metadata: {
+          caseId: 'GC-04-IMPORT',
+          clinicalContext: 'Suspected cardiac mass',
+          location: 'Unspecified',
+          note: 'Imported CMR-driven high suspicion',
+        },
+        imagingData: {
+          echoAvailable: false,
+          echo: null,
+          cmrAvailable: true,
+          cmr: {
+            infiltration: true,
+            firstPassPerfusion: true,
+            pericardialEffusion: false,
+            sessile: false,
+            polylobated: false,
+            heterogeneousEnhancement: true,
+          },
+          ctpetAvailable: false,
+          ct: null,
+          pet: null,
+        },
+      })),
+    })
+
+    await expect(page.getByLabel('Case / patient ID')).toHaveValue('GC-04-IMPORT')
+    await expect(scoreNumber(cmrSection(page), '5/8')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'CMR-driven high suspicion' })).toBeVisible()
+    await expect(page.getByText(/Imported GC-04-IMPORT/)).toBeVisible()
   })
 
   test('Loads a synthetic golden case into the evaluation form', async ({ page }) => {
@@ -105,12 +144,18 @@ test.describe('Complete clinical workflow', () => {
 
     await page.getByRole('button', { name: 'Details' }).click()
     await expect(page.getByRole('heading', { name: 'Evaluation Detail' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Case JSON' })).toBeVisible()
     await expect(page.getByText('Explanation')).toBeVisible()
     await expect(page.getByText('Next step', { exact: true })).toBeVisible()
     await expect(page.getByText('Evidence', { exact: true }).first()).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
     await page.getByText('Original imaging data').click()
     await expect(page.locator('pre')).toBeVisible()
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Download case JSON' }).click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toMatch(/\.cm-dss\.json$/)
   })
 
   test('Deletes case from Dashboard', async ({ page }) => {
