@@ -76,7 +76,7 @@ Artifact:
 
 Status:
 
-- Started in this iteration.
+- Completed as documented golden cases and automated regression tests.
 
 ### 2. Formal Validation Narrative
 
@@ -90,6 +90,10 @@ Purpose:
 Suggested artifact:
 
 - A thesis chapter or `docs/validation-methodology.md`.
+
+Status:
+
+- Added in `docs/validation-methodology.md` with diagram-driven methodology, validation scope, golden case matrix, traceability validation, workflow validation, and limitations.
 
 Minimum content:
 
@@ -109,6 +113,10 @@ Purpose:
 Suggested artifact:
 
 - `docs/source-mapping.md` or a thesis appendix.
+
+Status:
+
+- Added in `docs/source-mapping.md`.
 
 Minimum content:
 
@@ -199,9 +207,8 @@ The ISE project must not become a dependency of the thesis PWA.
 
 ## Immediate Next Steps
 
-1. Complete `docs/synthetic-cases.md`.
-2. Convert the golden cases into additional automated tests if useful.
-3. Add `docs/source-mapping.md`.
-4. Add `docs/validation-methodology.md`.
-5. Add a concise clinical safety disclaimer to the generated report and/or UI.
-6. Prepare screenshots from GitHub Pages for the thesis document.
+1. Prepare screenshots from GitHub Pages for the thesis document.
+2. Export or redraw the main Mermaid diagrams from `docs/validation-methodology.md` for the thesis.
+3. Create a dataset intake checklist for future real-case or CBIR work.
+4. Consider a short expert-review paragraph after cardiologist/radiologist feedback.
+5. Add a release tag when the current documentation and deployed UI are accepted.
