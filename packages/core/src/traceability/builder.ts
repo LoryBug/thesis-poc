@@ -134,7 +134,9 @@ export function buildTraceability(data: ImagingData, result: ConsensusResult = e
     addEdge({ from: cutoffNodeId, to: `source:${TRACE_SOURCES.ctPet.id}`, relation: 'cites' })
     addPetNodes(data, cutoffNodeId)
     if (ctLevel === 'high') addRule('ct-pet:rule:high-suspicion', 'CT/PET high-suspicion profile', 'Cardiac CT and PET/CT criteria support high suspicion.', 'ct-pet', cutoffNodeId)
-    if (ctLevel === 'gray') addRule('ct-pet:rule:gray-zone', 'Cardiac CT gray zone', 'CT 3-4 signs requires PET/CT or CMR clarification.', 'ct-pet', cutoffNodeId)
+    if (ctLevel === 'gray' || (ctSigns >= 3 && ctSigns <= 4 && !petDataEntered)) {
+      addRule('ct-pet:rule:gray-zone', 'Cardiac CT gray zone', 'CT 3-4 signs requires PET/CT or CMR clarification.', 'ct-pet', cutoffNodeId)
+    }
     if (ctLevel === 'discordant') addRule('ct-pet:rule:discordant', 'CT/PET discordance', 'PET positive with <=2 CT signs requires contextual review.', 'ct-pet', cutoffNodeId)
   } else {
     addMissing('ct-pet:missing', 'Cardiac CT/PET not entered', 'CT/PET pathway cannot be evaluated without cardiac CT features.')
