@@ -6,36 +6,36 @@ describe('case.store', () => {
     useCaseStore.getState().reset()
   })
 
-  it('inizia con echo non disponibile', () => {
+  it('starts with echo unavailable', () => {
     const s = useCaseStore.getState()
     expect(s.echoAvailable).toBe(false)
   })
 
-  it('inizia con cmr non disponibile', () => {
+  it('starts with CMR unavailable', () => {
     const s = useCaseStore.getState()
     expect(s.cmrAvailable).toBe(false)
   })
 
-  it('inizia con ctpet non disponibile', () => {
+  it('starts with CT/PET unavailable', () => {
     const s = useCaseStore.getState()
     expect(s.ctpetAvailable).toBe(false)
   })
 
-  it('inizia con metadata clinico predefinito', () => {
+  it('starts with default clinical metadata', () => {
     const s = useCaseStore.getState()
     expect(s.metadata.caseId).toBe('')
-    expect(s.metadata.clinicalContext).toBe('Sospetta massa cardiaca')
-    expect(s.metadata.location).toBe('Non specificata')
+    expect(s.metadata.clinicalContext).toBe('Suspected cardiac mass')
+    expect(s.metadata.location).toBe('Unspecified')
   })
 
-  it('toImagingData restituisce echo null quando echo non disponibile', () => {
+  it('toImagingData returns echo null when echo is unavailable', () => {
     useCaseStore.getState().setEchoAvailable(false)
     const data = useCaseStore.getState().toImagingData()
     expect(data.echoAvailable).toBe(false)
     expect(data.echo).toBeNull()
   })
 
-  it('toImagingData restituisce echo con features quando echo disponibile', () => {
+  it('toImagingData returns echo features when echo is available', () => {
     const store = useCaseStore.getState()
     store.setEchoAvailable(true)
     store.setEchoFeature('infiltration', true)
@@ -48,7 +48,7 @@ describe('case.store', () => {
     expect(data.echo!.sessile).toBe(false)
   })
 
-  it('toImagingData restituisce pet sempre come oggetto (mai null) quando ctpet disponibile', () => {
+  it('toImagingData always returns PET as an object when CT/PET is available', () => {
     const store = useCaseStore.getState()
     store.setCtpetAvailable(true)
     const data = useCaseStore.getState().toImagingData()
@@ -58,7 +58,7 @@ describe('case.store', () => {
     expect(data.pet!.tlg).toBeNull()
   })
 
-  it('setEchoFeature aggiorna solo la feature specificata', () => {
+  it('setEchoFeature updates only the specified feature', () => {
     useCaseStore.getState().setEchoAvailable(true)
     useCaseStore.getState().setEchoFeature('infiltration', true)
     const echo = useCaseStore.getState().echo
@@ -67,7 +67,7 @@ describe('case.store', () => {
     expect(echo.sessile).toBe(false)
   })
 
-  it('reset riporta allo stato iniziale', () => {
+  it('reset restores initial state', () => {
     const store = useCaseStore.getState()
     store.setMetadataField('caseId', 'CM-001')
     store.setEchoAvailable(true)
@@ -86,29 +86,29 @@ describe('case.store', () => {
     expect(s.pet.suvMax).toBeNull()
   })
 
-  it('toCaseMetadata restituisce una copia dei metadata', () => {
+  it('toCaseMetadata returns a metadata copy', () => {
     const store = useCaseStore.getState()
     store.setMetadataField('caseId', 'CM-001')
-    store.setMetadataField('note', 'massa atriale destra')
+    store.setMetadataField('note', 'right atrial mass')
     const metadata = store.toCaseMetadata()
 
     expect(metadata.caseId).toBe('CM-001')
-    expect(metadata.note).toBe('massa atriale destra')
+    expect(metadata.note).toBe('right atrial mass')
     expect(metadata).not.toBe(useCaseStore.getState().metadata)
   })
 
-  it('setPetParam aggiorna il parametro corretto', () => {
+  it('setPetParam updates the correct parameter', () => {
     useCaseStore.getState().setPetParam('suvMax', 7.2)
     expect(useCaseStore.getState().pet.suvMax).toBe(7.2)
     expect(useCaseStore.getState().pet.mtv).toBeNull()
   })
 
-  it('setPetParam accetta 0 come valore valido', () => {
+  it('setPetParam accepts 0 as a valid value', () => {
     useCaseStore.getState().setPetParam('suvMax', 0)
     expect(useCaseStore.getState().pet.suvMax).toBe(0)
   })
 
-  it('loadFrom carica dati imaging esistenti', () => {
+  it('loadFrom loads existing imaging data', () => {
     const data = {
       echoAvailable: true,
       echo: { infiltration: true, polylobated: false, pericardialEffusion: true, sessile: false, inhomogeneity: false, nonLeftLocation: false },

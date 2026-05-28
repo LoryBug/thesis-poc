@@ -2,19 +2,19 @@ import { useCaseStore } from '../stores/case.store'
 import { RiskPill } from './ui/RiskPill'
 
 const clinicalContexts = [
-  'Sospetta massa cardiaca',
-  'Riscontro incidentale',
-  'Paziente oncologico',
-  'Sospetto trombo',
-  'Sospetta endocardite',
+  'Suspected cardiac mass',
+  'Incidental finding',
+  'Oncology patient',
+  'Suspected thrombus',
+  'Suspected endocarditis',
 ]
 
 const locations = [
-  'Non specificata',
-  'Camere sinistre',
-  'Camere destre',
-  'Pericardio',
-  'Grossi vasi',
+  'Unspecified',
+  'Left chambers',
+  'Right chambers',
+  'Pericardium',
+  'Great vessels',
 ]
 
 export function CaseMetadataCard() {
@@ -25,25 +25,25 @@ export function CaseMetadataCard() {
     <article className="cm-card">
       <div className="cm-card-header">
         <div className="cm-card-title">
-          <h2>Dati del caso</h2>
-          <p>Campi opzionali per generare un report sintetico copiabile.</p>
+          <h2>Case data</h2>
+          <p>Optional fields used to generate a concise copyable report.</p>
         </div>
-        <RiskPill>Input clinico</RiskPill>
+        <RiskPill>Clinical input</RiskPill>
       </div>
 
       <div className="cm-form-grid">
         <label className="cm-field">
-          ID caso / paziente
+          Case / patient ID
           <input
             className="cm-input"
             value={metadata.caseId}
             onChange={(event) => setMetadataField('caseId', event.target.value)}
-            placeholder="Es. CM-001"
+            placeholder="e.g. CM-001"
           />
         </label>
 
         <label className="cm-field">
-          Contesto clinico
+          Clinical context
           <select
             className="cm-select"
             value={metadata.clinicalContext}
@@ -54,7 +54,7 @@ export function CaseMetadataCard() {
         </label>
 
         <label className="cm-field">
-          Localizzazione prevalente
+          Predominant location
           <select
             className="cm-select"
             value={metadata.location}
@@ -65,12 +65,12 @@ export function CaseMetadataCard() {
         </label>
 
         <label className="cm-field">
-          Nota rapida
+          Quick note
           <input
             className="cm-input"
             value={metadata.note}
             onChange={(event) => setMetadataField('note', event.target.value)}
-            placeholder="Es. massa atriale destra, dispnea NYHA III"
+            placeholder="e.g. right atrial mass, NYHA III dyspnea"
           />
         </label>
       </div>

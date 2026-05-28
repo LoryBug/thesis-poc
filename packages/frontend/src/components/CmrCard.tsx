@@ -5,12 +5,12 @@ import { FeatureTile } from './ui/FeatureTile'
 import { ScoreStrip } from './ui/ScoreStrip'
 
 const features: { key: keyof CmrFeatures; title: string; description: string; points: number }[] = [
-  { key: 'infiltration', title: 'Infiltrazione', description: 'Disruption o estensione nei tessuti adiacenti.', points: 2 },
-  { key: 'firstPassPerfusion', title: 'Perfusione first-pass', description: 'Perfusione della massa dopo gadolinio.', points: 2 },
-  { key: 'pericardialEffusion', title: 'Versamento pericardico', description: 'Più che lieve o post-pericardiocentesi.', points: 1 },
-  { key: 'sessile', title: 'Sessile (base larga)', description: 'Impianto diretto su parete o base larga.', points: 1 },
-  { key: 'polylobated', title: 'Polilobato', description: 'Due o più lobi alla valutazione multiplanare.', points: 1 },
-  { key: 'heterogeneousEnhancement', title: 'Enhancement eterogeneo', description: 'Pattern disomogeneo post-contrasto.', points: 1 },
+  { key: 'infiltration', title: 'Infiltration', description: 'Disruption or extension into adjacent tissues.', points: 2 },
+  { key: 'firstPassPerfusion', title: 'First-pass contrast perfusion', description: 'Mass perfusion after gadolinium administration.', points: 2 },
+  { key: 'pericardialEffusion', title: 'Pericardial effusion', description: 'More than mild, or mild after pericardiocentesis.', points: 1 },
+  { key: 'sessile', title: 'Sessile appearance', description: 'Direct wall attachment or broad base.', points: 1 },
+  { key: 'polylobated', title: 'Polylobate shape', description: 'Two or more lobes on multiplanar assessment.', points: 1 },
+  { key: 'heterogeneousEnhancement', title: 'Heterogeneity enhancement', description: 'Heterogeneous post-contrast enhancement pattern.', points: 1 },
 ]
 
 export function CmrCard() {
@@ -26,8 +26,8 @@ export function CmrCard() {
     <article className="cm-card" data-exam-card="cmr">
       <div className="cm-card-header">
         <div className="cm-card-title">
-          <h2>Risonanza magnetica - CMR Mass Score</h2>
-          <p>Integra morfologia e caratterizzazione tissutale. Cutoff operativo: CMR Mass Score ≥ 5.</p>
+          <h2>Cardiac magnetic resonance - CMR Mass Score</h2>
+          <p>Integrates morphology and tissue characterization. Operational cutoff: CMR Mass Score &gt;= 5.</p>
         </div>
         <label className="cm-exam-toggle">
           <input
@@ -35,12 +35,12 @@ export function CmrCard() {
             checked={cmrAvailable}
             onChange={(event) => setCmrAvailable(event.target.checked)}
           />
-          CMR disponibile
+          CMR available
         </label>
       </div>
 
       {!cmrAvailable ? (
-        <p className="text-sm italic" style={{ color: 'var(--cm-muted)' }}>Seleziona la disponibilità per inserire i dati.</p>
+        <p className="text-sm italic" style={{ color: 'var(--cm-muted)' }}>Select availability to enter data.</p>
       ) : (
         <>
           <div className="cm-feature-grid">
@@ -59,8 +59,8 @@ export function CmrCard() {
           <ScoreStrip
             score={score}
             max={CMR_MAX}
-            note={`Cutoff CMR Mass Score ≥ ${CMR_CUTOFF}. Score corrente: ${score}/8.`}
-            badge={positive ? 'POSITIVO' : 'sotto cutoff'}
+            note={`CMR Mass Score cutoff >= ${CMR_CUTOFF}. Current score: ${score}/8.`}
+            badge={positive ? 'Positive' : 'Below cutoff'}
             level={positive ? 'high' : 'low'}
           />
         </>

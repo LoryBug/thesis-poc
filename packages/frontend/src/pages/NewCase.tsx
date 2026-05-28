@@ -72,12 +72,12 @@ export function NewCase() {
           <article className="cm-card">
             <div className="cm-card-header">
               <div className="cm-card-title">
-                <h2>Azioni</h2>
-                <p>La valutazione è aggiornata in tempo reale. Salva solo quando vuoi archiviare il caso.</p>
+                <h2>Actions</h2>
+                <p>The assessment updates in real time. Save only when you want to archive the case.</p>
               </div>
             </div>
             <div className="cm-actions">
-              <button type="button" className="cm-button" onClick={handleSave} disabled={!hasAnyExam}>Salva valutazione</button>
+              <button type="button" className="cm-button" onClick={handleSave} disabled={!hasAnyExam}>Save evaluation</button>
               <button type="button" className="cm-button secondary" onClick={() => navigate('home')}>Dashboard</button>
             </div>
           </article>
@@ -85,13 +85,13 @@ export function NewCase() {
           <ReportCard report={report} onReset={handleReset} />
 
           <article className="cm-card cm-disclaimer">
-            <strong>Nota POC</strong><br />
-            Questo prototipo è solo dimostrativo e non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida. Le soglie sono derivate dagli articoli forniti.
+            <strong>POC note</strong><br />
+            This prototype is demonstrative only and does not replace clinical judgment, specialist reporting, Heart Team discussion, or guidelines. Thresholds are derived from the supplied papers.
           </article>
         </aside>
       </section>
 
-      <p className="cm-footer-note">Prototype React/TypeScript - Masse cardiache, score diagnostici e supporto decisionale.</p>
+      <p className="cm-footer-note">React/TypeScript prototype - cardiac masses, diagnostic scores, and decision support.</p>
     </div>
   )
 }

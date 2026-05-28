@@ -38,11 +38,11 @@ describe('history.store', () => {
     useHistoryStore.getState().clearAll()
   })
 
-  it('inizia vuoto', () => {
+  it('starts empty', () => {
     expect(useHistoryStore.getState().cases).toHaveLength(0)
   })
 
-  it('addCase aggiunge all\'inizio', () => {
+  it('addCase prepends to the list', () => {
     const store = useHistoryStore.getState()
     store.addCase(makeCase({ id: '1' }))
     store.addCase(makeCase({ id: '2' }))
@@ -51,7 +51,7 @@ describe('history.store', () => {
     expect(useHistoryStore.getState().cases[1]?.id).toBe('1')
   })
 
-  it('removeCase rimuove per id', () => {
+  it('removeCase removes by id', () => {
     const store = useHistoryStore.getState()
     store.addCase(makeCase({ id: 'a' }))
     store.addCase(makeCase({ id: 'b' }))
@@ -61,14 +61,14 @@ describe('history.store', () => {
     expect(ids).toEqual(['c', 'a'])
   })
 
-  it('removeCase non fallisce con id inesistente', () => {
+  it('removeCase does not fail with an unknown id', () => {
     const store = useHistoryStore.getState()
     store.addCase(makeCase({ id: 'x' }))
     store.removeCase('nonexistent')
     expect(useHistoryStore.getState().cases).toHaveLength(1)
   })
 
-  it('clearAll svuota la lista', () => {
+  it('clearAll empties the list', () => {
     const store = useHistoryStore.getState()
     store.addCase(makeCase())
     store.addCase(makeCase())

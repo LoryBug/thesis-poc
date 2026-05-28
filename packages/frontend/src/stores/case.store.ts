@@ -35,8 +35,8 @@ const defaultPet: PetParameters = { suvMax: null, mtv: null, tlg: null }
 
 const defaultMetadata: CaseMetadata = {
   caseId: '',
-  clinicalContext: 'Sospetta massa cardiaca',
-  location: 'Non specificata',
+  clinicalContext: 'Suspected cardiac mass',
+  location: 'Unspecified',
   note: '',
 }
 

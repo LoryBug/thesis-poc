@@ -22,13 +22,13 @@ export function ReportCard({ report, onReset }: ReportCardProps) {
     <article className="cm-card">
       <div className="cm-card-header">
         <div className="cm-card-title">
-          <h2>Report copiabile</h2>
-          <p>Bozza automatica per discussione in Heart Team o meeting.</p>
+          <h2>Copyable report</h2>
+          <p>Automatic draft for Heart Team discussion or case meeting.</p>
         </div>
       </div>
       <textarea className="cm-textarea" value={report} readOnly />
       <div className="cm-actions">
-        <button type="button" className="cm-button" onClick={handleCopy}>{copied ? 'Copiato' : 'Copia report'}</button>
+        <button type="button" className="cm-button" onClick={handleCopy}>{copied ? 'Copied' : 'Copy report'}</button>
         {onReset && <button type="button" className="cm-button secondary" onClick={onReset}>Reset</button>}
       </div>
     </article>

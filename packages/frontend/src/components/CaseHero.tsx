@@ -14,14 +14,14 @@ export function CaseHero({ result, demScore, cmrScore, ctScore }: CaseHeroProps)
         <div className="cm-eyebrow">Proof of concept</div>
         <h1 className="cm-title-xl">Cardiac Mass Decision Support</h1>
         <p className="cm-lead">
-          Prototipo per applicare score diagnostici sulle masse cardiache, motivare il sospetto clinico e proporre un next step di imaging.
+          Prototype for applying diagnostic scores to cardiac masses, explaining clinical suspicion, and proposing the next imaging step.
         </p>
       </div>
 
       <aside className="cm-hero-side">
         <div className="cm-status-panel">
-          <div className="cm-status-label">Output integrato</div>
-          <div className="cm-status-value">{result.risk === 'not' ? 'Non valutato' : result.title}</div>
+          <div className="cm-status-label">Integrated output</div>
+          <div className="cm-status-value">{result.risk === 'not' ? 'Not evaluated' : result.title}</div>
           <div className="cm-status-subtitle">{result.subtitle}</div>
         </div>
         <div className="cm-mini-grid">

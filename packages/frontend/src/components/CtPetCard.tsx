@@ -5,22 +5,22 @@ import { FeatureTile } from './ui/FeatureTile'
 import { ScoreStrip } from './ui/ScoreStrip'
 
 const ctFeatures: { key: keyof CtFeatures; title: string; description: string; points: number }[] = [
-  { key: 'irregularMargins', title: 'Margini irregolari', description: 'Profilo non circoscritto o spiculato.', points: 1 },
-  { key: 'pericardialEffusion', title: 'Versamento pericardico', description: 'Associato a massa sospetta.', points: 1 },
-  { key: 'invasion', title: 'Invasione', description: 'Disruption o estensione in strutture vicine.', points: 1 },
-  { key: 'solidNature', title: 'Natura solida', description: 'Densità compatibile con componente solida.', points: 1 },
-  { key: 'diameterOver30mm', title: 'Diametro >30mm', description: 'Dimensione elevata, non diagnostica da sola.', points: 1 },
-  { key: 'contrastUptake', title: 'Captazione contrasto', description: 'Aumento densità dopo mezzo di contrasto.', points: 1 },
-  { key: 'preContrastSuspicious', title: 'Sospetta densità pre-contrasto', description: 'Segnale pre-contrastografico associato a sospetto.', points: 1 },
-  { key: 'calcifications', title: 'Calcificazioni', description: 'Segno incluso nello studio TC.', points: 1 },
+  { key: 'irregularMargins', title: 'Irregular margins', description: 'Non-circumscribed or spiculated profile.', points: 1 },
+  { key: 'pericardialEffusion', title: 'Pericardial effusion', description: 'Associated with a suspicious mass.', points: 1 },
+  { key: 'invasion', title: 'Invasion', description: 'Disruption or extension into adjacent structures.', points: 1 },
+  { key: 'solidNature', title: 'Solid nature', description: 'Density compatible with a solid component.', points: 1 },
+  { key: 'diameterOver30mm', title: 'Diameter >30 mm', description: 'Large size, not diagnostic on its own.', points: 1 },
+  { key: 'contrastUptake', title: 'Contrast uptake', description: 'Density increase after contrast medium.', points: 1 },
+  { key: 'preContrastSuspicious', title: 'Pre-contrast suspicious density', description: 'Pre-contrast density associated with suspicion.', points: 1 },
+  { key: 'calcifications', title: 'Calcifications', description: 'Sign included in the cardiac CT study.', points: 1 },
 ]
 
 const levelLabel: Record<CtPetLevel, string> = {
-  high: 'Alto sospetto',
-  gray: 'Zona grigia',
-  discordant: 'Discordante',
-  low: 'Basso sospetto',
-  unavailable: 'Non disponibile',
+  high: 'High suspicion',
+  gray: 'Gray zone',
+  discordant: 'Discordant',
+  low: 'Low suspicion',
+  unavailable: 'Unavailable',
 }
 
 const levelRisk: Record<CtPetLevel, 'high' | 'mid' | 'low' | 'not'> = {
@@ -48,8 +48,8 @@ export function CtPetCard() {
     <article className="cm-card" data-exam-card="ctpet">
       <div className="cm-card-header">
         <div className="cm-card-title">
-          <h2>TC cardiaca e PET/TC</h2>
-          <p>Conteggio segni TC: ≤2 basso sospetto, 3-4 zona grigia, ≥5 alto sospetto. PET utile soprattutto nella zona grigia o per staging.</p>
+          <h2>Cardiac CT and 18F-FDG PET/CT</h2>
+          <p>CT sign count: &lt;=2 low suspicion, 3-4 gray zone, &gt;=5 high suspicion. PET is especially useful in the gray zone or for staging.</p>
         </div>
         <label className="cm-exam-toggle">
           <input
@@ -57,12 +57,12 @@ export function CtPetCard() {
             checked={ctpetAvailable}
             onChange={(event) => setCtpetAvailable(event.target.checked)}
           />
-          TC/PET disponibile
+          CT/PET available
         </label>
       </div>
 
       {!ctpetAvailable ? (
-        <p className="text-sm italic" style={{ color: 'var(--cm-muted)' }}>Seleziona la disponibilità per inserire i dati.</p>
+        <p className="text-sm italic" style={{ color: 'var(--cm-muted)' }}>Select availability to enter data.</p>
       ) : (
         <>
           <div className="cm-feature-grid">
@@ -80,9 +80,9 @@ export function CtPetCard() {
 
           <div className="cm-pet-grid">
             {([
-              { key: 'suvMax' as const, label: 'SUVmax', hint: '≥ 4.9' },
-              { key: 'mtv' as const, label: 'MTV (mL)', hint: '≥ 8.2' },
-              { key: 'tlg' as const, label: 'TLG', hint: '≥ 29' },
+              { key: 'suvMax' as const, label: 'SUVmax', hint: '>= 4.9' },
+              { key: 'mtv' as const, label: 'MTV (mL)', hint: '>= 8.2' },
+              { key: 'tlg' as const, label: 'TLG', hint: '>= 29' },
             ]).map(({ key, label, hint }) => (
               <label key={key} className="cm-field">
                 {label}
@@ -101,14 +101,14 @@ export function CtPetCard() {
 
           {Object.values(pet).some((value) => value !== null) && (
             <p className="mt-3 text-xs" style={{ color: 'var(--cm-muted)' }}>
-              PET: <strong style={{ color: petPositive ? 'var(--cm-high)' : 'var(--cm-low)' }}>{petPositive ? 'Positiva' : 'Negativa'}</strong>
+              PET: <strong style={{ color: petPositive ? 'var(--cm-high)' : 'var(--cm-low)' }}>{petPositive ? 'Positive' : 'Negative'}</strong>
             </p>
           )}
 
           <ScoreStrip
             score={ctSigns}
             max={CT_MAX}
-            note={`TC signs: ${ctSigns}/8. Parametri PET inseriti: ${petDataEntered ? 'sì' : 'no'}.`}
+            note={`CT signs: ${ctSigns}/8. PET parameters entered: ${petDataEntered ? 'yes' : 'no'}.`}
             badge={levelLabel[level]}
             level={levelRisk[level]}
           />

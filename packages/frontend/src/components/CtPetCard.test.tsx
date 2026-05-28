@@ -9,91 +9,91 @@ describe('CtPetCard', () => {
     useCaseStore.getState().reset()
   })
 
-  it('mostra messaggio quando non disponibile', () => {
+  it('shows message when unavailable', () => {
     render(<CtPetCard />)
-    expect(screen.getByText(/Seleziona la disponibilità/)).toBeInTheDocument()
+    expect(screen.getByText(/Select availability/)).toBeInTheDocument()
   })
 
-  it('mostra checkbox TC quando disponibile', () => {
+  it('shows CT checkboxes when available', () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    expect(screen.getByText('Margini irregolari')).toBeInTheDocument()
-    expect(screen.getByText('Calcificazioni')).toBeInTheDocument()
+    expect(screen.getByText('Irregular margins')).toBeInTheDocument()
+    expect(screen.getByText('Calcifications')).toBeInTheDocument()
   })
 
-  it('mostra segni TC 0/8 inizialmente', () => {
+  it('shows CT signs 0/8 initially', () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
     expect(screen.getByText('0/8')).toBeInTheDocument()
   })
 
-  it('conta segni TC selezionati', async () => {
+  it('counts selected CT signs', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    await userEvent.click(screen.getByText('Margini irregolari'))
-    await userEvent.click(screen.getByText('Invasione'))
-    await userEvent.click(screen.getByText('Natura solida'))
+    await userEvent.click(screen.getByText('Irregular margins'))
+    await userEvent.click(screen.getByText('Invasion'))
+    await userEvent.click(screen.getByText('Solid nature'))
     expect(screen.getByText('3/8')).toBeInTheDocument()
   })
 
-  it('mostra classificazione zona grigia per TC 3 segni e PET assente', async () => {
+  it('shows unavailable classification for CT 3 signs and absent PET', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    await userEvent.click(screen.getByText('Margini irregolari'))
-    await userEvent.click(screen.getByText('Versamento pericardico'))
-    await userEvent.click(screen.getByText('Invasione'))
-    expect(screen.getByText('Non disponibile')).toBeInTheDocument()
+    await userEvent.click(screen.getByText('Irregular margins'))
+    await userEvent.click(screen.getByText('Pericardial effusion'))
+    await userEvent.click(screen.getByText('Invasion'))
+    expect(screen.getByText('Unavailable')).toBeInTheDocument()
   })
 
-  it('mostra PET negativa quando SUVmax sotto cutoff', async () => {
+  it('shows negative PET when SUVmax is below cutoff', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    const suvInput = screen.getByPlaceholderText('≥ 4.9')
+    const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '3.2')
-    expect(screen.getByText('Negativa')).toBeInTheDocument()
+    expect(screen.getByText('Negative')).toBeInTheDocument()
   })
 
-  it('mostra PET positiva quando SUVmax sopra cutoff', async () => {
+  it('shows positive PET when SUVmax is above cutoff', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    const suvInput = screen.getByPlaceholderText('≥ 4.9')
+    const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '7.5')
-    expect(screen.getByText('Positiva')).toBeInTheDocument()
+    expect(screen.getByText('Positive')).toBeInTheDocument()
   })
 
-  it('non mostra stato PET finche nessun parametro inserito', () => {
+  it('does not show PET status until a parameter is entered', () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
     expect(screen.queryByText(/^PET:/)).not.toBeInTheDocument()
   })
 
-  it('mostra stato PET quando solo MTV inserito', async () => {
+  it('shows PET status when only MTV is entered', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    const mtvInput = screen.getByPlaceholderText('≥ 8.2')
+    const mtvInput = screen.getByPlaceholderText('>= 8.2')
     await userEvent.type(mtvInput, '10.0')
-    expect(screen.getByText('Positiva')).toBeInTheDocument()
+    expect(screen.getByText('Positive')).toBeInTheDocument()
   })
 
-  it('classificazione cambia da "Non disponibile" a "Basso sospetto" con TC 1 e PET negativa', async () => {
+  it('classification changes from unavailable to low suspicion with CT 1 and negative PET', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    await userEvent.click(screen.getByText('Margini irregolari'))
-    const suvInput = screen.getByPlaceholderText('≥ 4.9')
+    await userEvent.click(screen.getByText('Irregular margins'))
+    const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '2.0')
-    expect(screen.getByText('Basso sospetto')).toBeInTheDocument()
+    expect(screen.getByText('Low suspicion')).toBeInTheDocument()
   })
 
-  it('classificazione "Alto sospetto" con TC >=5 e PET negativa', async () => {
+  it('classifies high suspicion with CT >=5 and negative PET', async () => {
     useCaseStore.getState().setCtpetAvailable(true)
     render(<CtPetCard />)
-    await userEvent.click(screen.getByText('Margini irregolari'))
-    await userEvent.click(screen.getByText('Invasione'))
-    await userEvent.click(screen.getByText('Natura solida'))
-    await userEvent.click(screen.getByText('Diametro >30mm'))
-    await userEvent.click(screen.getByText('Captazione contrasto'))
-    const suvInput = screen.getByPlaceholderText('≥ 4.9')
+    await userEvent.click(screen.getByText('Irregular margins'))
+    await userEvent.click(screen.getByText('Invasion'))
+    await userEvent.click(screen.getByText('Solid nature'))
+    await userEvent.click(screen.getByText('Diameter >30 mm'))
+    await userEvent.click(screen.getByText('Contrast uptake'))
+    const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '2.0')
-    expect(screen.getByText('Alto sospetto')).toBeInTheDocument()
+    expect(screen.getByText('High suspicion')).toBeInTheDocument()
   })
 })

@@ -43,7 +43,7 @@ export function Header() {
               letterSpacing: '0.03em',
             }}
           >
-            Nuova Valutazione
+            New Evaluation
           </button>
         </nav>
       </div>

@@ -4,8 +4,8 @@ import type { CaseMetadata } from './storage'
 
 const fallbackMetadata: CaseMetadata = {
   caseId: '',
-  clinicalContext: 'Sospetta massa cardiaca',
-  location: 'Non specificata',
+  clinicalContext: 'Suspected cardiac mass',
+  location: 'Unspecified',
   note: '',
 }
 
@@ -29,37 +29,37 @@ export function buildClinicalReport({
   return [
     'CARDIAC MASS DECISION SUPPORT - POC',
     '',
-    `Caso: ${metadata.caseId.trim() || 'non specificato'}`,
-    `Contesto: ${metadata.clinicalContext}`,
-    `Localizzazione prevalente: ${metadata.location}`,
-    `Nota: ${metadata.note.trim() || '-'}`,
+    `Case: ${metadata.caseId.trim() || 'not specified'}`,
+    `Clinical context: ${metadata.clinicalContext}`,
+    `Predominant location: ${metadata.location}`,
+    `Note: ${metadata.note.trim() || '-'}`,
     '',
-    'SCORE E FEATURE',
+    'SCORES AND FEATURES',
     demScore !== null
-      ? `Ecocardiografia / DEM Score: ${demScore}/9; probabilità DEM stimata ${demProbability(demScore)}%.`
-      : 'Ecocardiografia / DEM Score: non disponibile.',
+      ? `Echocardiography / DEM Score: ${demScore}/9; estimated DEM probability of malignancy ${demProbability(demScore)}%.`
+      : 'Echocardiography / DEM Score: not available.',
     cmrScore !== null
       ? `CMR Mass Score: ${cmrScore}/8.`
-      : 'CMR Mass Score: non disponibile.',
+      : 'CMR Mass Score: not available.',
     ctScore !== null
-      ? `TC/PET: CT signs ${ctScore}/8; PET ${petPositive === null ? 'non inserita' : petPositive ? 'positiva' : 'negativa'}.`
-      : 'TC/PET: non disponibile.',
+      ? `CT/PET: CT signs ${ctScore}/8; PET ${petPositive === null ? 'not entered' : petPositive ? 'positive' : 'negative'}.`
+      : 'CT/PET: not available.',
     '',
-    'CONSENSO MULTIMODALE',
-    `Eco: ${result.modalities.echo.status}. ${result.modalities.echo.note}`,
+    'MULTIMODALITY CONSENSUS',
+    `Echo: ${result.modalities.echo.status}. ${result.modalities.echo.note}`,
     `CMR: ${result.modalities.cmr.status}. ${result.modalities.cmr.note}`,
-    `TC/PET: ${result.modalities.ctPet.status}. ${result.modalities.ctPet.note}`,
-    `Integrato: ${result.integrated.status}. ${result.integrated.note}`,
+    `CT/PET: ${result.modalities.ctPet.status}. ${result.modalities.ctPet.note}`,
+    `Integrated: ${result.integrated.status}. ${result.integrated.note}`,
     '',
-    'INTERPRETAZIONE',
+    'INTERPRETATION',
     `${result.title}. ${result.explanation}`,
     '',
-    'EVIDENZE',
-    ...(result.evidence.length ? result.evidence : ['Nessuna red flag selezionata o nessun esame avanzato disponibile.']).map((item) => `- ${item}`),
+    'EVIDENCE',
+    ...(result.evidence.length ? result.evidence : ['No red flag selected or no advanced imaging available.']).map((item) => `- ${item}`),
     '',
-    'NEXT STEP SUGGERITO',
+    'SUGGESTED NEXT STEP',
     result.nextStep,
     '',
-    'Nota: prototipo dimostrativo. Non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida.',
+    'Note: demonstration prototype. It does not replace clinical judgment, specialist reporting, Heart Team discussion, or guidelines.',
   ].join('\n')
 }

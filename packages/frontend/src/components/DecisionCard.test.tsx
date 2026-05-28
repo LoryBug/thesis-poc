@@ -6,8 +6,8 @@ import type { ConsensusResult } from '@cm-dss/core'
 function makeResult(risk: ConsensusResult['risk']): ConsensusResult {
   return {
     risk,
-    title: `Rischio ${risk}`,
-    subtitle: `Sottotitolo per ${risk}`,
+    title: `Risk ${risk}`,
+    subtitle: `Subtitle for ${risk}`,
     explanation: '',
     nextStep: '',
     evidence: [],
@@ -21,24 +21,24 @@ function makeResult(risk: ConsensusResult['risk']): ConsensusResult {
 }
 
 describe('DecisionCard', () => {
-  it('mostra titolo e sottotitolo per rischio alto', () => {
+  it('shows title and subtitle for high risk', () => {
     render(<DecisionCard result={makeResult('high')} />)
-    expect(screen.getByText('Rischio high')).toBeInTheDocument()
-    expect(screen.getByText('Sottotitolo per high')).toBeInTheDocument()
+    expect(screen.getByText('Risk high')).toBeInTheDocument()
+    expect(screen.getByText('Subtitle for high')).toBeInTheDocument()
   })
 
-  it('mostra titolo e sottotitolo per rischio medio', () => {
+  it('shows title and subtitle for medium risk', () => {
     render(<DecisionCard result={makeResult('mid')} />)
-    expect(screen.getByText('Rischio mid')).toBeInTheDocument()
+    expect(screen.getByText('Risk mid')).toBeInTheDocument()
   })
 
-  it('mostra titolo e sottotitolo per rischio basso', () => {
+  it('shows title and subtitle for low risk', () => {
     render(<DecisionCard result={makeResult('low')} />)
-    expect(screen.getByText('Rischio low')).toBeInTheDocument()
+    expect(screen.getByText('Risk low')).toBeInTheDocument()
   })
 
-  it('mostra titolo per rischio non valutato', () => {
+  it('shows title for not-evaluated risk', () => {
     render(<DecisionCard result={makeResult('not')} />)
-    expect(screen.getByText('Rischio not')).toBeInTheDocument()
+    expect(screen.getByText('Risk not')).toBeInTheDocument()
   })
 })

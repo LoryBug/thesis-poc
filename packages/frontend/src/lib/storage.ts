@@ -45,6 +45,6 @@ export function saveCases(cases: SavedCase[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cases))
   } catch (err) {
-    console.error('Impossibile salvare la cronologia (quota localStorage esaurita o accesso negato):', err)
+    console.error('Unable to save history (localStorage quota exhausted or access denied):', err)
   }
 }

@@ -6,16 +6,16 @@ interface Props {
 }
 
 const badgeByRisk: Record<ConsensusResult['risk'], string> = {
-  high: 'Alta priorità',
-  mid: 'Approfondire',
-  low: 'Basso rischio',
+  high: 'High priority',
+  mid: 'Needs review',
+  low: 'Low risk',
   not: 'POC',
 }
 
 export function ConsensusPanel({ result }: Props) {
   const evidence = result.evidence.length > 0
     ? result.evidence
-    : ['Nessuna evidenza generata.']
+    : ['No evidence generated.']
 
   return (
     <article className={`cm-card cm-decision ${result.risk === 'not' ? '' : result.risk}`}>
@@ -27,15 +27,15 @@ export function ConsensusPanel({ result }: Props) {
         <RiskPill level={result.risk}>{badgeByRisk[result.risk]}</RiskPill>
       </div>
 
-      <p className="mt-1 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Spiegazione</p>
+      <p className="mt-1 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Explanation</p>
       <p className="cm-decision-text">{result.explanation}</p>
 
-      <div className="cm-consensus-box" aria-label="Consenso multimodale">
+      <div className="cm-consensus-box" aria-label="Multimodality consensus">
         {([
-          ['Eco', result.modalities.echo],
+          ['Echo', result.modalities.echo],
           ['CMR', result.modalities.cmr],
-          ['TC/PET', result.modalities.ctPet],
-          ['Integrato', result.integrated],
+          ['CT/PET', result.modalities.ctPet],
+          ['Integrated', result.integrated],
         ] as const).map(([label, modality]) => (
           <div key={label} className="cm-consensus-row">
             <span>{label}</span>
@@ -48,11 +48,11 @@ export function ConsensusPanel({ result }: Props) {
       </div>
 
       <div className="cm-next-step">
-        <strong>Prossimo passo</strong>
+        <strong>Next step</strong>
         <p>{result.nextStep}</p>
       </div>
 
-      <p className="mt-4 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Evidenze</p>
+      <p className="mt-4 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Evidence</p>
       <ul className="cm-evidence-list">
         {evidence.map((item) => <li key={item}>{item}</li>)}
       </ul>

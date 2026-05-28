@@ -675,15 +675,15 @@
         <div class="eyebrow">Proof of concept</div>
         <h1>Cardiac Mass Decision Support</h1>
         <p class="lead">
-          Prototipo rapido per applicare score diagnostici sulle masse cardiache, motivare il sospetto clinico e proporre un possibile next step di imaging.
+          Rapid prototype for applying diagnostic scores to cardiac masses, explaining clinical suspicion, and proposing a possible next imaging step.
         </p>
       </div>
 
       <aside class="hero-side">
         <div class="status-panel">
-          <div class="status-label">Output integrato</div>
-          <div class="status-value" id="heroRisk">Non valutato</div>
-          <div class="status-subtitle" id="heroSubtitle">Seleziona gli esami disponibili e le feature osservate.</div>
+          <div class="status-label">Integrated output</div>
+          <div class="status-value" id="heroRisk">Not evaluated</div>
+          <div class="status-subtitle" id="heroSubtitle">Select available examinations and observed features.</div>
         </div>
         <div class="mini-grid">
           <div class="mini-stat"><strong id="heroDem">-</strong><span>DEM</span></div>
@@ -698,39 +698,39 @@
         <article class="card">
           <div class="card-header">
             <div class="card-title">
-              <h2>Dati del caso</h2>
-              <p>Campi opzionali per generare un report sintetico copiabile.</p>
+              <h2>Case data</h2>
+              <p>Optional fields used to generate a concise copyable report.</p>
             </div>
-            <span class="pill">Input clinico</span>
+            <span class="pill">Clinical input</span>
           </div>
           <div class="form-grid">
             <label class="field">
-              ID caso / paziente
-              <input id="caseId" type="text" placeholder="Es. CM-001">
+              Case / patient ID
+              <input id="caseId" type="text" placeholder="e.g. CM-001">
             </label>
             <label class="field">
-              Contesto clinico
+              Clinical context
               <select id="clinicalContext">
-                <option value="Sospetta massa cardiaca">Sospetta massa cardiaca</option>
-                <option value="Riscontro incidentale">Riscontro incidentale</option>
-                <option value="Paziente oncologico">Paziente oncologico</option>
-                <option value="Sospetto trombo">Sospetto trombo</option>
-                <option value="Sospetta endocardite">Sospetta endocardite</option>
+                <option value="Suspected cardiac mass">Suspected cardiac mass</option>
+                <option value="Incidental finding">Incidental finding</option>
+                <option value="Oncology patient">Oncology patient</option>
+                <option value="Suspected thrombus">Suspected thrombus</option>
+                <option value="Suspected endocarditis">Suspected endocarditis</option>
               </select>
             </label>
             <label class="field">
-              Localizzazione prevalente
+              Predominant location
               <select id="location">
-                <option value="Non specificata">Non specificata</option>
-                <option value="Camere sinistre">Camere sinistre</option>
-                <option value="Camere destre">Camere destre</option>
-                <option value="Pericardio">Pericardio</option>
-                <option value="Grossi vasi">Grossi vasi</option>
+                <option value="Unspecified">Unspecified</option>
+                <option value="Left chambers">Left chambers</option>
+                <option value="Right chambers">Right chambers</option>
+                <option value="Pericardium">Pericardium</option>
+                <option value="Great vessels">Great vessels</option>
               </select>
             </label>
             <label class="field">
-              Nota rapida
-              <input id="freeNote" type="text" placeholder="Es. massa atriale destra, dispnea NYHA III">
+              Quick note
+              <input id="freeNote" type="text" placeholder="e.g. right atrial mass, NYHA III dyspnea">
             </label>
           </div>
         </article>
@@ -738,36 +738,36 @@
         <article class="card" data-exam-card="echo">
           <div class="card-header">
             <div class="card-title">
-              <h2>Ecocardiografia - DEM Score</h2>
-              <p>Score ecocardiografico pesato per sospetto di malignita. Cutoff operativo: DEM >= 3.</p>
+              <h2>Echocardiography - DEM Score</h2>
+              <p>Weighted echocardiographic score for predicted malignancy in cardiac masses. Operational cutoff: DEM >= 3.</p>
             </div>
-            <label class="exam-toggle"><input id="echoAvailable" type="checkbox" checked> Eco disponibile</label>
+            <label class="exam-toggle"><input id="echoAvailable" type="checkbox" checked> Echocardiography available</label>
           </div>
           <div data-exam-body="echo">
             <div class="feature-grid">
               <label class="feature">
-                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Infiltrazione">
-                <span><b>Infiltrazione</b><small>Estensione in miocardio/pericardio o tessuti vicini.</small></span>
+                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Infiltration">
+                <span><b>Infiltration</b><small>Extension into myocardium, pericardium, or neighboring tissues.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Massa polilobata">
-                <span><b>Massa polilobata</b><small>Due o piu lobi, morfologia complessa.</small></span>
+                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Polylobate mass">
+                <span><b>Polylobate mass</b><small>Two or more lobes with complex morphology.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Versamento pericardico moderato/severo">
-                <span><b>Versamento pericardico</b><small>Moderato/severo o clinicamente significativo.</small></span>
+                <input type="checkbox" data-score="dem" data-points="2" data-count="echo" data-label="Moderate-severe pericardial effusion">
+                <span><b>Pericardial effusion</b><small>Moderate-severe or clinically significant.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Aspetto sessile">
-                <span><b>Aspetto sessile</b><small>Base larga, assenza di peduncolo evidente.</small></span>
+                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Sessile appearance">
+                <span><b>Sessile appearance</b><small>Broad base without a clear peduncle.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Disomogeneita">
-                <span><b>Disomogeneita</b><small>Ecogenicita eterogenea rispetto al miocardio.</small></span>
+                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Inhomogeneity">
+                <span><b>Inhomogeneity</b><small>Heterogeneous echogenicity compared with myocardium.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Localizzazione non sinistra">
-                <span><b>Localizzazione non sinistra</b><small>Cuore destro, pericardio o grossi vasi.</small></span>
+                <input type="checkbox" data-score="dem" data-points="1" data-count="echo" data-label="Non-left localization">
+                <span><b>Non-left localization</b><small>Right heart, pericardium, or great vessels.</small></span>
               </label>
             </div>
 
@@ -775,9 +775,9 @@
               <div class="score-number"><span id="demScore">0</span><span>/9</span></div>
               <div>
                 <div class="bar"><i id="demBar"></i></div>
-                <div class="score-note" id="demNote">Probabilita DEM stimata: 0%. Sotto cutoff.</div>
+                <div class="score-note" id="demNote">Estimated DEM probability of malignancy: 0%. Below cutoff.</div>
               </div>
-              <span class="pill low" id="demBadge">Basso sospetto</span>
+              <span class="pill low" id="demBadge">Low suspicion</span>
             </div>
           </div>
         </article>
@@ -785,36 +785,36 @@
         <article class="card" data-exam-card="cmr">
           <div class="card-header">
             <div class="card-title">
-              <h2>Risonanza magnetica - CMR Mass Score</h2>
-              <p>Integra morfologia e caratterizzazione tissutale. Cutoff operativo: CMR Mass Score >= 5.</p>
+              <h2>Cardiac magnetic resonance - CMR Mass Score</h2>
+              <p>Integrates morphology and tissue characterization. Operational cutoff: CMR Mass Score >= 5.</p>
             </div>
-            <label class="exam-toggle"><input id="cmrAvailable" type="checkbox"> CMR disponibile</label>
+            <label class="exam-toggle"><input id="cmrAvailable" type="checkbox"> CMR available</label>
           </div>
           <div data-exam-body="cmr" class="disabled-section">
             <div class="feature-grid">
               <label class="feature">
-                <input type="checkbox" data-score="cmr" data-points="2" data-label="Infiltrazione CMR">
-                <span><b>Infiltrazione</b><small>Disruption/estensione nei tessuti adiacenti.</small></span>
+                <input type="checkbox" data-score="cmr" data-points="2" data-label="CMR infiltration">
+                <span><b>Infiltration</b><small>Disruption or extension into adjacent tissues.</small></span>
               </label>
               <label class="feature">
                 <input type="checkbox" data-score="cmr" data-points="2" data-label="First-pass contrast perfusion">
-                <span><b>First-pass perfusion</b><small>Perfusione della massa dopo gadolinio.</small></span>
+                <span><b>First-pass contrast perfusion</b><small>Mass perfusion after gadolinium administration.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="cmr" data-points="1" data-label="Versamento pericardico CMR">
-                <span><b>Versamento pericardico</b><small>Piu che lieve o post-pericardiocentesi.</small></span>
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="CMR pericardial effusion">
+                <span><b>Pericardial effusion</b><small>More than mild, or mild after pericardiocentesis.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="cmr" data-points="1" data-label="Aspetto sessile CMR">
-                <span><b>Aspetto sessile</b><small>Impianto diretto su parete/base larga.</small></span>
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="CMR sessile appearance">
+                <span><b>Sessile appearance</b><small>Direct wall attachment or broad base.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="cmr" data-points="1" data-label="Forma polilobata CMR">
-                <span><b>Forma polilobata</b><small>Due o piu lobi alla valutazione multiplanare.</small></span>
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="CMR polylobate shape">
+                <span><b>Polylobate shape</b><small>Two or more lobes on multiplanar assessment.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="cmr" data-points="1" data-label="Enhancement eterogeneo">
-                <span><b>Enhancement eterogeneo</b><small>Pattern disomogeneo post-contrasto.</small></span>
+                <input type="checkbox" data-score="cmr" data-points="1" data-label="Heterogeneity enhancement">
+                <span><b>Heterogeneity enhancement</b><small>Heterogeneous post-contrast enhancement pattern.</small></span>
               </label>
             </div>
 
@@ -822,9 +822,9 @@
               <div class="score-number"><span id="cmrScore">0</span><span>/8</span></div>
               <div>
                 <div class="bar"><i id="cmrBar"></i></div>
-                <div class="score-note" id="cmrNote">CMR non disponibile: score non usato nella decisione.</div>
+                <div class="score-note" id="cmrNote">CMR unavailable: score not used in the decision.</div>
               </div>
-              <span class="pill" id="cmrBadge">Non calcolato</span>
+              <span class="pill" id="cmrBadge">Not calculated</span>
             </div>
           </div>
         </article>
@@ -832,44 +832,44 @@
         <article class="card" data-exam-card="ctpet">
           <div class="card-header">
             <div class="card-title">
-              <h2>TC cardiaca e PET/TC</h2>
-              <p>Conteggio dei segni TC: <=2 basso sospetto, 3-4 zona grigia, >=5 alto sospetto. PET utile soprattutto nella zona grigia o per staging.</p>
+              <h2>Cardiac CT and 18F-FDG PET/CT</h2>
+              <p>CT sign count: &lt;=2 low suspicion, 3-4 gray zone, &gt;=5 high suspicion. PET is especially useful in the gray zone or for staging.</p>
             </div>
-            <label class="exam-toggle"><input id="ctpetAvailable" type="checkbox"> TC/PET disponibile</label>
+            <label class="exam-toggle"><input id="ctpetAvailable" type="checkbox"> CT/PET available</label>
           </div>
           <div data-exam-body="ctpet" class="disabled-section">
             <div class="feature-grid">
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Margini irregolari TC">
-                <span><b>Margini irregolari</b><small>Profilo non circoscritto o spiculato.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT irregular margins">
+                <span><b>Irregular margins</b><small>Non-circumscribed or spiculated profile.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Versamento pericardico TC">
-                <span><b>Versamento pericardico</b><small>Associato a massa sospetta.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT pericardial effusion">
+                <span><b>Pericardial effusion</b><small>Associated with a suspicious mass.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Invasione TC">
-                <span><b>Invasione</b><small>Disruption o estensione in strutture vicine.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT invasion">
+                <span><b>Invasion</b><small>Disruption or extension into adjacent structures.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Natura solida TC">
-                <span><b>Natura solida</b><small>Densita compatibile con componente solida.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT solid nature">
+                <span><b>Solid nature</b><small>Density compatible with a solid component.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Diametro maggiore di 30 mm">
-                <span><b>Diametro &gt; 30 mm</b><small>Dimensione elevata, non diagnostica da sola.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="Diameter greater than 30 mm">
+                <span><b>Diameter &gt; 30 mm</b><small>Large size, not diagnostic on its own.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Uptake contrastografico TC">
-                <span><b>Uptake di contrasto</b><small>Aumento densita dopo mezzo di contrasto.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT contrast uptake">
+                <span><b>Contrast uptake</b><small>Density increase after contrast medium.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Segnale isodenso pre-contrasto TC">
-                <span><b>Isodenso pre-contrasto</b><small>Caratteristica pre-contrastografica associata a malignita nello studio TC.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT pre-contrast suspicious density">
+                <span><b>Pre-contrast suspicious density</b><small>Pre-contrast density associated with suspicion in the cardiac CT study.</small></span>
               </label>
               <label class="feature">
-                <input type="checkbox" data-score="ct" data-points="1" data-label="Calcificazioni TC">
-                <span><b>Calcificazioni</b><small>Segno incluso nello studio, meno discriminante.</small></span>
+                <input type="checkbox" data-score="ct" data-points="1" data-label="CT calcifications">
+                <span><b>Calcifications</b><small>Sign included in the study, less discriminative on its own.</small></span>
               </label>
             </div>
 
@@ -892,9 +892,9 @@
               <div class="score-number"><span id="ctScore">0</span><span>/8</span></div>
               <div>
                 <div class="bar"><i id="ctBar"></i></div>
-                <div class="score-note" id="ctNote">TC/PET non disponibile: score non usato nella decisione.</div>
+                <div class="score-note" id="ctNote">CT/PET unavailable: score not used in the decision.</div>
               </div>
-              <span class="pill" id="ctBadge">Non calcolato</span>
+              <span class="pill" id="ctBadge">Not calculated</span>
             </div>
           </div>
         </article>
@@ -904,63 +904,63 @@
         <article class="card decision" id="decisionCard">
           <div class="card-header">
             <div class="card-title">
-              <h2 id="decisionTitle">Decisione non valutata</h2>
-              <p id="decisionSubtitle">Inserisci almeno un esame disponibile.</p>
+              <h2 id="decisionTitle">Decision not evaluated</h2>
+              <p id="decisionSubtitle">Enter at least one available examination.</p>
             </div>
             <span class="pill" id="decisionBadge">POC</span>
           </div>
           <p class="decision-text" id="decisionText">
-            Il sistema applica regole derivate dagli studi letti: DEM Score, CMR Mass Score e approccio TC/PET.
+            The system applies rules derived from the reviewed studies: DEM Score, CMR Mass Score, and the CT/PET approach.
           </p>
-          <div class="consensus-box" aria-label="Consenso multimodale">
+          <div class="consensus-box" aria-label="Multimodality consensus">
             <div class="consensus-row">
-              <span>Eco</span>
-              <div><strong id="consensusEcho">Non valutata</strong><small id="consensusEchoNote">Primo livello: triage e indicazione a imaging avanzato.</small></div>
+              <span>Echo</span>
+              <div><strong id="consensusEcho">Not evaluated</strong><small id="consensusEchoNote">First-line triage and indication for advanced imaging.</small></div>
             </div>
             <div class="consensus-row">
               <span>CMR</span>
-              <div><strong id="consensusCmr">Non disponibile</strong><small id="consensusCmrNote">Esame dominante quando disponibile per caratterizzazione tissutale.</small></div>
+              <div><strong id="consensusCmr">Unavailable</strong><small id="consensusCmrNote">Dominant examination when available for tissue characterization.</small></div>
             </div>
             <div class="consensus-row">
-              <span>TC/PET</span>
-              <div><strong id="consensusCtPet">Non disponibile</strong><small id="consensusCtPetNote">Percorso alternativo o complementare, soprattutto in zona grigia.</small></div>
+              <span>CT/PET</span>
+              <div><strong id="consensusCtPet">Unavailable</strong><small id="consensusCtPetNote">Alternative or complementary pathway, especially in the gray zone.</small></div>
             </div>
             <div class="consensus-row">
-              <span>Integrato</span>
-              <div><strong id="consensusIntegrated">In attesa di input</strong><small id="consensusIntegratedNote">Gli esami non vengono sommati: si valuta concordanza, discordanza e gerarchia clinica.</small></div>
+              <span>Integrated</span>
+              <div><strong id="consensusIntegrated">Awaiting input</strong><small id="consensusIntegratedNote">Examinations are not simply added: concordance, discordance, and clinical hierarchy are assessed.</small></div>
             </div>
           </div>
           <div class="next-step">
-            <strong>Next step suggerito</strong>
-            <p id="nextStep">Completare input clinico-imaging.</p>
+            <strong>Suggested next step</strong>
+            <p id="nextStep">Complete clinical/imaging input.</p>
           </div>
           <ul class="evidence-list" id="evidenceList">
-            <li>Nessuna evidenza selezionata.</li>
+            <li>No evidence selected.</li>
           </ul>
         </article>
 
         <article class="card">
           <div class="card-header">
             <div class="card-title">
-              <h2>Report copiabile</h2>
-              <p>Bozza automatica per discussione in Heart Team o meeting.</p>
+              <h2>Copyable report</h2>
+              <p>Automatic draft for Heart Team discussion or case meeting.</p>
             </div>
           </div>
           <textarea id="report" readonly></textarea>
           <div class="actions">
-            <button id="copyReport" type="button">Copia report</button>
+            <button id="copyReport" type="button">Copy report</button>
             <button id="resetForm" class="secondary" type="button">Reset</button>
           </div>
         </article>
 
         <article class="card disclaimer">
-          <strong>Nota POC</strong><br>
-          Questo prototipo e solo dimostrativo e non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida. Le soglie sono derivate dagli articoli forniti.
+          <strong>POC note</strong><br>
+          This prototype is demonstrative only and does not replace clinical judgment, specialist reporting, Heart Team discussion, or guidelines. Thresholds are derived from the supplied papers.
         </article>
       </aside>
     </section>
 
-    <p class="footer-note">Prototype HTML/CSS/vanilla JS - Masse cardiache, score diagnostici e supporto decisionale.</p>
+    <p class="footer-note">Prototype HTML/CSS/vanilla JS - cardiac masses, diagnostic scores, and decision support.</p>
   </main>
 
   <script>
@@ -990,18 +990,18 @@
     const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
     function cutoffLevel(score, cutoff, unavailable) {
-      if (unavailable) return { label: "Non calcolato", className: "" };
-      if (score >= cutoff) return { label: "Sopra cutoff", className: "high" };
-      return { label: "Sotto cutoff", className: "low" };
+      if (unavailable) return { label: "Not calculated", className: "" };
+      if (score >= cutoff) return { label: "Above cutoff", className: "high" };
+      return { label: "Below cutoff", className: "low" };
     }
 
     function ctPetLevel(ctSigns, petAbnormal, unavailable) {
-      if (unavailable) return { label: "Non calcolato", className: "" };
-      if (ctSigns >= 5) return { label: "Alto sospetto TC", className: "high" };
-      if (ctSigns >= 3 && ctSigns <= 4 && petAbnormal > 0) return { label: "Alto sospetto TC/PET", className: "high" };
-      if (ctSigns >= 3 && ctSigns <= 4) return { label: "Zona grigia TC", className: "mid" };
-      if (petAbnormal > 0) return { label: "Discordante", className: "mid" };
-      return { label: "Basso sospetto TC", className: "low" };
+      if (unavailable) return { label: "Not calculated", className: "" };
+      if (ctSigns >= 5) return { label: "Cardiac CT high suspicion", className: "high" };
+      if (ctSigns >= 3 && ctSigns <= 4 && petAbnormal > 0) return { label: "CT/PET high suspicion", className: "high" };
+      if (ctSigns >= 3 && ctSigns <= 4) return { label: "Cardiac CT gray zone", className: "mid" };
+      if (petAbnormal > 0) return { label: "Discordant", className: "mid" };
+      return { label: "Cardiac CT low suspicion", className: "low" };
     }
 
     function setBadge(element, level) {
@@ -1066,24 +1066,24 @@
       $("#demScore").textContent = echoAvailable ? state.dem : "-";
       $("#demBar").style.width = echoAvailable ? `${Math.min(100, state.dem / 9 * 100)}%` : "0%";
       $("#demNote").textContent = echoAvailable
-        ? `Probabilita DEM stimata: ${demProbability[state.dem]}%. Count non pesato: ${state.echoCount}/6.`
-        : "Eco non disponibile: DEM Score non usato nella decisione.";
+        ? `Estimated DEM probability of malignancy: ${demProbability[state.dem]}%. Unweighted count: ${state.echoCount}/6.`
+        : "Echo unavailable: DEM Score not used in the decision.";
       setBadge($("#demBadge"), demLevel);
 
       const cmrLevel = cutoffLevel(state.cmr, 5, !cmrAvailable);
       $("#cmrScore").textContent = cmrAvailable ? state.cmr : "-";
       $("#cmrBar").style.width = cmrAvailable ? `${Math.min(100, state.cmr / 8 * 100)}%` : "0%";
       $("#cmrNote").textContent = cmrAvailable
-        ? `Cutoff CMR Mass Score >= 5. Score corrente: ${state.cmr}/8.`
-        : "CMR non disponibile: score non usato nella decisione.";
+        ? `CMR Mass Score cutoff >= 5. Current score: ${state.cmr}/8.`
+        : "CMR unavailable: score not used in the decision.";
       setBadge($("#cmrBadge"), cmrLevel);
 
       const ctLevel = ctPetLevel(state.ct, state.petAbnormal, !ctpetAvailable);
       $("#ctScore").textContent = ctpetAvailable ? state.ct : "-";
       $("#ctBar").style.width = ctpetAvailable ? `${Math.min(100, state.ct / 8 * 100)}%` : "0%";
       $("#ctNote").textContent = ctpetAvailable
-        ? `TC signs: ${state.ct}/8. Parametri PET patologici: ${state.petAbnormal}/3.`
-        : "TC/PET non disponibile: score non usato nella decisione.";
+        ? `CT signs: ${state.ct}/8. PET parameters above cutoff: ${state.petAbnormal}/3.`
+        : "CT/PET unavailable: score not used in the decision.";
       setBadge($("#ctBadge"), ctLevel);
 
       $("#heroDem").textContent = echoAvailable ? `${state.dem}/9` : "-";
@@ -1113,114 +1113,114 @@
       const anyExam = echoAvailable || cmrAvailable || ctpetAvailable;
 
       const consensus = {
-        echo: echoAvailable ? (echoPositive ? `DEM positivo (${state.dem}/9)` : `DEM sotto cutoff (${state.dem}/9)`) : "Non disponibile",
+        echo: echoAvailable ? (echoPositive ? `DEM positive (${state.dem}/9)` : `DEM below cutoff (${state.dem}/9)`) : "Unavailable",
         echoNote: echoAvailable
-          ? (echoPositive ? "Primo livello positivo: nei paper indica approfondimento con imaging avanzato." : "Primo livello senza cutoff di malignita; resta dipendente da finestra acustica e contesto.")
-          : "Primo livello non inserito.",
-        cmr: cmrAvailable ? (cmrPositive ? `CMR Mass Score positivo (${state.cmr}/8)` : `CMR Mass Score sotto cutoff (${state.cmr}/8)`) : "Non disponibile",
+          ? (echoPositive ? "Positive first-line imaging: advanced imaging is indicated in the papers." : "First-line imaging does not reach the malignancy cutoff; interpretation still depends on acoustic window and context.")
+          : "First-line imaging not entered.",
+        cmr: cmrAvailable ? (cmrPositive ? `CMR Mass Score positive (${state.cmr}/8)` : `CMR Mass Score below cutoff (${state.cmr}/8)`) : "Unavailable",
         cmrNote: cmrAvailable
-          ? (cmrPositive ? "Esame dominante positivo: integra morfologia e caratterizzazione tissutale." : "Esame dominante sotto cutoff; utile per chiarire sospetti ecocardiografici.")
-          : "Nei paper e l'esame non invasivo piu completo dopo ecocardiografia.",
-        ctPet: "Non disponibile",
-        ctPetNote: "Percorso alternativo/complementare se CMR non fattibile, inconclusiva o per staging.",
-        integrated: "In attesa di input",
-        integratedNote: "Gli esami non vengono sommati: si valuta concordanza, discordanza e gerarchia clinica."
+          ? (cmrPositive ? "Dominant examination positive: integrates morphology and tissue characterization." : "Dominant examination below cutoff; useful to clarify echocardiographic suspicion.")
+          : "In the papers, this is the most comprehensive non-invasive examination after echocardiography.",
+        ctPet: "Unavailable",
+        ctPetNote: "Alternative/complementary pathway if CMR is not feasible, inconclusive, or needed for staging.",
+        integrated: "Awaiting input",
+        integratedNote: "Examinations are not simply added: concordance, discordance, and clinical hierarchy are assessed."
       };
 
       if (ctpetAvailable) {
         if (ctHigh) {
-          consensus.ctPet = `TC ad alto sospetto (${state.ct}/8)`;
-          consensus.ctPetNote = "Almeno 5 segni TC: nel paper identifica fortemente la natura maligna.";
+          consensus.ctPet = `Cardiac CT high suspicion (${state.ct}/8)`;
+          consensus.ctPetNote = "At least 5 CT signs: strongly supports a malignant nature in the paper algorithm.";
         } else if (ctGray && petPositive) {
-          consensus.ctPet = `Zona grigia TC + PET positiva (${state.ct}/8)`;
-          consensus.ctPetNote = "La PET viene usata per risolvere i casi TC 3-4 segni verso malignita.";
+          consensus.ctPet = `CT gray zone + PET positive (${state.ct}/8)`;
+          consensus.ctPetNote = "PET is used to shift CT 3-4 sign cases toward malignancy.";
         } else if (ctGray && petNegative) {
-          consensus.ctPet = `Zona grigia TC + PET negativa (${state.ct}/8)`;
-          consensus.ctPetNote = "Nel paper valori PET sotto cutoff aiutano a riclassificare i casi grigi verso benignita.";
+          consensus.ctPet = `CT gray zone + PET negative (${state.ct}/8)`;
+          consensus.ctPetNote = "In the paper, PET values below cutoff help reclassify gray-zone cases toward benignity.";
         } else if (ctGray) {
-          consensus.ctPet = `Zona grigia TC (${state.ct}/8)`;
-          consensus.ctPetNote = "Servono PET/TC o integrazione con CMR per aumentare la confidenza.";
+          consensus.ctPet = `CT gray zone (${state.ct}/8)`;
+          consensus.ctPetNote = "PET/CT or CMR integration is needed to increase confidence.";
         } else if (ctPetDiscordant) {
-          consensus.ctPet = `Discordanza TC/PET (${state.ct}/8)`;
-          consensus.ctPetNote = "TC <=2 segni ma PET positiva: combinazione non equivalente all'algoritmo principale del paper.";
+          consensus.ctPet = `CT/PET discordance (${state.ct}/8)`;
+          consensus.ctPetNote = "CT <= 2 signs but PET positive: this combination is not equivalent to the main paper algorithm.";
         } else {
-          consensus.ctPet = `TC a basso sospetto (${state.ct}/8)`;
-          consensus.ctPetNote = "Due o meno segni TC: nel paper escludeva malignita nel campione studiato.";
+          consensus.ctPet = `Cardiac CT low suspicion (${state.ct}/8)`;
+          consensus.ctPetNote = "Two or fewer CT signs: malignancy was unlikely in the studied sample.";
         }
       }
 
-      if (echoPositive) evidence.push(`Ecocardiografia positiva: DEM Score ${state.dem}/9 (${echoLabels.join(", ")}).`);
-      if (echoCountPositive) evidence.push(`Check-list eco non pesata positiva: ${state.echoCount}/6 feature di malignita.`);
-      if (cmrPositive) evidence.push(`CMR positiva: CMR Mass Score ${state.cmr}/8 (${cmrLabels.join(", ")}).`);
-      if (cmrNegative && echoPositive) evidence.push("Discordanza eco-CMR: DEM positivo ma CMR Mass Score sotto cutoff.");
-      if (ctHigh) evidence.push(`TC positiva: almeno 5 segni patologici (${state.ct}/8: ${ctLabels.join(", ")}).`);
-      if (ctGray) evidence.push(`TC in zona grigia (${state.ct}/8): nel paper richiede PET/TC o integrazione multimodale.`);
-      if (ctGray && petPositive) evidence.push(`PET/TC positiva nella zona grigia TC: ${formatPetEvidence(pet)}.`);
-      if (ctGray && petNegative) evidence.push(`PET/TC sotto cutoff nella zona grigia TC: ${formatPetEvidence(pet)}.`);
-      if (ctPetDiscordant) evidence.push(`Dato discordante: TC <=2 segni ma PET/TC patologica (${formatPetEvidence(pet)}).`);
+      if (echoPositive) evidence.push(`Positive echocardiography: DEM Score ${state.dem}/9 (${echoLabels.join(", ")}).`);
+      if (echoCountPositive) evidence.push(`Positive unweighted echo checklist: ${state.echoCount}/6 malignancy features.`);
+      if (cmrPositive) evidence.push(`Positive CMR: CMR Mass Score ${state.cmr}/8 (${cmrLabels.join(", ")}).`);
+      if (cmrNegative && echoPositive) evidence.push("Echo-CMR discordance: DEM positive but CMR Mass Score below cutoff.");
+      if (ctHigh) evidence.push(`Positive cardiac CT: at least 5 pathological signs (${state.ct}/8: ${ctLabels.join(", ")}).`);
+      if (ctGray) evidence.push(`Cardiac CT gray zone (${state.ct}/8): the paper requires PET/CT or multimodality integration.`);
+      if (ctGray && petPositive) evidence.push(`Positive PET/CT in the CT gray zone: ${formatPetEvidence(pet)}.`);
+      if (ctGray && petNegative) evidence.push(`PET/CT below cutoff in the CT gray zone: ${formatPetEvidence(pet)}.`);
+      if (ctPetDiscordant) evidence.push(`Discordant finding: CT <= 2 signs but PET/CT positive (${formatPetEvidence(pet)}).`);
 
       let risk = "not";
-      let title = "Decisione non valutata";
-      let subtitle = "Inserisci almeno un esame disponibile.";
-      let text = "Il sistema applica regole derivate dagli studi letti: DEM Score, CMR Mass Score e approccio TC/PET.";
-      let next = "Completare input clinico-imaging.";
+      let title = "Decision not evaluated";
+      let subtitle = "Enter at least one available examination.";
+      let text = "The system applies rules derived from the reviewed studies: DEM Score, CMR Mass Score, and the CT/PET approach.";
+      let next = "Complete clinical/imaging input.";
 
       if (!anyExam) {
         risk = "not";
       } else if (cmrPositive && echoPositive) {
         risk = "high";
-        title = "Concordanza eco-CMR ad alto sospetto";
-        subtitle = "DEM e CMR Mass Score sono entrambi sopra cutoff.";
-        text = "La combinazione e coerente con la logica multimodale dei paper: l'eco segnala il rischio e la CMR conferma con caratterizzazione tissutale.";
-        next = "Discussione rapida in Heart Team; completare staging se contesto oncologico; valutare biopsia/chirurgia se utile alla gestione.";
+        title = "Concordant high-suspicion echo-CMR";
+        subtitle = "DEM and CMR Mass Score are both above cutoff.";
+        text = "This combination follows the multimodality logic of the papers: echocardiography flags risk and CMR confirms with tissue characterization.";
+        next = "Rapid Heart Team discussion; complete staging if the oncology context applies; consider biopsy or surgery if useful for management.";
       } else if (cmrPositive) {
         risk = "high";
-        title = "Alto sospetto guidato da CMR";
-        subtitle = "CMR Mass Score sopra cutoff, anche se eco non positiva o non disponibile.";
-        text = "Quando disponibile, la CMR e l'esame non invasivo piu completo e nel paper supera l'ecocardiografia per accuratezza diagnostica.";
-        next = "Gestire come alto sospetto: Heart Team, staging/TC/PET se indicati, valutazione istologica o terapeutica secondo fattibilita clinica.";
+        title = "CMR-driven high suspicion";
+        subtitle = "CMR Mass Score above cutoff, even if echocardiography is not positive or unavailable.";
+        text = "When available, CMR is the most comprehensive non-invasive examination and outperforms echocardiography for diagnostic accuracy in the paper.";
+        next = "Manage as high suspicion: Heart Team, staging/CT/PET if indicated, histological or therapeutic assessment according to clinical feasibility.";
       } else if (ctPetPositive && cmrNegative) {
         risk = "high";
-        title = "Discordanza tra metodiche avanzate";
-        subtitle = "CMR sotto cutoff ma TC/PET con criteri di alto sospetto.";
-        text = "La discordanza non va risolta con una somma di score: va rivalutata su immagini, qualita tecnica e contesto oncologico.";
-        next = "Rivedere collegialmente CMR, TC e PET; considerare Heart Team e diagnosi istologica se la decisione terapeutica dipende dalla natura della massa.";
+        title = "Discordance between advanced modalities";
+        subtitle = "CMR below cutoff but CT/PET meets high-suspicion criteria.";
+        text = "Discordance should not be resolved by adding scores together: review images, technical quality, and oncology context.";
+        next = "Review CMR, CT, and PET collegially; consider Heart Team discussion and histological diagnosis if the therapeutic decision depends on mass nature.";
       } else if (ctPetPositive) {
         risk = "high";
-        title = "Alto sospetto guidato da TC/PET";
-        subtitle = "Percorso TC/PET positivo secondo algoritmo del paper.";
-        text = "In assenza di CMR conclusiva o disponibile, TC e PET/TC forniscono evidenza anatomica e metabolica complementare.";
-        next = "Completare staging e discutere in Heart Team; considerare CMR se fattibile e utile per caratterizzazione locale o planning.";
+        title = "CT/PET-driven high suspicion";
+        subtitle = "CT/PET pathway positive according to the paper algorithm.";
+        text = "When conclusive CMR is absent or unavailable, cardiac CT and PET/CT provide complementary anatomic and metabolic evidence.";
+        next = "Complete staging and discuss in Heart Team; consider CMR if feasible and useful for local characterization or planning.";
       } else if (echoPositive && cmrNegative) {
         risk = "mid";
-        title = "Discordanza eco-CMR";
-        subtitle = "Eco sopra cutoff, CMR sotto cutoff.";
-        text = "La CMR riduce il sospetto ma non cancella automaticamente il segnale ecocardiografico: nei paper le metodiche vengono integrate e confrontate.";
-        next = "Rivalutare qualita delle immagini e feature discordanti; considerare TC/PET o follow-up se il sospetto clinico resta elevato.";
+        title = "Echo-CMR discordance";
+        subtitle = "Echocardiography above cutoff, CMR below cutoff.";
+        text = "CMR lowers suspicion but does not automatically erase the echocardiographic signal: in the papers, modalities are integrated and compared.";
+        next = "Reassess image quality and discordant features; consider CT/PET or follow-up if clinical suspicion remains high.";
       } else if (echoPositive) {
         risk = "mid";
-        title = "Sospetto ecocardiografico significativo";
-        subtitle = "DEM Score sopra cutoff: indicato imaging di secondo livello.";
-        text = "L'ecocardiografia e il primo filtro: se positiva, la logica dei paper porta a CMR per caratterizzazione tissutale e conferma.";
-        next = "Eseguire CMR cardiaca se disponibile. Se CMR non fattibile, considerare TC cardiaca; PET/TC se TC e in zona grigia o se contesto oncologico.";
+        title = "Significant echocardiographic suspicion";
+        subtitle = "DEM Score above cutoff: second-level imaging is indicated.";
+        text = "Echocardiography is the first-line filter: if positive, the paper logic moves to CMR for tissue characterization and confirmation.";
+        next = "Perform cardiac CMR if available. If CMR is not feasible, consider cardiac CT; PET/CT if CT is in the gray zone or in an oncology context.";
       } else if (ctGray && !petAvailable) {
         risk = "mid";
-        title = "Zona grigia TC";
-        subtitle = "TC con 3-4 segni e PET non inserita.";
-        text = "Nel paper TC 3-4 segni non discrimina in modo sufficiente; la PET/TC aggiunge informazione metabolica.";
-        next = "Integrare con PET/TC 18F-FDG oppure rivalutare con CMR, in base a disponibilita e contesto clinico.";
+        title = "Cardiac CT gray zone";
+        subtitle = "CT with 3-4 signs and PET not entered.";
+        text = "In the paper, CT with 3-4 signs is not sufficiently discriminative; PET/CT adds metabolic information.";
+        next = "Integrate with 18F-FDG PET/CT or reassess with CMR, depending on availability and clinical context.";
       } else if (ctPetDiscordant) {
         risk = "mid";
-        title = "Risultato TC/PET discordante";
-        subtitle = "PET patologica con basso numero di segni TC.";
-        text = "Questa combinazione va rivalutata nel contesto clinico e non va trattata come classificazione automatica del paper.";
-        next = "Rivedere qualita/preparazione PET, confrontare con CMR/TC e discutere in Heart Team se il sospetto clinico resta elevato.";
+        title = "Discordant CT/PET result";
+        subtitle = "PET positive with a low number of CT signs.";
+        text = "This combination should be reassessed in the clinical context and should not be treated as an automatic paper classification.";
+        next = "Review PET quality/preparation, compare with CMR/CT, and discuss in Heart Team if clinical suspicion remains high.";
       } else {
         risk = "low";
-        title = "Basso sospetto con dati disponibili";
-        subtitle = cmrAvailable ? "CMR sotto cutoff e nessuna evidenza avanzata positiva." : "Nessun cutoff di malignita superato.";
-        text = "Le feature disponibili non raggiungono le soglie proposte dagli studi. La conclusione resta dipendente da qualita dell'esame e contesto clinico.";
-        next = "Se il quadro clinico e coerente con benignita/trombo, gestire secondo sospetto clinico. Considerare follow-up o imaging avanzato se referto non conclusivo.";
+        title = "Low suspicion with available data";
+        subtitle = cmrAvailable ? "CMR below cutoff and no positive advanced-imaging evidence." : "No malignancy cutoff exceeded.";
+        text = "The available features do not reach the thresholds proposed by the studies. The conclusion still depends on examination quality and clinical context.";
+        next = "If the clinical picture is consistent with benignity or thrombus, manage according to clinical suspicion. Consider follow-up or advanced imaging if the report is inconclusive.";
       }
 
       consensus.integrated = title;
@@ -1240,15 +1240,15 @@
       $("#decisionSubtitle").textContent = subtitle;
       $("#decisionText").textContent = text;
       $("#nextStep").textContent = next;
-      $("#decisionBadge").textContent = risk === "not" ? "POC" : risk === "high" ? "Alta priorita" : risk === "mid" ? "Approfondire" : "Basso rischio";
+      $("#decisionBadge").textContent = risk === "not" ? "POC" : risk === "high" ? "High priority" : risk === "mid" ? "Needs review" : "Low risk";
       $("#decisionBadge").className = "pill" + (risk === "not" ? "" : ` ${risk}`);
 
-      $("#heroRisk").textContent = title.replace("Decisione non valutata", "Non valutato");
+      $("#heroRisk").textContent = title.replace("Decision not evaluated", "Not evaluated");
       $("#heroSubtitle").textContent = subtitle;
 
       const list = $("#evidenceList");
       list.innerHTML = "";
-      const finalEvidence = evidence.length ? evidence : ["Nessuna red flag selezionata o nessun esame avanzato disponibile."];
+      const finalEvidence = evidence.length ? evidence : ["No red flag selected or no advanced imaging available."];
       finalEvidence.forEach((item) => {
         const li = document.createElement("li");
         li.textContent = item;
@@ -1265,11 +1265,11 @@
       if (pet.suv !== null) parts.push(`SUVmax ${pet.suv}${pet.suv >= 4.9 ? " >= 4.9" : ""}`);
       if (pet.mtv !== null) parts.push(`MTV ${pet.mtv}${pet.mtv >= 8.2 ? " >= 8.2" : ""}`);
       if (pet.tlg !== null) parts.push(`TLG ${pet.tlg}${pet.tlg >= 29 ? " >= 29" : ""}`);
-      return parts.length ? parts.join(", ") : "nessun valore numerico inserito";
+      return parts.length ? parts.join(", ") : "no numeric value entered";
     }
 
     function updateReport(echoAvailable, cmrAvailable, ctpetAvailable, pet) {
-      const caseId = $("#caseId").value.trim() || "non specificato";
+      const caseId = $("#caseId").value.trim() || "not specified";
       const context = $("#clinicalContext").value;
       const location = $("#location").value;
       const note = $("#freeNote").value.trim() || "-";
@@ -1281,38 +1281,38 @@
       const report = [
         "CARDIAC MASS DECISION SUPPORT - POC",
         "",
-        `Caso: ${caseId}`,
-        `Contesto: ${context}`,
-        `Localizzazione prevalente: ${location}`,
-        `Nota: ${note}`,
+        `Case: ${caseId}`,
+        `Clinical context: ${context}`,
+        `Predominant location: ${location}`,
+        `Note: ${note}`,
         "",
-        "SCORE E FEATURE",
+        "SCORES AND FEATURES",
         echoAvailable
-          ? `Ecocardiografia / DEM Score: ${state.dem}/9; count non pesato ${state.echoCount}/6; probabilita DEM stimata ${demProbability[state.dem]}%. Feature: ${echoLabels.join(", ") || "nessuna"}.`
-          : "Ecocardiografia / DEM Score: non disponibile.",
+          ? `Echocardiography / DEM Score: ${state.dem}/9; unweighted count ${state.echoCount}/6; estimated DEM probability of malignancy ${demProbability[state.dem]}%. Features: ${echoLabels.join(", ") || "none"}.`
+          : "Echocardiography / DEM Score: not available.",
         cmrAvailable
-          ? `CMR Mass Score: ${state.cmr}/8. Feature: ${cmrLabels.join(", ") || "nessuna"}.`
-          : "CMR Mass Score: non disponibile.",
+          ? `CMR Mass Score: ${state.cmr}/8. Features: ${cmrLabels.join(", ") || "none"}.`
+          : "CMR Mass Score: not available.",
         ctpetAvailable
-          ? `TC/PET: CT signs ${state.ct}/8; PET patologici ${state.petAbnormal}/3; ${formatPetEvidence(pet)}. Feature TC: ${ctLabels.join(", ") || "nessuna"}.`
-          : "TC/PET: non disponibile.",
+          ? `CT/PET: CT signs ${state.ct}/8; PET parameters above cutoff ${state.petAbnormal}/3; ${formatPetEvidence(pet)}. CT features: ${ctLabels.join(", ") || "none"}.`
+          : "CT/PET: not available.",
         "",
-        "CONSENSO MULTIMODALE",
-        `Eco: ${state.consensus?.echo || "non valutata"}. ${state.consensus?.echoNote || ""}`,
-        `CMR: ${state.consensus?.cmr || "non valutata"}. ${state.consensus?.cmrNote || ""}`,
-        `TC/PET: ${state.consensus?.ctPet || "non valutata"}. ${state.consensus?.ctPetNote || ""}`,
-        `Integrato: ${state.consensus?.integrated || "non valutato"}. ${state.consensus?.integratedNote || ""}`,
+        "MULTIMODALITY CONSENSUS",
+        `Echo: ${state.consensus?.echo || "not evaluated"}. ${state.consensus?.echoNote || ""}`,
+        `CMR: ${state.consensus?.cmr || "not evaluated"}. ${state.consensus?.cmrNote || ""}`,
+        `CT/PET: ${state.consensus?.ctPet || "not evaluated"}. ${state.consensus?.ctPetNote || ""}`,
+        `Integrated: ${state.consensus?.integrated || "not evaluated"}. ${state.consensus?.integratedNote || ""}`,
         "",
-        "INTERPRETAZIONE",
-        `${state.decision?.title || "Decisione non valutata"}. ${state.decision?.text || ""}`,
+        "INTERPRETATION",
+        `${state.decision?.title || "Decision not evaluated"}. ${state.decision?.text || ""}`,
         "",
-        "EVIDENZE",
+        "EVIDENCE",
         ...(state.evidence || []).map((item) => `- ${item}`),
         "",
-        "NEXT STEP SUGGERITO",
-        state.decision?.next || "Completare input clinico-imaging.",
+        "SUGGESTED NEXT STEP",
+        state.decision?.next || "Complete clinical/imaging input.",
         "",
-        "Nota: prototipo dimostrativo. Non sostituisce giudizio clinico, referto specialistico, Heart Team o linee guida."
+        "Note: demonstration prototype. It does not replace clinical judgment, specialist reporting, Heart Team discussion, or guidelines."
       ].join("\n");
 
       $("#report").value = report;
@@ -1334,8 +1334,8 @@
       const report = $("#report").value;
       try {
         await navigator.clipboard.writeText(report);
-        $("#copyReport").textContent = "Copiato";
-        setTimeout(() => $("#copyReport").textContent = "Copia report", 1200);
+        $("#copyReport").textContent = "Copied";
+        setTimeout(() => $("#copyReport").textContent = "Copy report", 1200);
       } catch (error) {
         $("#report").select();
         document.execCommand("copy");

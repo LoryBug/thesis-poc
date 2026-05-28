@@ -9,56 +9,56 @@ describe('EchoCard', () => {
     useCaseStore.getState().reset()
   })
 
-  it('mostra messaggio quando non disponibile', () => {
+  it('shows message when unavailable', () => {
     render(<EchoCard />)
-    expect(screen.getByText(/Seleziona la disponibilità/)).toBeInTheDocument()
+    expect(screen.getByText(/Select availability/)).toBeInTheDocument()
   })
 
-  it('mostra i checkbox delle feature quando disponibile', async () => {
+  it('shows feature checkboxes when available', async () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    expect(screen.getByText('Infiltrazione')).toBeInTheDocument()
-    expect(screen.getByText('Polilobato')).toBeInTheDocument()
-    expect(screen.getByText('Versamento pericardico')).toBeInTheDocument()
-    expect(screen.getByText('Sessile (base larga)')).toBeInTheDocument()
-    expect(screen.getByText('Inomogeneità')).toBeInTheDocument()
-    expect(screen.getByText('Localizzazione non a sinistra')).toBeInTheDocument()
+    expect(screen.getByText('Infiltration')).toBeInTheDocument()
+    expect(screen.getByText('Polylobate mass')).toBeInTheDocument()
+    expect(screen.getByText('Pericardial effusion')).toBeInTheDocument()
+    expect(screen.getByText('Sessile appearance')).toBeInTheDocument()
+    expect(screen.getByText('Inhomogeneity')).toBeInTheDocument()
+    expect(screen.getByText('Non-left localization')).toBeInTheDocument()
   })
 
-  it('mostra score 0 quando nessuna feature selezionata', () => {
+  it('shows score 0 when no feature is selected', () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
     expect(screen.getByText('0/9')).toBeInTheDocument()
   })
 
-  it('mostra DEM Score calcolato quando si seleziona una feature', async () => {
+  it('shows calculated DEM Score when a feature is selected', async () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    await userEvent.click(screen.getByText('Infiltrazione'))
+    await userEvent.click(screen.getByText('Infiltration'))
     expect(screen.getByText('2/9')).toBeInTheDocument()
-    expect(screen.getByText('sotto cutoff')).toBeInTheDocument()
+    expect(screen.getByText('Below cutoff')).toBeInTheDocument()
   })
 
-  it('mostra POSITIVO quando DEM >= cutoff', async () => {
+  it('shows positive when DEM >= cutoff', async () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    await userEvent.click(screen.getByText('Infiltrazione'))
-    await userEvent.click(screen.getByText('Polilobato'))
-    await userEvent.click(screen.getByText('Versamento pericardico'))
-    expect(screen.getByText('POSITIVO')).toBeInTheDocument()
+    await userEvent.click(screen.getByText('Infiltration'))
+    await userEvent.click(screen.getByText('Polylobate mass'))
+    await userEvent.click(screen.getByText('Pericardial effusion'))
+    expect(screen.getByText('Positive')).toBeInTheDocument()
     expect(screen.getByText('6/9')).toBeInTheDocument()
   })
 
-  it('mostra probabilita DEM quando score calcolato', async () => {
+  it('shows DEM probability when score is calculated', async () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    await userEvent.click(screen.getByText('Infiltrazione'))
-    expect(screen.getByText(/Probabilità stimata:/)).toBeInTheDocument()
+    await userEvent.click(screen.getByText('Infiltration'))
+    expect(screen.getByText(/Estimated probability of malignancy:/)).toBeInTheDocument()
   })
 
-  it('mostra probabilita 0 quando nessuna feature selezionata', () => {
+  it('shows probability 0 when no feature is selected', () => {
     useCaseStore.getState().setEchoAvailable(true)
     render(<EchoCard />)
-    expect(screen.getByText(/Probabilità stimata: 0%/)).toBeInTheDocument()
+    expect(screen.getByText(/Estimated probability of malignancy: 0%/)).toBeInTheDocument()
   })
 })

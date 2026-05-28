@@ -5,12 +5,12 @@ import { FeatureTile } from './ui/FeatureTile'
 import { ScoreStrip } from './ui/ScoreStrip'
 
 const features: { key: keyof EchoFeatures; title: string; description: string; points: number }[] = [
-  { key: 'infiltration', title: 'Infiltrazione', description: 'Estensione in miocardio/pericardio o tessuti vicini.', points: 2 },
-  { key: 'polylobated', title: 'Polilobato', description: 'Due o più lobi, morfologia complessa.', points: 2 },
-  { key: 'pericardialEffusion', title: 'Versamento pericardico', description: 'Moderato/severo o clinicamente significativo.', points: 2 },
-  { key: 'sessile', title: 'Sessile (base larga)', description: 'Base larga, assenza di peduncolo evidente.', points: 1 },
-  { key: 'inhomogeneity', title: 'Inomogeneità', description: 'Ecogenicità eterogenea rispetto al miocardio.', points: 1 },
-  { key: 'nonLeftLocation', title: 'Localizzazione non a sinistra', description: 'Cuore destro, pericardio o grossi vasi.', points: 1 },
+  { key: 'infiltration', title: 'Infiltration', description: 'Extension into myocardium, pericardium, or neighboring tissues.', points: 2 },
+  { key: 'polylobated', title: 'Polylobate mass', description: 'Two or more lobes with complex morphology.', points: 2 },
+  { key: 'pericardialEffusion', title: 'Pericardial effusion', description: 'Moderate-severe or clinically significant.', points: 2 },
+  { key: 'sessile', title: 'Sessile appearance', description: 'Broad base without a clear peduncle.', points: 1 },
+  { key: 'inhomogeneity', title: 'Inhomogeneity', description: 'Heterogeneous echogenicity compared with myocardium.', points: 1 },
+  { key: 'nonLeftLocation', title: 'Non-left localization', description: 'Right heart, pericardium, or great vessels.', points: 1 },
 ]
 
 export function EchoCard() {
@@ -27,8 +27,8 @@ export function EchoCard() {
     <article className="cm-card" data-exam-card="echo">
       <div className="cm-card-header">
         <div className="cm-card-title">
-          <h2>Ecocardiografia - DEM Score</h2>
-          <p>Score ecocardiografico pesato per sospetto di malignità. Cutoff operativo: DEM ≥ 3.</p>
+          <h2>Echocardiography - DEM Score</h2>
+          <p>Weighted echocardiographic score for predicted malignancy in cardiac masses. Operational cutoff: DEM &gt;= 3.</p>
         </div>
         <label className="cm-exam-toggle">
           <input
@@ -36,12 +36,12 @@ export function EchoCard() {
             checked={echoAvailable}
             onChange={(event) => setEchoAvailable(event.target.checked)}
           />
-          Eco disponibile
+          Echocardiography available
         </label>
       </div>
 
       {!echoAvailable ? (
-        <p className="text-sm italic" style={{ color: 'var(--cm-muted)' }}>Seleziona la disponibilità per inserire i dati.</p>
+        <p className="text-sm italic" style={{ color: 'var(--cm-muted)' }}>Select availability to enter data.</p>
       ) : (
         <>
           <div className="cm-feature-grid">
@@ -60,8 +60,8 @@ export function EchoCard() {
           <ScoreStrip
             score={score}
             max={DEM_MAX}
-            note={`Probabilità stimata: ${prob}% (DEM). ${positive ? 'Sopra cutoff.' : 'Sotto cutoff.'}`}
-            badge={positive ? 'POSITIVO' : 'sotto cutoff'}
+            note={`Estimated probability of malignancy: ${prob}% (DEM). ${positive ? 'Above cutoff.' : 'Below cutoff.'}`}
+            badge={positive ? 'Positive' : 'Below cutoff'}
             level={positive ? 'high' : 'low'}
           />
         </>

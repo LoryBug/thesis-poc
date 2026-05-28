@@ -7,3 +7,7 @@ dist/
 coverage/
 test-results/
 playwright-report/
+
+# Local reference papers
+*.pdf
+*.PDF

@@ -4,44 +4,44 @@ import { cmrAllPresent, cmrAllAbsent, cmrPartial } from '../fixtures/cmr-feature
 
 describe('CMR Mass Score', () => {
   describe('calculateCmrScore', () => {
-    it('restituisce 0 quando nessuna feature e presente', () => {
+    it('returns 0 when no feature is present', () => {
       expect(calculateCmrScore(cmrAllAbsent())).toBe(0)
     })
 
-    it('restituisce 8 quando tutte le 6 feature sono presenti', () => {
+    it('returns 8 when all 6 features are present', () => {
       expect(calculateCmrScore(cmrAllPresent())).toBe(8)
     })
 
-    it('restituisce il peso corretto per feature parziali (infiltration + firstPassPerfusion)', () => {
+    it('returns the correct weight for partial features (infiltration + firstPassPerfusion)', () => {
       const features = cmrPartial(['infiltration', 'firstPassPerfusion'])
       expect(calculateCmrScore(features)).toBe(4) // 2 + 2
     })
 
-    it('restituisce 2 con solo infiltration', () => {
+    it('returns 2 with infiltration only', () => {
       expect(calculateCmrScore(cmrPartial(['infiltration']))).toBe(2)
     })
 
-    it('restituisce 2 con solo firstPassPerfusion', () => {
+    it('returns 2 with firstPassPerfusion only', () => {
       expect(calculateCmrScore(cmrPartial(['firstPassPerfusion']))).toBe(2)
     })
 
-    it('restituisce 1 con solo pericardialEffusion', () => {
+    it('returns 1 with pericardialEffusion only', () => {
       expect(calculateCmrScore(cmrPartial(['pericardialEffusion']))).toBe(1)
     })
 
-    it('restituisce 1 con solo sessile', () => {
+    it('returns 1 with sessile only', () => {
       expect(calculateCmrScore(cmrPartial(['sessile']))).toBe(1)
     })
 
-    it('restituisce 1 con solo polylobated', () => {
+    it('returns 1 with polylobated only', () => {
       expect(calculateCmrScore(cmrPartial(['polylobated']))).toBe(1)
     })
 
-    it('restituisce 1 con solo heterogeneousEnhancement', () => {
+    it('returns 1 with heterogeneousEnhancement only', () => {
       expect(calculateCmrScore(cmrPartial(['heterogeneousEnhancement']))).toBe(1)
     })
 
-    it('non modifica le feature in input (purezza funzione)', () => {
+    it('does not mutate input features (function purity)', () => {
       const features = cmrAllPresent()
       const original = { ...features }
       calculateCmrScore(features)
@@ -50,13 +50,13 @@ describe('CMR Mass Score', () => {
   })
 
   describe('CMR_CUTOFF', () => {
-    it('il cutoff operativo e 5', () => {
+    it('operational cutoff is 5', () => {
       expect(CMR_CUTOFF).toBe(5)
     })
   })
 
   describe('CMR_MAX', () => {
-    it('il valore massimo e 8', () => {
+    it('maximum value is 8', () => {
       expect(CMR_MAX).toBe(8)
     })
   })

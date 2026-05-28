@@ -2,34 +2,34 @@ import { describe, it, expect } from 'vitest'
 import { useUiStore } from './ui.store'
 
 describe('ui.store', () => {
-  it('inizia su pagina home', () => {
+  it('starts on the home page', () => {
     expect(useUiStore.getState().page).toBe('home')
   })
 
-  it('selectedCaseId inizia null', () => {
+  it('selectedCaseId starts null', () => {
     expect(useUiStore.getState().selectedCaseId).toBeNull()
   })
 
-  it('navigate cambia pagina', () => {
+  it('navigate changes page', () => {
     useUiStore.getState().navigate('new')
     expect(useUiStore.getState().page).toBe('new')
     expect(useUiStore.getState().selectedCaseId).toBeNull()
   })
 
-  it('navigate con caseId a detail imposta selectedCaseId', () => {
+  it('navigate with caseId to detail sets selectedCaseId', () => {
     useUiStore.getState().navigate('detail', 'abc-123')
     expect(useUiStore.getState().page).toBe('detail')
     expect(useUiStore.getState().selectedCaseId).toBe('abc-123')
   })
 
-  it('navigate a nuova pagina resetta selectedCaseId', () => {
+  it('navigate to a new page resets selectedCaseId', () => {
     useUiStore.getState().navigate('detail', 'abc-123')
     useUiStore.getState().navigate('home')
     expect(useUiStore.getState().page).toBe('home')
     expect(useUiStore.getState().selectedCaseId).toBeNull()
   })
 
-  it('navigate a detail senza caseId lascia selectedCaseId a null', () => {
+  it('navigate to detail without caseId leaves selectedCaseId null', () => {
     useUiStore.getState().navigate('detail')
     expect(useUiStore.getState().page).toBe('detail')
     expect(useUiStore.getState().selectedCaseId).toBeNull()

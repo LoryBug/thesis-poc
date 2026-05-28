@@ -20,8 +20,8 @@ export function CaseDetail() {
     return (
       <div className="cm-page">
         <div className="cm-card" style={{ textAlign: 'center', padding: '48px 22px' }}>
-          <p style={{ color: 'var(--cm-muted)' }}>Caso non trovato.</p>
-          <button type="button" className="cm-button mt-4" onClick={() => navigate('home')}>Torna alla Dashboard</button>
+          <p style={{ color: 'var(--cm-muted)' }}>Case not found.</p>
+          <button type="button" className="cm-button mt-4" onClick={() => navigate('home')}>Back to Dashboard</button>
         </div>
       </div>
     )
@@ -46,10 +46,10 @@ export function CaseDetail() {
     <div className="cm-page">
       <section className="cm-hero">
         <div className="cm-hero-main">
-          <div className="cm-eyebrow">Dettaglio caso</div>
-          <h1 className="cm-title-xl">Dettaglio Valutazione</h1>
+          <div className="cm-eyebrow">Case detail</div>
+          <h1 className="cm-title-xl">Evaluation Detail</h1>
           <p className="cm-lead">
-            {new Date(savedCase.date).toLocaleDateString('it-IT', {
+            {new Date(savedCase.date).toLocaleDateString('en-GB', {
               day: 'numeric',
               month: 'long',
               year: 'numeric',
@@ -60,11 +60,11 @@ export function CaseDetail() {
         </div>
         <aside className="cm-hero-side">
           <div className="cm-status-panel">
-            <div className="cm-status-label">Output integrato</div>
+            <div className="cm-status-label">Integrated output</div>
             <div className="cm-status-value">{savedCase.result.title}</div>
             <div className="cm-status-subtitle">{savedCase.result.subtitle}</div>
           </div>
-          <button type="button" className="cm-button secondary" onClick={() => navigate('home')}>Indietro</button>
+          <button type="button" className="cm-button secondary" onClick={() => navigate('home')}>Back</button>
         </aside>
       </section>
 
@@ -73,8 +73,8 @@ export function CaseDetail() {
           <article className="cm-card">
             <div className="cm-card-header">
               <div className="cm-card-title">
-                <h2>{savedCase.metadata?.caseId || 'Caso senza ID'}</h2>
-                <p>{savedCase.metadata?.clinicalContext || 'Contesto non specificato'} · {savedCase.metadata?.location || 'Localizzazione non specificata'}</p>
+                <h2>{savedCase.metadata?.caseId || 'Case without ID'}</h2>
+                <p>{savedCase.metadata?.clinicalContext || 'Context not specified'} · {savedCase.metadata?.location || 'Location not specified'}</p>
               </div>
             </div>
             {savedCase.metadata?.note && <p style={{ color: 'var(--cm-muted)' }}>{savedCase.metadata.note}</p>}
@@ -83,7 +83,7 @@ export function CaseDetail() {
           <ConsensusPanel result={savedCase.result} />
 
           <details className="cm-card">
-            <summary className="font-bold cursor-pointer" style={{ color: 'var(--cm-primary)' }}>Dati imaging originali</summary>
+            <summary className="font-bold cursor-pointer" style={{ color: 'var(--cm-primary)' }}>Original imaging data</summary>
             <pre className="mt-3 overflow-auto rounded-xl p-4 text-xs" style={{ maxHeight: 260, background: '#fbfdff', color: 'var(--cm-muted)' }}>
               {JSON.stringify(savedCase.imagingData, null, 2)}
             </pre>

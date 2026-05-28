@@ -13,185 +13,185 @@ import {
 } from '../fixtures/imaging-data'
 
 describe('Consensus Engine', () => {
-  describe('nessun esame disponibile', () => {
+  describe('no examination available', () => {
     const result = evaluateConsensus(imagingDataNoExams())
 
-    it('restituisce rischio not', () => {
+    it('returns not risk', () => {
       expect(result.risk).toBe('not')
     })
 
-    it('contiene un next step che richiede input', () => {
-      expect(result.nextStep).toContain('Completare')
+    it('contains a next step that requests input', () => {
+      expect(result.nextStep).toContain('Complete')
     })
   })
 
-  describe('sola eco positiva sopra cutoff', () => {
+  describe('echo only positive above cutoff', () => {
     const result = evaluateConsensus(imagingDataOnlyEcho(echoPartial(['infiltration', 'sessile', 'polylobated']))) // DEM = 5
 
-    it('restituisce rischio mid', () => {
+    it('returns mid risk', () => {
       expect(result.risk).toBe('mid')
     })
 
-    it('next step suggerisce CMR', () => {
+    it('next step suggests CMR', () => {
       expect(result.nextStep.toLowerCase()).toContain('cmr')
     })
 
-    it('menziona DEM Score nelle evidenze', () => {
+    it('mentions DEM Score in evidence', () => {
       expect(result.evidence.length).toBeGreaterThanOrEqual(1)
     })
 
-    it('eco status indica positivo', () => {
-      expect(result.modalities.echo.status).toContain('positivo')
+    it('echo status indicates positive', () => {
+      expect(result.modalities.echo.status).toContain('positive')
     })
 
-    it('CMR status indica non disponibile', () => {
-      expect(result.modalities.cmr.status).toContain('Non disponibile')
+    it('CMR status indicates unavailable', () => {
+      expect(result.modalities.cmr.status).toContain('Unavailable')
     })
   })
 
-  describe('sola eco negativa', () => {
+  describe('echo only negative', () => {
     const result = evaluateConsensus(imagingDataOnlyEcho(echoAllAbsent()))
 
-    it('restituisce rischio low', () => {
+    it('returns low risk', () => {
       expect(result.risk).toBe('low')
     })
   })
 
-  describe('concordanza eco-CMR positiva', () => {
+  describe('positive echo-CMR concordance', () => {
     const result = evaluateConsensus(imagingDataEchoAndCmr(
       echoPartial(['infiltration', 'polylobated', 'pericardialEffusion']), // DEM = 6
       cmrAllPresent(), // CMR = 8
     ))
 
-    it('restituisce rischio high', () => {
+    it('returns high risk', () => {
       expect(result.risk).toBe('high')
     })
 
-    it('next step menziona Heart Team', () => {
+    it('next step mentions Heart Team', () => {
       expect(result.nextStep.toLowerCase()).toContain('heart')
     })
 
-    it('CMR status indica positivo', () => {
-      expect(result.modalities.cmr.status).toContain('positivo')
+    it('CMR status indicates positive', () => {
+      expect(result.modalities.cmr.status).toContain('positive')
     })
 
-    it('eco status indica positivo', () => {
-      expect(result.modalities.echo.status).toContain('positivo')
+    it('echo status indicates positive', () => {
+      expect(result.modalities.echo.status).toContain('positive')
     })
 
-    it('testo della decisione menziona concordanza', () => {
-      expect(result.title.toLowerCase()).toContain('concordanza')
+    it('decision text mentions concordance', () => {
+      expect(result.title.toLowerCase()).toContain('concordant')
     })
   })
 
-  describe('sola CMR positiva (eco non disponibile)', () => {
+  describe('CMR only positive (echo unavailable)', () => {
     const result = evaluateConsensus(imagingDataOnlyCmr(cmrPartial(['infiltration', 'firstPassPerfusion', 'heterogeneousEnhancement']))) // CMR = 5
 
-    it('restituisce rischio high', () => {
+    it('returns high risk', () => {
       expect(result.risk).toBe('high')
     })
 
-    it('testo menziona CMR come esame dominante', () => {
-      expect(result.title.toLowerCase()).toContain('guidato da cmr')
+    it('text mentions CMR-driven result', () => {
+      expect(result.title.toLowerCase()).toContain('cmr-driven')
     })
   })
 
-  describe('discordanza eco-CMR (eco positiva, CMR negativa)', () => {
+  describe('echo-CMR discordance (echo positive, CMR negative)', () => {
     const result = evaluateConsensus(imagingDataEchoAndCmr(
       echoPartial(['infiltration', 'polylobated']), // DEM = 4
       cmrAllAbsent(), // CMR = 0
     ))
 
-    it('restituisce rischio mid', () => {
+    it('returns mid risk', () => {
       expect(result.risk).toBe('mid')
     })
 
-    it('testo menziona discordanza eco-CMR', () => {
-      expect(result.title.toLowerCase()).toContain('discordanza eco')
+    it('text mentions echo-CMR discordance', () => {
+      expect(result.title.toLowerCase()).toContain('echo-cmr discordance')
     })
   })
 
-  describe('TC ad alto sospetto (>=5 segni)', () => {
+  describe('high-suspicion CT (>=5 signs)', () => {
     const result = evaluateConsensus(imagingDataOnlyCt(ctPartial(5)))
 
-    it('restituisce rischio high', () => {
+    it('returns high risk', () => {
       expect(result.risk).toBe('high')
     })
 
-    it('testo menziona TC come via diagnostica', () => {
-      expect(result.title.toLowerCase()).toContain('tc/pet')
+    it('text mentions CT/PET as diagnostic pathway', () => {
+      expect(result.title.toLowerCase()).toContain('ct/pet')
     })
   })
 
-  describe('TC in zona grigia (3-4) con PET positiva', () => {
+  describe('CT gray zone (3-4) with positive PET', () => {
     const result = evaluateConsensus(imagingDataCtAndPet(
       ctPartial(3),
       { suvMax: 6.2, mtv: null, tlg: null },
     ))
 
-    it('restituisce rischio high', () => {
+    it('returns high risk', () => {
       expect(result.risk).toBe('high')
     })
 
-    it('TC/PET status indica zona grigia + PET positiva', () => {
-      expect(result.modalities.ctPet.status).toContain('PET positiva')
+    it('CT/PET status indicates gray zone + positive PET', () => {
+      expect(result.modalities.ctPet.status).toContain('PET positive')
     })
   })
 
-  describe('TC in zona grigia (3-4) con PET negativa', () => {
+  describe('CT gray zone (3-4) with negative PET', () => {
     const result = evaluateConsensus(imagingDataCtAndPet(
       ctPartial(3),
       { suvMax: 2.1, mtv: 3.0, tlg: 10 },
     ))
 
-    it('restituisce rischio low', () => {
+    it('returns low risk', () => {
       expect(result.risk).toBe('low')
     })
 
-    it('TC/PET status indica PET negativa', () => {
-      expect(result.modalities.ctPet.status).toContain('PET negativa')
+    it('CT/PET status indicates negative PET', () => {
+      expect(result.modalities.ctPet.status).toContain('PET negative')
     })
   })
 
-  describe('TC in zona grigia senza PET disponibile', () => {
+  describe('CT gray zone without PET available', () => {
     const result = evaluateConsensus(imagingDataOnlyCt(ctPartial(3)))
 
-    it('restituisce rischio mid', () => {
+    it('returns mid risk', () => {
       expect(result.risk).toBe('mid')
     })
 
-    it('next step suggerisce PET', () => {
+    it('next step suggests PET', () => {
       expect(result.nextStep.toLowerCase()).toContain('pet')
     })
   })
 
-  describe('TC discordante (<=2 segni ma PET positiva)', () => {
+  describe('discordant CT (<=2 signs but positive PET)', () => {
     const result = evaluateConsensus(imagingDataCtAndPet(
       ctPartial(1),
       { suvMax: 7.0, mtv: null, tlg: null },
     ))
 
-    it('restituisce rischio mid', () => {
+    it('returns mid risk', () => {
       expect(result.risk).toBe('mid')
     })
 
-    it('testo menziona discordanza', () => {
-      expect(result.title.toLowerCase()).toContain('discordante')
+    it('text mentions discordance', () => {
+      expect(result.title.toLowerCase()).toContain('discordant')
     })
   })
 
-  describe('tutti gli esami negativi', () => {
+  describe('all examinations negative', () => {
     const result = evaluateConsensus(imagingDataEchoAndCmr(echoAllAbsent(), cmrAllAbsent()))
 
-    it('restituisce rischio low', () => {
+    it('returns low risk', () => {
       expect(result.risk).toBe('low')
     })
   })
 
-  describe('esito integrato nel report', () => {
+  describe('integrated result in report', () => {
     const result = evaluateConsensus(imagingDataOnlyEcho(echoAllPresent()))
 
-    it('contiene una descrizione testuale integrata', () => {
+    it('contains an integrated text description', () => {
       expect(result.integrated).toBeDefined()
       expect(result.integrated.status.length).toBeGreaterThan(0)
     })

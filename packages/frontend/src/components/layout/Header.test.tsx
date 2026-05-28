@@ -9,31 +9,31 @@ describe('Header', () => {
     useUiStore.getState().navigate('home')
   })
 
-  it('mostra il titolo dell\'app', () => {
+  it('shows the app title', () => {
     render(<Header />)
     expect(screen.getByText('Cardiac Mass DSS')).toBeInTheDocument()
   })
 
-  it('mostra i pulsanti di navigazione', () => {
+  it('shows navigation buttons', () => {
     render(<Header />)
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
-    expect(screen.getByText('Nuova Valutazione')).toBeInTheDocument()
+    expect(screen.getByText('New Evaluation')).toBeInTheDocument()
   })
 
-  it('cliccando Dashboard si va a home', async () => {
+  it('clicking Dashboard navigates home', async () => {
     useUiStore.getState().navigate('new')
     render(<Header />)
     await userEvent.click(screen.getByText('Dashboard'))
     expect(useUiStore.getState().page).toBe('home')
   })
 
-  it('cliccando Nuova Valutazione si va a new', async () => {
+  it('clicking New Evaluation navigates to new', async () => {
     render(<Header />)
-    await userEvent.click(screen.getByText('Nuova Valutazione'))
+    await userEvent.click(screen.getByText('New Evaluation'))
     expect(useUiStore.getState().page).toBe('new')
   })
 
-  it('evidenzia il pulsante attivo', () => {
+  it('highlights the active button', () => {
     useUiStore.getState().navigate('home')
     render(<Header />)
     const dashBtn = screen.getByText('Dashboard')
