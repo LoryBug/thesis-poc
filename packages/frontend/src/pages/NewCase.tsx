@@ -64,16 +64,22 @@ export function NewCase() {
 
       <section className="cm-layout">
         <div className="cm-stack">
+          <SyntheticCaseLoader />
           <CaseMetadataCard />
           <EchoCard />
           <CmrCard />
           <CtPetCard />
+          <TraceabilityPanel
+            traceability={traceability}
+            collapsible
+            defaultOpen={false}
+            title="Why this output?"
+            subtitle="Clinical Traceability: feature -> score -> cutoff -> rule -> recommendation."
+          />
         </div>
 
         <aside className="cm-sidebar">
           <ConsensusPanel result={result} />
-          <TraceabilityPanel traceability={traceability} />
-          <SyntheticCaseLoader />
 
           <article className="cm-card">
             <div className="cm-card-header">

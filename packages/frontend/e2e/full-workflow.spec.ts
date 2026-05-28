@@ -31,8 +31,8 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByText('Echocardiography - DEM Score')).toBeVisible()
     await expect(page.getByText('Cardiac magnetic resonance - CMR Mass Score')).toBeVisible()
     await expect(page.getByText('Cardiac CT and 18F-FDG PET/CT')).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Synthetic Case Loader' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Why this output?' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Save evaluation' })).toBeVisible()
   })
 
@@ -45,6 +45,7 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByLabel('Case / patient ID')).toHaveValue('GC-04')
     await expect(scoreNumber(cmrSection(page), '5/8')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'CMR-driven high suspicion' })).toBeVisible()
+    await page.getByRole('heading', { name: 'Why this output?' }).click()
     await expect(page.getByText('CMR Mass Score above cutoff', { exact: true }).first()).toBeVisible()
   })
 
@@ -79,7 +80,8 @@ test.describe('Complete clinical workflow', () => {
 
     // Live result -> both echo and CMR are positive.
     await expect(page.getByRole('heading', { name: 'Concordant high-suspicion echo-CMR' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Clinical Traceability' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Why this output?' })).toBeVisible()
+    await page.getByRole('heading', { name: 'Why this output?' }).click()
     await expect(page.getByText('Activated rules', { exact: true })).toBeVisible()
     await expect(page.getByText('Save evaluation')).toBeVisible()
 

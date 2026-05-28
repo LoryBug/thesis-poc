@@ -634,6 +634,56 @@ textarea:focus-visible {
   background: var(--cm-accent);
 }
 
+.cm-traceability-details > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cm-traceability-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cm-traceability-toggle {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #eaf2fb;
+  color: var(--cm-primary-2);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 8px 10px;
+}
+
+.cm-traceability-groups {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cm-traceability-group {
+  border: 1px solid var(--cm-line);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.7);
+  padding: 12px;
+}
+
+.cm-traceability-group h3 {
+  margin: 0;
+  color: var(--cm-primary);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cm-traceability-group .cm-evidence-list {
+  margin-top: 10px;
+}
+
 .cm-textarea {
   min-height: 230px;
   resize: vertical;
