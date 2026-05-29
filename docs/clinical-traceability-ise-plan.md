@@ -431,6 +431,101 @@ Intenti ammessi:
 
 Se la domanda non rientra in questi intenti, il dispatcher deve rifiutare o chiedere chiarimento.
 
+### Trace-Grounded Source Retrieval
+
+La componente piu utile non e un RAG libero su PDF o web, ma un retrieval chiuso e deterministico basato sul trace prodotto da Jason.
+
+Nome consigliato:
+
+```text
+Trace-grounded source retrieval for explainable agent reasoning
+```
+
+Pipeline:
+
+```text
+Case beliefs
+-> Jason reasoning
+-> activated rules
+-> source IDs
+-> curated source snippets
+-> explanation / optional LLM verbalization
+```
+
+Differenza rispetto a un RAG classico:
+
+| RAG classico | Trace-grounded source retrieval |
+|---|---|
+| Cerca liberamente su documenti o embedding. | Recupera solo fonti collegate a regole attivate. |
+| Il retrieval dipende dalla query utente. | Il retrieval dipende dal trace simbolico. |
+| Rischia citazioni irrilevanti o hallucination. | Le fonti sono pre-curate e mappate a rule ID. |
+| L'LLM puo influenzare il contenuto clinico. | Jason decide; l'LLM verbalizza solo trace e snippets. |
+
+Registry regola-fonte:
+
+```prolog
+source_for_rule(cmr_mass_score_above_cutoff, paolisso_2024_cmr_mass_score).
+source_for_rule(dem_score_above_cutoff, paolisso_2022_dem_score).
+source_for_rule(ct_gray_zone_without_pet, dangelo_2020_ct_pet).
+source_for_rule(missing_cmr_after_positive_echo, local_safety_behavior).
+```
+
+Registry snippets curati:
+
+```prolog
+source_snippet(
+    paolisso_2024_cmr_mass_score,
+    "CMR Mass Score cutoff >= 5 supports malignancy suspicion."
+).
+
+source_snippet(
+    dangelo_2020_ct_pet,
+    "Cardiac CT signs and 18F-FDG PET/CT thresholds support CT/PET pathway interpretation."
+).
+```
+
+Esempio su `gc04`:
+
+```text
+Beliefs:
+score(gc04, cmr_mass_score, 5)
+cutoff(cmr_mass_score, 5)
+
+Jason derives:
+risk(gc04, high)
+activated_rule(gc04, cmr_mass_score_above_cutoff)
+
+Source retrieval:
+source_for_rule(cmr_mass_score_above_cutoff, paolisso_2024_cmr_mass_score)
+source_snippet(paolisso_2024_cmr_mass_score, Snippet)
+```
+
+Payload sicuro per LLM opzionale:
+
+```json
+{
+  "caseId": "gc04",
+  "decision": "cmr_driven_high_suspicion",
+  "risk": "high",
+  "activatedRules": ["cmr_mass_score_above_cutoff"],
+  "sources": [
+    {
+      "id": "paolisso_2024_cmr_mass_score",
+      "snippet": "CMR Mass Score cutoff >= 5 supports malignancy suspicion."
+    }
+  ],
+  "nextSteps": ["heart_team_discussion", "staging_or_histological_assessment"]
+}
+```
+
+Vincoli per il verbalizer:
+
+- usare solo trace e snippets forniti;
+- non citare fonti non presenti nel trace;
+- non inferire fatti clinici aggiuntivi;
+- non generare raccomandazioni fuori dai `nextSteps` Jason;
+- dichiarare dati mancanti quando presenti nel trace.
+
 ### Uso Corretto
 
 L'LLM puo:
@@ -441,7 +536,8 @@ L'LLM puo:
 - generare bozze di report leggibili;
 - evidenziare dati mancanti gia identificati dal rule engine;
 - agire come conversational layer sopra Jason;
-- classificare una domanda utente in intenti ammessi e controllati.
+- classificare una domanda utente in intenti ammessi e controllati;
+- verbalizzare solo fonti recuperate dal trace-grounded source retrieval.
 
 Esempio:
 
@@ -472,6 +568,7 @@ L'LLM non deve:
 Case facts
 -> Jason BDI reasoning / planning
 -> trace graph
+-> source IDs and curated snippets
 -> optional LLM dispatcher/verbalizer constrained by trace
 -> human review
 ```
@@ -516,6 +613,7 @@ ise-cardiac-traceability-agent/
     sources.asl
     cutoffs.asl
     clinical_actions.asl
+    source_snippets.asl
   docs/
     README.md
   output/
@@ -537,16 +635,17 @@ ise-cardiac-traceability-agent/
 4. Implementare baseline monagente `cardiac_mass_agent.asl`.
 5. Implementare goals `!evaluate`, `!plan_next_steps`, `!explain`.
 6. Aggiungere planning diagnostico per high suspicion, discordance, gray zone e missing data.
-7. Aggiungere output trace/plan leggibile.
-8. Valutare split multi-agent solo se utile per il corso.
-9. Aggiungere LLM dispatcher/verbalizer solo se il baseline agentivo e gia funzionante.
+7. Aggiungere trace-grounded source retrieval con rule-source registry e snippets curati.
+8. Aggiungere output trace/plan leggibile.
+9. Valutare split multi-agent solo se utile per il corso.
+10. Aggiungere LLM dispatcher/verbalizer solo se il baseline agentivo e gia funzionante.
 
 ## Messaggio Da Usare Con I Docenti ISE
 
 Bozza sintetica:
 
 ```text
-I would like to propose an ISE project connected to my thesis domain, but implemented as a separate artifact. The thesis is a TypeScript/PWA clinical decision support prototype for cardiac mass evaluation. The ISE project would model the same domain as a Jason/AgentSpeak BDI agent that reasons over observed imaging features, diagnostic scores, literature-derived cutoffs and missing data. The agent would produce symbolic risk assessment, traceable explanations and diagnostic next-step plans. An optional LLM component could be added only as a constrained dispatcher/verbalizer over Jason-generated traces, not as a clinical decision maker.
+I would like to propose an ISE project connected to my thesis domain, but implemented as a separate artifact. The thesis is a TypeScript/PWA clinical decision support prototype for cardiac mass evaluation. The ISE project would model the same domain as a Jason/AgentSpeak BDI agent that reasons over observed imaging features, diagnostic scores, literature-derived cutoffs and missing data. The agent would produce symbolic risk assessment, traceable explanations and diagnostic next-step plans. Explanations would use trace-grounded source retrieval: only sources mapped to Jason-activated rules are retrieved and verbalized. An optional LLM component could be added only as a constrained dispatcher/verbalizer over Jason-generated traces and curated snippets, not as a clinical decision maker.
 ```
 
 ## Decisione Attuale
@@ -556,4 +655,5 @@ Scelta consigliata:
 - tesi: TypeScript CDSS + deterministic clinical traceability;
 - ISE: progetto separato Jason/AgentSpeak su BDI reasoning, planning ed explainability;
 - baseline: monagente Jason prima di eventuale multi-agent;
-- LLM: opzionale, solo come dispatcher/verbalizer vincolato da intenti e trace Jason.
+- source retrieval: chiuso, curato e guidato dalle regole attivate da Jason;
+- LLM: opzionale, solo come dispatcher/verbalizer vincolato da intenti, trace Jason e snippets curati.
