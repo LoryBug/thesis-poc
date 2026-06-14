@@ -3,6 +3,7 @@ import { calculateCtSigns, evaluatePet, ctPetLevel, CT_MAX } from '@cm-dss/core'
 import type { CtFeatures, CtPetLevel } from '@cm-dss/core'
 import { FeatureTile } from './ui/FeatureTile'
 import { ScoreStrip } from './ui/ScoreStrip'
+import { Abbr } from './ui/Abbr'
 
 const ctFeatures: { key: keyof CtFeatures; title: string; description: string; points: number }[] = [
   { key: 'irregularMargins', title: 'Irregular margins', description: 'Non-circumscribed or spiculated profile.', points: 1 },
@@ -86,10 +87,10 @@ export function CtPetCard() {
 
           <div className="cm-pet-grid">
             {([
-              { key: 'suvMax' as const, label: 'SUVmax', hint: '>= 4.9' },
-              { key: 'mtv' as const, label: 'MTV (mL)', hint: '>= 8.2' },
-              { key: 'tlg' as const, label: 'TLG', hint: '>= 29' },
-            ]).map(({ key, label, hint }) => (
+              { key: 'suvMax' as const, label: <><Abbr term="SUVmax" definition="Maximum Standardized Uptake Value: peak FDG uptake normalized to body weight. Cutoff >= 4.9" /></>, hint: '>= 4.9' },
+              { key: 'mtv' as const, label: <><Abbr term="MTV" definition="Metabolic Tumor Volume (mL): volume of tissue with SUV above threshold. Cutoff >= 8.2" /></>, hint: '>= 8.2' },
+              { key: 'tlg' as const, label: <><Abbr term="TLG" definition="Total Lesion Glycolysis: MTV × mean SUV, reflects total metabolic activity. Cutoff >= 29" /></>, hint: '>= 29' },
+            ] as const).map(({ key, label, hint }) => (
               <label key={key} className="cm-field">
                 {label}
                 <input

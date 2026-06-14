@@ -99,7 +99,7 @@ export function NewCase() {
             </div>
           </article>
 
-          <ReportCard report={report} onReset={handleReset} />
+          <ReportCard report={report} caseId={metadata.caseId} onReset={handleReset} />
 
           <article className="cm-card cm-disclaimer">
             <strong>POC note</strong><br />

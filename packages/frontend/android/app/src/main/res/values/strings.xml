@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cardiac Mass DSS</string>
+    <string name="title_activity_main">Cardiac Mass DSS</string>
+    <string name="package_name">it.unibo.cardiacmassdss</string>
+    <string name="custom_url_scheme">it.unibo.cardiacmassdss</string>
+</resources>

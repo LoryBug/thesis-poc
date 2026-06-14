@@ -13,50 +13,29 @@ export function Header() {
         boxShadow: '0 18px 40px rgba(23, 59, 104, 0.12)',
       }}
     >
-      <div className="flex items-center justify-between" style={{ maxWidth: '1320px', margin: '0 auto', padding: '16px 16px' }}>
+      <div className="cm-header-inner">
         <h1
-          className="text-xl font-bold cursor-pointer select-none tracking-tight"
+          className="cm-header-title"
           onClick={() => navigate('home')}
         >
           Cardiac Mass DSS
         </h1>
-        <nav className="flex flex-wrap justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => navigate('home')}
-            className="px-3 py-1.5 rounded text-sm font-semibold cursor-pointer transition-opacity"
-            style={{
-              background: page === 'home' ? 'rgba(255,255,255,0.15)' : 'transparent',
-              color: 'rgba(255,255,255,0.85)',
-              letterSpacing: '0.03em',
-            }}
-          >
-            Dashboard
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('new')}
-            className="px-3 py-1.5 rounded text-sm font-semibold cursor-pointer transition-opacity"
-            style={{
-              background: page === 'new' ? 'rgba(255,255,255,0.15)' : 'transparent',
-              color: 'rgba(255,255,255,0.85)',
-              letterSpacing: '0.03em',
-            }}
-          >
-            New Evaluation
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('guide')}
-            className="px-3 py-1.5 rounded text-sm font-semibold cursor-pointer transition-opacity"
-            style={{
-              background: page === 'guide' ? 'rgba(255,255,255,0.15)' : 'transparent',
-              color: 'rgba(255,255,255,0.85)',
-              letterSpacing: '0.03em',
-            }}
-          >
-            Explainability Guide
-          </button>
+        <nav className="cm-header-nav">
+          {([
+            { page: 'home', label: 'Dashboard' },
+            { page: 'new', label: 'New Evaluation' },
+            { page: 'guide', label: 'Guide' },
+          ] as const).map((item) => (
+            <button
+              key={item.page}
+              type="button"
+              onClick={() => navigate(item.page)}
+              className="cm-header-btn"
+              style={{ background: page === item.page ? 'rgba(255,255,255,0.15)' : 'transparent' }}
+            >
+              {item.label}
+            </button>
+          ))}
         </nav>
       </div>
     </header>

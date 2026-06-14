@@ -1,4 +1,28 @@
 import { demProbability } from '@cm-dss/core'
+
+export function printReport(report: string, caseId?: string) {
+  const win = window.open('', '_blank', 'width=820,height=700')
+  if (!win) return
+  const escaped = report.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  win.document.write(`<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <title>Cardiac Mass DSS — ${caseId || 'Report'}</title>
+    <style>
+      body{font-family:Georgia,serif;max-width:680px;margin:40px auto;padding:0 24px;color:#1a202c;line-height:1.65;font-size:14px}
+      h1{font-size:17px;color:#173b68;border-bottom:2px solid #173b68;padding-bottom:8px;margin-bottom:20px}
+      pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;margin:0}
+      .footer{margin-top:36px;padding-top:10px;border-top:1px solid #ccc;font-size:11px;color:#777;font-style:italic}
+      @media print{body{margin:0}button{display:none}}
+    </style>
+  </head><body>
+    <h1>Cardiac Mass DSS — Clinical Report</h1>
+    <pre>${escaped}</pre>
+    <div class="footer">Research prototype — University of Bologna. Not for clinical use without specialist validation.</div>
+  </body></html>`)
+  win.document.close()
+  win.focus()
+  setTimeout(() => win.print(), 400)
+}
 import type { ClinicalTraceability, ConsensusResult, TraceNode } from '@cm-dss/core'
 import type { CaseMetadata } from './storage'
 

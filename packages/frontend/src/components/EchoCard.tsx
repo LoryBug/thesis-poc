@@ -3,6 +3,7 @@ import { calculateDemScore, demProbability, DEM_CUTOFF, DEM_MAX } from '@cm-dss/
 import type { EchoFeatures } from '@cm-dss/core'
 import { FeatureTile } from './ui/FeatureTile'
 import { ScoreStrip } from './ui/ScoreStrip'
+import { Abbr } from './ui/Abbr'
 
 const features: { key: keyof EchoFeatures; title: string; description: string; points: number }[] = [
   { key: 'infiltration', title: 'Infiltration', description: 'Extension into myocardium, pericardium, or neighboring tissues.', points: 2 },
@@ -27,7 +28,7 @@ export function EchoCard() {
     <article className="cm-card" data-exam-card="echo">
       <div className="cm-card-header">
         <div className="cm-card-title">
-          <h2>Echocardiography - DEM Score</h2>
+          <h2>Echocardiography — <Abbr term="DEM" definition="Diagnostic Echocardiographic score for Malignancy: weighted sum of 6 echocardiographic features (max 9)" /> Score</h2>
           <p>Weighted echocardiographic score for predicted malignancy in cardiac masses. Operational cutoff: DEM &gt;= 3.</p>
         </div>
         <label className="cm-exam-toggle">

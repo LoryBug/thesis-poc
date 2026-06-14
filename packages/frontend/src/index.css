@@ -977,6 +977,153 @@ textarea:focus-visible {
   text-align: center;
 }
 
+/* ── Header ───────────────────────────────────────────────── */
+
+.cm-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 14px 16px;
+}
+
+.cm-header-title {
+  flex-shrink: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cm-header-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.cm-header-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 140ms ease;
+  min-height: 38px;
+}
+
+.cm-header-btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+@media (max-width: 480px) {
+  .cm-header-title {
+    font-size: 15px;
+  }
+
+  .cm-header-btn {
+    padding: 8px 9px;
+    font-size: 12px;
+  }
+}
+
+/* ── Abbreviation tooltip ─────────────────────────────────── */
+
+.cm-abbr {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dotted var(--cm-primary-2);
+  font-weight: inherit;
+  display: inline;
+}
+
+.cm-abbr-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  width: max-content;
+  max-width: 240px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  background: var(--cm-dark);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+  white-space: normal;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+}
+
+.cm-abbr-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--cm-dark);
+}
+
+/* ── Disclaimer modal ─────────────────────────────────────── */
+
+.cm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 34, 61, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.cm-modal {
+  width: min(520px, 100%);
+  padding: 32px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(15, 34, 61, 0.28);
+}
+
+.cm-modal h2 {
+  margin: 0 0 14px;
+  color: var(--cm-dark);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.cm-modal p {
+  margin: 0 0 16px;
+  color: var(--cm-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cm-modal ul {
+  margin: 0 0 24px;
+  padding-left: 18px;
+  color: var(--cm-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.cm-modal ul li strong {
+  color: var(--cm-text);
+}
+
 @media (max-width: 1080px) {
   .cm-hero,
   .cm-layout {
@@ -992,6 +1139,10 @@ textarea:focus-visible {
   .cm-page {
     width: min(100% - 20px, 1320px);
     padding-top: 10px;
+  }
+
+  .cm-modal {
+    padding: 24px 20px;
   }
 
   .cm-card,
