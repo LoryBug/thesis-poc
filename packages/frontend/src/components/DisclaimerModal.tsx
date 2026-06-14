@@ -1,9 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const DISCLAIMER_KEY = 'cm-dss-disclaimer-v1'
 
 export function DisclaimerModal() {
   const [visible, setVisible] = useState(() => !localStorage.getItem(DISCLAIMER_KEY))
+  const btnRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!visible) return
+    btnRef.current?.focus()
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') accept()
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [visible])
 
   if (!visible) return null
 
@@ -25,7 +36,7 @@ export function DisclaimerModal() {
           <li>Thresholds are derived from published literature (Paolisso et al., D'Angelo et al.)</li>
           <li>All data stays on this device — nothing is transmitted externally</li>
         </ul>
-        <button type="button" className="cm-button" onClick={accept} autoFocus>
+        <button ref={btnRef} type="button" className="cm-button" onClick={accept}>
           I understand, continue
         </button>
       </div>

@@ -3,10 +3,12 @@ import { demProbability } from '@cm-dss/core'
 export function printReport(report: string, caseId?: string) {
   const win = window.open('', '_blank', 'width=820,height=700')
   if (!win) return
-  const escaped = report.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  const escaped = esc(report)
+  const safeId = esc(caseId || 'Report')
   win.document.write(`<!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8"/>
-    <title>Cardiac Mass DSS — ${caseId || 'Report'}</title>
+    <title>Cardiac Mass DSS — ${safeId}</title>
     <style>
       body{font-family:Georgia,serif;max-width:680px;margin:40px auto;padding:0 24px;color:#1a202c;line-height:1.65;font-size:14px}
       h1{font-size:17px;color:#173b68;border-bottom:2px solid #173b68;padding-bottom:8px;margin-bottom:20px}

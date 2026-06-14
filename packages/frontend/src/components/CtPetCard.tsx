@@ -38,6 +38,12 @@ function parsePetInput(value: string) {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : null
 }
 
+const petFields = [
+  { key: 'suvMax' as const, label: <Abbr term="SUVmax" definition="Maximum Standardized Uptake Value: peak FDG uptake normalized to body weight. Cutoff >= 4.9" />, hint: '>= 4.9' },
+  { key: 'mtv' as const,    label: <Abbr term="MTV"    definition="Metabolic Tumor Volume (mL): volume of tissue with SUV above threshold. Cutoff >= 8.2" />,    hint: '>= 8.2' },
+  { key: 'tlg' as const,    label: <Abbr term="TLG"    definition="Total Lesion Glycolysis: MTV × mean SUV, reflects total metabolic activity. Cutoff >= 29" />,    hint: '>= 29'  },
+]
+
 export function CtPetCard() {
   const ct = useCaseStore((s) => s.ct)
   const pet = useCaseStore((s) => s.pet)
@@ -86,11 +92,7 @@ export function CtPetCard() {
           </div>
 
           <div className="cm-pet-grid">
-            {([
-              { key: 'suvMax' as const, label: <><Abbr term="SUVmax" definition="Maximum Standardized Uptake Value: peak FDG uptake normalized to body weight. Cutoff >= 4.9" /></>, hint: '>= 4.9' },
-              { key: 'mtv' as const, label: <><Abbr term="MTV" definition="Metabolic Tumor Volume (mL): volume of tissue with SUV above threshold. Cutoff >= 8.2" /></>, hint: '>= 8.2' },
-              { key: 'tlg' as const, label: <><Abbr term="TLG" definition="Total Lesion Glycolysis: MTV × mean SUV, reflects total metabolic activity. Cutoff >= 29" /></>, hint: '>= 29' },
-            ] as const).map(({ key, label, hint }) => (
+            {petFields.map(({ key, label, hint }) => (
               <label key={key} className="cm-field">
                 {label}
                 <input
