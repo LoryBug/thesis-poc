@@ -53,7 +53,7 @@ describe('EvaluationToolsCard', () => {
     Object.defineProperty(file, 'text', { value: async () => content })
 
     fireEvent.change(screen.getByLabelText('Case JSON file'), { target: { files: [file] } })
-    expect(await screen.findByText(/Imported JSON-01/)).toBeVisible()
+    expect(await screen.findByText(/Imported and saved JSON-01/)).toBeVisible()
 
     const state = useCaseStore.getState()
     expect(state.metadata.caseId).toBe('JSON-01')

@@ -52,6 +52,9 @@ export function ConsensusPanel({ result }: Props) {
         <p>{result.nextStep}</p>
       </div>
 
+      <p className="mt-4 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Decision path</p>
+      <p className="text-xs font-mono" style={{ color: 'var(--cm-muted)' }}>{result.decisionPath}</p>
+
       <p className="mt-4 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cm-muted)' }}>Evidence</p>
       <ul className="cm-evidence-list">
         {evidence.map((item) => <li key={item}>{item}</li>)}

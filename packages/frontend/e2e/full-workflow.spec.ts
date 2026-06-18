@@ -15,10 +15,18 @@ const ctpetSection = (page: Page) =>
 const scoreNumber = (section: ReturnType<typeof echoSection>, score: string) =>
   section.locator('.cm-score-number', { hasText: score })
 
+async function acceptDisclaimer(page: Page) {
+  const button = page.getByRole('button', { name: 'I understand, continue' })
+  if (await button.isVisible().catch(() => false)) {
+    await button.click()
+  }
+}
+
 test.describe('Complete clinical workflow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
+    await acceptDisclaimer(page)
   })
 
   test('Empty dashboard shows initial message', async ({ page }) => {
@@ -28,9 +36,9 @@ test.describe('Complete clinical workflow', () => {
 
   test('Navigation to New Evaluation shows the three panels', async ({ page }) => {
     await newCaseBtn(page).click()
-    await expect(page.getByText('Echocardiography - DEM Score')).toBeVisible()
-    await expect(page.getByText('Cardiac magnetic resonance - CMR Mass Score')).toBeVisible()
-    await expect(page.getByText('Cardiac CT and 18F-FDG PET/CT')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Echocardiography.*DEM.*Score/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Cardiac magnetic resonance - CMR Mass Score' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Cardiac CT and 18F-FDG PET/CT' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Demo / Import Tools' })).toBeVisible()
     await expect(page.getByText('Case metadata')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Why this output?' })).toBeVisible()
@@ -38,7 +46,7 @@ test.describe('Complete clinical workflow', () => {
   })
 
   test('Explainability Guide shows the visual methodology', async ({ page }) => {
-    await page.getByRole('button', { name: 'Explainability Guide' }).click()
+    await page.getByRole('button', { name: 'Guide' }).click()
     await expect(page.getByRole('heading', { name: 'How the CDSS reaches and explains an output' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'CDSS pipeline' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Traceability chain' })).toBeVisible()
@@ -81,7 +89,7 @@ test.describe('Complete clinical workflow', () => {
     await expect(page.getByLabel('Case / patient ID')).toHaveValue('GC-04-IMPORT')
     await expect(scoreNumber(cmrSection(page), '5/8')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'CMR-driven high suspicion' })).toBeVisible()
-    await expect(page.getByText(/Imported GC-04-IMPORT/)).toBeVisible()
+    await expect(page.getByText(/Imported and saved GC-04-IMPORT/)).toBeVisible()
   })
 
   test('Loads a synthetic golden case into the evaluation form', async ({ page }) => {
@@ -180,5 +188,58 @@ test.describe('Complete clinical workflow', () => {
     await page.getByRole('button', { name: 'Delete' }).click()
     await expect(page.getByText(/Evaluation on/)).not.toBeVisible()
     await expect(page.getByText('No saved evaluations.')).toBeVisible()
+  })
+
+  test('Import JSON auto-saves to dashboard', async ({ page }) => {
+    await newCaseBtn(page).click()
+
+    await page.getByLabel('Case JSON file').setInputFiles({
+      name: 'gc-04.cm-dss.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify({
+        metadata: { caseId: 'GC-04-IMPORT', clinicalContext: 'Suspected cardiac mass', location: 'Unspecified', note: 'Auto-save test' },
+        imagingData: {
+          echoAvailable: false, echo: null,
+          cmrAvailable: true,
+          cmr: { infiltration: true, firstPassPerfusion: true, pericardialEffusion: false, sessile: false, polylobated: false, heterogeneousEnhancement: true },
+          ctpetAvailable: false, ct: null, pet: null,
+        },
+      })),
+    })
+
+    await expect(page.getByText(/Imported and saved/)).toBeVisible()
+
+    // Navigate to Home and verify case persisted
+    await page.getByRole('navigation').getByRole('button', { name: 'Dashboard' }).click()
+    await expect(page.getByText('GC-04-IMPORT')).toBeVisible()
+  })
+
+  test('PET warning on clinically unusual value', async ({ page }) => {
+    await newCaseBtn(page).click()
+    await ctpetSection(page).getByText('CT/PET available').click()
+
+    const suvInput = ctpetSection(page).getByPlaceholder('>= 4.9')
+    await suvInput.fill('55')
+
+    await expect(ctpetSection(page).getByText(/Valore insolitamente alto/)).toBeVisible()
+  })
+
+  test('Decision path visible in consensus panel', async ({ page }) => {
+    await newCaseBtn(page).click()
+
+    await echoSection(page).getByText('Echocardiography available').click()
+    await echoSection(page).getByText('Infiltration').click()
+    await echoSection(page).getByText('Polylobate mass').click()
+    await echoSection(page).getByText('Pericardial effusion').click()
+
+    await cmrSection(page).getByText('CMR available').click()
+    await cmrSection(page).getByText('Infiltration').click()
+    await cmrSection(page).getByText('First-pass contrast perfusion').click()
+    await cmrSection(page).getByText('Pericardial effusion').click()
+    await cmrSection(page).getByText('Sessile appearance').click()
+
+    // Echo 6/9 positive, CMR 6/8 positive -> concordant-high-echo-cmr
+    await expect(page.getByRole('heading', { name: 'Concordant high-suspicion echo-CMR' })).toBeVisible()
+    await expect(page.locator('.cm-decision').getByText('concordant-high-echo-cmr', { exact: true })).toBeVisible()
   })
 })

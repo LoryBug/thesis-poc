@@ -10,7 +10,7 @@ export function DisclaimerModal() {
     if (!visible) return
     btnRef.current?.focus()
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') accept()
+      if (e.key === 'Escape') setVisible(false)
     }
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)

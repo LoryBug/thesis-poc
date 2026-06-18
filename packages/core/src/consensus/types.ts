@@ -12,6 +12,7 @@ export interface ConsensusResult {
   explanation: string
   nextStep: string
   evidence: string[]
+  decisionPath: string
   modalities: {
     echo: ModalityStatus
     cmr: ModalityStatus

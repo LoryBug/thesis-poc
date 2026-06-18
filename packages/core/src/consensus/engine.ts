@@ -84,13 +84,15 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
   let subtitle = 'No examination available.'
   let explanation = 'Enter at least one examination to obtain an assessment.'
   let nextStep = 'Complete clinical/imaging input.'
+  let decisionPath = 'no-exam'
   let integratedStatus = 'Awaiting input'
   let integratedNote = ''
 
   if (!anyExam) {
-    // remains 'not'
+    decisionPath = 'no-exam'
   } else if (cmrPositive && echoPositive) {
     risk = 'high'
+    decisionPath = 'concordant-high-echo-cmr'
     title = 'Concordant high-suspicion echo-CMR'
     subtitle = 'DEM and CMR Mass Score are both above cutoff.'
     explanation = 'This combination follows the multimodality logic of the papers: echocardiography flags risk and CMR confirms with tissue characterization.'
@@ -99,6 +101,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (cmrPositive) {
     risk = 'high'
+    decisionPath = 'cmr-driven-high'
     title = 'CMR-driven high suspicion'
     subtitle = 'CMR Mass Score above cutoff, even if echocardiography is not positive or unavailable.'
     explanation = 'When available, CMR is the most comprehensive non-invasive examination and outperforms echocardiography for diagnostic accuracy.'
@@ -107,6 +110,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (ctHigh && data.cmrAvailable && !cmrPositive) {
     risk = 'high'
+    decisionPath = 'discordant-cmr-ctpet-high'
     title = 'Discordance between advanced modalities'
     subtitle = 'CMR below cutoff but CT/PET meets high-suspicion criteria.'
     explanation = 'Discordance should not be resolved by adding scores together: review images, technical quality, and oncology context.'
@@ -115,6 +119,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (ctHigh) {
     risk = 'high'
+    decisionPath = 'ctpet-driven-high'
     title = 'CT/PET-driven high suspicion'
     subtitle = 'CT/PET pathway positive according to the paper algorithm.'
     explanation = 'Cardiac CT and PET/CT provide complementary anatomic and metabolic evidence.'
@@ -123,6 +128,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (echoPositive && cmrNegative) {
     risk = 'mid'
+    decisionPath = 'discordant-echo-cmr'
     title = 'Echo-CMR discordance'
     subtitle = 'Echocardiography above cutoff, CMR below cutoff.'
     explanation = 'CMR lowers suspicion but does not automatically erase the echocardiographic signal.'
@@ -131,6 +137,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (echoPositive) {
     risk = 'mid'
+    decisionPath = 'echo-positive-needs-cmr'
     title = 'Significant echocardiographic suspicion'
     subtitle = 'DEM Score above cutoff: second-level imaging is indicated.'
     explanation = 'Echocardiography is the first-line filter: if positive, CMR is needed for tissue characterization.'
@@ -139,6 +146,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (ctGrayWithoutPet) {
     risk = 'mid'
+    decisionPath = 'ct-gray-zone-needs-pet'
     title = 'Cardiac CT gray zone'
     subtitle = 'CT with 3-4 signs and PET unavailable.'
     explanation = 'CT with 3-4 signs is not sufficiently discriminative; PET/CT or CMR is required.'
@@ -147,6 +155,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else if (ctDiscordant) {
     risk = 'mid'
+    decisionPath = 'discordant-ct-pet'
     title = 'Discordant CT/PET result'
     subtitle = 'PET positive with a low number of CT signs.'
     explanation = 'This combination should be reassessed in the clinical context and is not an automatic paper classification.'
@@ -155,6 +164,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     integratedNote = subtitle
   } else {
     risk = 'low'
+    decisionPath = 'low-suspicion'
     title = 'Low suspicion with available data'
     subtitle = data.cmrAvailable
       ? 'CMR below cutoff and no positive advanced-imaging evidence.'
@@ -172,6 +182,7 @@ export function evaluateConsensus(data: ImagingData): ConsensusResult {
     explanation,
     nextStep,
     evidence,
+    decisionPath,
     modalities: {
       echo: { status: echoStatus, note: echoNote },
       cmr: { status: cmrStatus, note: cmrNote },

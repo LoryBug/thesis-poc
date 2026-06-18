@@ -18,7 +18,7 @@ describe('Header', () => {
     render(<Header />)
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     expect(screen.getByText('New Evaluation')).toBeInTheDocument()
-    expect(screen.getByText('Explainability Guide')).toBeInTheDocument()
+    expect(screen.getByText('Guide')).toBeInTheDocument()
   })
 
   it('clicking Dashboard navigates home', async () => {
@@ -34,9 +34,9 @@ describe('Header', () => {
     expect(useUiStore.getState().page).toBe('new')
   })
 
-  it('clicking Explainability Guide navigates to guide', async () => {
+  it('clicking Guide navigates to guide', async () => {
     render(<Header />)
-    await userEvent.click(screen.getByText('Explainability Guide'))
+    await userEvent.click(screen.getByText('Guide'))
     expect(useUiStore.getState().page).toBe('guide')
   })
 

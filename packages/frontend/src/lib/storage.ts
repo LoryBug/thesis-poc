@@ -19,6 +19,40 @@ export interface SavedCase {
 const STORAGE_VERSION = 1
 const STORAGE_KEY = `cm-dss-history@${STORAGE_VERSION}`
 
+type MigrationFn = (data: unknown) => unknown
+
+const migrations: Record<number, MigrationFn> = {
+  // v1 -> v2: identity — placeholder for future schema changes.
+  // 1: (data) => data,
+}
+
+function runMigrations(): void {
+  const currentRaw = localStorage.getItem(STORAGE_KEY)
+
+  for (let v = 1; v < STORAGE_VERSION; v++) {
+    const oldKey = `cm-dss-history@${v}`
+    const oldRaw = localStorage.getItem(oldKey)
+    if (oldRaw === null) continue
+
+    const migrate = migrations[v]
+    if (!migrate) {
+      // No migration defined — discard outdated data silently
+      localStorage.removeItem(oldKey)
+      continue
+    }
+
+    try {
+      const migrated = migrate(JSON.parse(oldRaw))
+      if (currentRaw === null) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
+      }
+    } catch {
+      // Silently discard corrupt data on old schema
+    }
+    localStorage.removeItem(oldKey)
+  }
+}
+
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
@@ -69,6 +103,7 @@ export function isSavedCase(value: unknown): value is SavedCase {
 
 export function loadCases(): SavedCase[] {
   try {
+    runMigrations()
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw)
@@ -87,6 +122,10 @@ export function saveCases(cases: SavedCase[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cases))
   } catch (err) {
-    console.error('Unable to save history (localStorage quota exhausted or access denied):', err)
+    const message = err instanceof DOMException && err.name === 'QuotaExceededError'
+      ? 'Storage quota exceeded. Delete some saved cases to free space.'
+      : 'Unable to save history. Storage access denied.'
+    console.error(message, err)
+    window.dispatchEvent(new CustomEvent('cm:storage-error', { detail: message }))
   }
 }

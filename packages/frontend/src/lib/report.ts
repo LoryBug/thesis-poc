@@ -59,7 +59,7 @@ export function buildClinicalReport({
   const traceEvidence = traceability?.nodes.filter((node) => reportEvidenceKinds.has(node.kind)) ?? []
 
   return [
-    'CARDIAC MASS DECISION SUPPORT - POC',
+    'Cardiac Mass DSS — Clinical Report',
     '',
     `Case: ${metadata.caseId.trim() || 'not specified'}`,
     `Clinical context: ${metadata.clinicalContext}`,
@@ -84,7 +84,7 @@ export function buildClinicalReport({
     `Integrated: ${result.integrated.status}. ${result.integrated.note}`,
     '',
     'INTERPRETATION',
-    `${result.title}. ${result.explanation}`,
+    `Path: ${result.decisionPath}. ${result.title}. ${result.explanation}`,
     '',
     'EVIDENCE',
     ...(result.evidence.length ? result.evidence : ['No red flag selected or no advanced imaging available.']).map((item) => `- ${item}`),

@@ -126,7 +126,7 @@ export function NewCase() {
         </aside>
       </section>
 
-      <p className="cm-footer-note">React/TypeScript prototype - cardiac masses, diagnostic scores, and decision support.</p>
+      <p className="cm-footer-note">Cardiac Mass DSS v1.0 — Not for clinical use without specialist validation.</p>
     </div>
   )
 }

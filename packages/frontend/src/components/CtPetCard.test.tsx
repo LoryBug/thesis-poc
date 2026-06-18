@@ -50,7 +50,7 @@ describe('CtPetCard', () => {
     render(<CtPetCard />)
     const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '3.2')
-    expect(screen.getByText('Negative')).toBeInTheDocument()
+    expect(await screen.findByText('Negative')).toBeInTheDocument()
   })
 
   it('shows positive PET when SUVmax is above cutoff', async () => {
@@ -58,7 +58,7 @@ describe('CtPetCard', () => {
     render(<CtPetCard />)
     const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '7.5')
-    expect(screen.getByText('Positive')).toBeInTheDocument()
+    expect(await screen.findByText('Positive')).toBeInTheDocument()
   })
 
   it('does not show PET status until a parameter is entered', () => {
@@ -72,7 +72,7 @@ describe('CtPetCard', () => {
     render(<CtPetCard />)
     const mtvInput = screen.getByPlaceholderText('>= 8.2')
     await userEvent.type(mtvInput, '10.0')
-    expect(screen.getByText('Positive')).toBeInTheDocument()
+    expect(await screen.findByText('Positive')).toBeInTheDocument()
   })
 
   it('classification changes from unavailable to low suspicion with CT 1 and negative PET', async () => {
@@ -81,7 +81,7 @@ describe('CtPetCard', () => {
     await userEvent.click(screen.getByText('Irregular margins'))
     const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '2.0')
-    expect(screen.getByText('Low suspicion')).toBeInTheDocument()
+    expect(await screen.findByText('Low suspicion')).toBeInTheDocument()
   })
 
   it('classifies high suspicion with CT >=5 and negative PET', async () => {
@@ -94,6 +94,6 @@ describe('CtPetCard', () => {
     await userEvent.click(screen.getByText('Contrast uptake'))
     const suvInput = screen.getByPlaceholderText('>= 4.9')
     await userEvent.type(suvInput, '2.0')
-    expect(screen.getByText('High suspicion')).toBeInTheDocument()
+    expect(await screen.findByText('High suspicion')).toBeInTheDocument()
   })
 })

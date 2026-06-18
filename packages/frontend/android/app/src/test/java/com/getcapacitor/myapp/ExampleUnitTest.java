@@ -1,4 +1,4 @@
-package com.getcapacitor.myapp;
+package it.unibo.cardiacmassdss;
 
 import static org.junit.Assert.*;
 

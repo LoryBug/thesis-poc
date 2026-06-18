@@ -1,12 +1,15 @@
 import { useMemo, useState, type ChangeEvent } from 'react'
+import { evaluateConsensus } from '@cm-dss/core'
 import { parseCaseJsonImport } from '../lib/case-json'
 import { syntheticCases } from '../lib/synthetic-cases'
 import { useCaseStore } from '../stores/case.store'
+import { useHistoryStore } from '../stores/history.store'
 
 export function EvaluationToolsCard() {
   const [selectedId, setSelectedId] = useState('GC-02')
   const [importStatus, setImportStatus] = useState<string>('')
   const loadFrom = useCaseStore((s) => s.loadFrom)
+  const addCase = useHistoryStore((s) => s.addCase)
   const selectedCase = useMemo(
     () => syntheticCases.find((item) => item.id === selectedId) ?? syntheticCases[0],
     [selectedId],
@@ -30,7 +33,15 @@ export function EvaluationToolsCard() {
     }
 
     loadFrom(parsed.data.imagingData, parsed.data.metadata)
-    setImportStatus(`Imported ${parsed.data.metadata?.caseId || file.name}. Decision will be recalculated from imaging data.`)
+    const result = evaluateConsensus(parsed.data.imagingData)
+    addCase({
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      metadata: parsed.data.metadata,
+      imagingData: parsed.data.imagingData,
+      result,
+    })
+    setImportStatus(`Imported and saved ${parsed.data.metadata?.caseId || file.name}.`)
   }
 
   return (
